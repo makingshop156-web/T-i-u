@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GAME BOOSTER</title>
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            background:#0b0f15;color:#fff;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+            padding:16px 20px 30px;user-select:none;-webkit-tap-highlight-color:transparent;
+            min-height:100vh;
+            background-image:radial-gradient(ellipse at 50% 0%,#161f2e 0%,#0b0f15 70%)
+        }
+        .hdr{text-align:center;margin:10px 0 20px}
+        .hdr .lg{font-size:44px}
+        .hdr h1{font-size:26px;letter-spacing:4px;background:linear-gradient(135deg,#4facfe,#00f2fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900}
+        .hdr p{font-size:11px;color:#6b7684;margin-top:2px;letter-spacing:1px}
+        .sub{font-size:10px;color:#6b7684;letter-spacing:2px;text-transform:uppercase;margin:16px 0 8px;padding-left:2px}
+
+        .card{background:#131920;border:1px solid #1e2530;border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;transition:all .3s}
+        .card:active{transform:scale(.98)}
+
+        .mode-group{display:flex;gap:8px;margin-bottom:16px}
+        .mode-btn{
+            flex:1;padding:16px 8px;border-radius:14px;font-size:13px;font-weight:700;text-align:center;
+            cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:1px;line-height:1.3
+        }
+        .mode-btn .sm{font-size:9px;font-weight:400;opacity:.7;display:block;margin-top:2px}
+        .mode-btn.perf{
+            background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;border:none;box-shadow:0 4px 20px rgba(79,172,254,.25)
+        }
+        .mode-btn.perf:active{transform:scale(.95)}
+        .mode-btn.eco{
+            background:#1a3a1a;color:#3fb950;border:1px solid #2d5a2d
+        }
+        .mode-btn.eco:active{transform:scale(.95);border-color:#3fb950}
+        .mode-btn.off{
+            background:#131920;color:#6b7684;border:1px solid #1e2530
+        }
+        .mode-btn.off:active{transform:scale(.95);border-color:#6b7684}
+
+        .sw{position:relative;display:inline-block;width:46px;height:28px;flex-shrink:0;margin-left:10px}
+        .sw input{opacity:0;width:0;height:0}
+        .sl{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#1e2530;transition:.3s;border-radius:28px}
+        .sl::before{position:absolute;content:"";height:24px;width:24px;left:2px;bottom:2px;background:#fff;transition:.3s;border-radius:50%}
+        input:checked+.sl{background:linear-gradient(135deg,#4facfe,#00f2fe)}
+        input:checked+.sl::before{transform:translateX(18px)}
+
+        .lbl{font-size:14px;font-weight:500}
+        .lbl .d{font-size:10px;color:#6b7684;font-weight:400;display:block;margin-top:1px}
+
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1a2536;border:1px solid #1e2530;border-radius:12px;padding:12px 20px;font-size:12.5px;color:#fff;opacity:0;transition:all .4s ease;z-index:999;max-width:88%;text-align:center;backdrop-filter:blur(12px);pointer-events:none}
+        .toast.s{opacity:1;transform:translateX(-50%) translateY(0)}
+        .ftr{text-align:center;margin-top:20px;padding:16px 0 4px;font-size:9px;color:#1e2530;letter-spacing:1px}
+    </style>
+</head>
+<body>
+
+    <div class="hdr">
+        <div class="lg">🎮</div>
+        <h1>GAME BOOST</h1>
+        <p>Chọn chế độ phù hợp với tình trạng pin</p>
+    </div>
+
+    <div class="mode-group">
+        <div class="mode-btn perf" onclick="boostPerf()">⚡ HIỆU NĂNG<br><span class="sm">Pin đầy • Mượt tối đa</span></div>
+        <div class="mode-btn eco" onclick="boostEco()">🔋 TIẾT KIỆM<br><span class="sm">Pin yếu • Vẫn mượt</span></div>
+        <div class="mode-btn off" onclick="boostOFF()">⏹ TẮT<br><span class="sm">Về mặc định</span></div>
+    </div>
+
+    <div class="sub">📋 Chi tiết từng chế độ</div>
+
+    <div class="card"><div class="lbl">⚡ Hiệu năng <span class="d">Game Mode ON + LPM OFF + Airplane + 120Hz + Focus</span></div></div>
+    <div class="card"><div class="lbl">🔋 Tiết kiệm <span class="d">Game Mode ON + Low Power OFF (giữ CPU) + Giảm sáng + Airplane + Focus</span></div></div>
+    <div class="card"><div class="lbl">🌡️ Chặn Apple Analytics <span class="d">Giảm tải CPU — cài 1 lần qua profile</span></div>
+        <label class="sw"><input type="checkbox" id="btn-tele" onchange="toggleTele(this)"><span class="sl"></span></label>
+    </div>
+    <div class="card"><div class="lbl">📡 DNS Cloudflare <span class="d">DNS nhanh + chặn quảng cáo — cài 1 lần qua profile</span></div>
+        <label class="sw"><input type="checkbox" id="btn-dns" onchange="toggleDNS(this)"><span class="sl"></span></label>
+    </div>
+    <div class="card"><div class="lbl">🚫 Chặn toàn bộ quảng cáo <span class="d">DoubleClick, Google, Facebook, Unity Ads</span></div>
+        <label class="sw"><input type="checkbox" id="btn-ad" onchange="toggleAD(this)"><span class="sl"></span></label>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div class="ftr">GAME BOOST v6.0 • 3 CHẾ ĐỘ THẬT</div>
+
+    <script>
+        let tt=null;
+        function toast(m,ok=true){
+            const e=document.getElementById('toast');
+            e.textContent=m;e.style.borderColor=ok?'#4facfe':'#d29922';
+            e.classList.add('s');clearTimeout(tt);
+            tt=setTimeout(()=>e.classList.remove('s'),2800);
+        }
+
+        function boostPerf(){
+            toast('⚡ HIỆU NĂNG: Game Mode ON · LPM OFF · Airplane · 120Hz ổn định · Tắt ngốn pin nền · Auto-Lock Never');
+            setTimeout(()=>window.location.href='shortcuts://run-shortcut?name=GameBoostPerf',400);
+            setTimeout(()=>toast('✅ Đã kích hoạt chế độ HIỆU NĂNG — chơi game mượt nhất!'),1800);
+        }
+
+        function boostEco(){
+            toast('🔋 TIẾT KIỆM: Game Mode ON · Low Power OFF (giữ CPU) · Airplane · Giảm sáng 50% · Focus');
+            setTimeout(()=>window.location.href='shortcuts://run-shortcut?name=GameBoostEco',400);
+            setTimeout(()=>toast('✅ Đã kích hoạt chế độ TIẾT KIỆM — pin yếu vẫn chơi ngon!'),1800);
+        }
+
+        function boostOFF(){
+            toast('⏹ Đang tắt Boost, khôi phục cài đặt gốc...');
+            setTimeout(()=>window.location.href='shortcuts://run-shortcut?name=GameBoostOFF',400);
+            setTimeout(()=>toast('✅ Đã tắt Boost — máy về bình thường'),1500);
+        }
+
+        function toggleTele(cb){
+            if(cb.checked){
+                toast('📊 Đang tải cấu hình chặn Apple Analytics...');
+                setTimeout(()=>{
+                    window.location.href='profiles/block-telemetry.mobileconfig';
+                    toast('✅ Vào Settings > Cấu hình > Nhấn "Cài đặt"',true);
+                },500);
+            } else {
+                toast('📊 Vào Settings > Cấu hình > Xóa profile telemetry',false);
+            }
+            setTimeout(()=>cb.checked=false,3000);
+        }
+
+        function toggleDNS(cb){
+            if(cb.checked){
+                toast('📡 Đang tải DNS Cloudflare...');
+                setTimeout(()=>{
+                    window.location.href='profiles/gaming-dns.mobileconfig';
+                    toast('✅ Vào Settings > Cấu hình > Nhấn "Cài đặt"',true);
+                },500);
+            } else {
+                toast('📡 Vào Settings > Cấu hình > Xóa profile DNS',false);
+            }
+            setTimeout(()=>cb.checked=false,3000);
+        }
+
+        function toggleAD(cb){
+            if(cb.checked){
+                toast('🚫 Đang tải cấu hình chặn quảng cáo...');
+                setTimeout(()=>{
+                    window.location.href='profiles/block-telemetry.mobileconfig';
+                    toast('✅ Vào Settings > Cấu hình > Nhấn "Cài đặt"',true);
+                },500);
+            } else {
+                toast('🚫 Vào Settings > Cấu hình > Xóa profile chặn QC',false);
+            }
+            setTimeout(()=>cb.checked=false,3000);
+        }
+
+        console.log('Game Boost v6.0 • 3 real modes');
+    </script>
+</body>
+</html>
