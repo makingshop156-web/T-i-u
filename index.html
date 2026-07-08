@@ -167,7 +167,7 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
             <div class="it"><div class="n" id="memVal">--</div><div class="l">RAM</div></div>
             <div class="it"><div class="n" id="cpuVal">--</div><div class="l">CPU</div></div>
             <div class="it"><div class="n" id="scrVal">--</div><div class="l">Display</div></div>
-            <div class="it"><div class="n" id="stoVal">--</div><div class="l">Storage</div></div>
+            <div class="it"><div class="n" id="stoVal">--</div><div class="l">Web Storage</div></div>
         </div>
     </div>
 
@@ -398,7 +398,7 @@ const cmds={
         const avg=times.reduce((a,b)=>a+b,0)/times.length;
         const jank=times.filter(t=>t>budget).length;
         const jp=(jank/times.length*100).toFixed(1);
-        const load=Math.min(100,Math.round((avg-2)/budget*100));
+        const load=Math.min(100,Math.max(0,Math.round((avg-budget)/budget*100)));
         tp(`<span style="color:var(--dm)">Display:</span>   <b>${refreshRate}Hz</b> <span style="color:var(--dm)">(calibrated)</span>`);
         tp(`<span style="color:var(--dm)">Avg frame:</span> <b>${avg.toFixed(2)}ms</b> <span style="color:var(--dm)">(REAL)</span>`);
         tp(`<span style="color:var(--dm)">Min:</span> ${Math.min(...times).toFixed(2)}ms | <span style="color:var(--dm)">Max:</span> ${Math.max(...times).toFixed(2)}ms`);
@@ -710,7 +710,7 @@ async function initDash(){
         sbd.className='d r';sbt.textContent='❌ No network';
         ba.innerHTML='<span class="bdg r">NO NETWORK</span>';
     }
-    $('quickInfo').innerHTML=`<span style="color:var(--dm)">Model:</span> ${model}<br><span style="color:var(--dm)">Storage:</span> ${$('stoVal').textContent}<br><span style="color:var(--dm)">Battery:</span> ${$('batTx').textContent}<br><span style="color:var(--dm)">Type</span> <b>help</b> in Terminal`;
+    $('quickInfo').innerHTML=`<span style="color:var(--dm)">Model:</span> ${model}<br><span style="color:var(--dm)">Web storage:</span> ${$('stoVal').textContent}<br><span style="color:var(--dm)">Battery:</span> ${$('batTx').textContent}<br><span style="color:var(--dm)">Type</span> <b>help</b> in Terminal`;
 }
 initDash().catch(()=>{});
 
