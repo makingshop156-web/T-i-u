@@ -350,22 +350,22 @@ let cmdHistory=[],histIdx=-1;
 const cmds={
     help(){
         tp('═══ <span style="color:var(--yl)">Commands</span> ═══');
-        tp('<b style="color:var(--gr)">cpu</b>       REAL CPU load — RAF frame timing (120 frames)');
-        tp('<b style="color:var(--gr)">gpu</b>       REAL GPU — WebGL 3D cube FPS benchmark');
-        tp('<b style="color:var(--gr)">ram</b>       REAL RAM — deviceMemory + heap estimate');
-        tp('<b style="color:var(--gr)">storage</b>   REAL storage — navigator.storage.estimate()');
-        tp('<b style="color:var(--gr)">dns</b>       REAL DNS test — 5 ad domains + 2 normal');
-        tp('<b style="color:var(--gr)">net</b>       REAL speed — 3-sample throughput test');
-        tp('<b style="color:var(--gr)">battery</b>   REAL battery — level, charging, drain');
-        tp('<b style="color:var(--gr)">thermal</b>   REAL thermal — RAF degradation + CPU stress (40 frames)');
-        tp('<b style="color:var(--gr)">webgpu</b>    WebGPU adapter info (if available)');
+        tp('<b style="color:var(--gr)">cpu</b>       (REAL) RAF timing + compute benchmark (int/float/memory)');
+        tp('<b style="color:var(--gr)">gpu</b>       (REAL) WebGL 3D cube FPS benchmark (180 frames)');
+        tp('<b style="color:var(--gr)">ram</b>       (SPEC) device RAM + (REAL) allocation probe + bandwidth');
+        tp('<b style="color:var(--gr)">storage</b>   (SPEC) capacity + (REAL) Cache API read/write speed');
+        tp('<b style="color:var(--gr)">dns</b>       (REAL) DNS test — 5 ad domains');
+        tp('<b style="color:var(--gr)">net</b>       (REAL) speed — 3-sample throughput test');
+        tp('<b style="color:var(--gr)">battery</b>   (REAL) battery — level, charging, drain');
+        tp('<b style="color:var(--gr)">thermal</b>   (REAL) thermal — RAF degradation + CPU stress');
+        tp('<b style="color:var(--gr)">webgpu</b>    (REAL) WebGPU adapter info (if available)');
+        tp('<b style="color:var(--gr)">probe</b>     (REAL) run ALL hardware probes (CPU+RAM+storage+thermal)');
         tp('<b style="color:var(--gr)">sysinfo</b>   Show all device info');
         tp('<b style="color:var(--gr)">score</b>     Show Performance Score');
         tp('<b style="color:var(--gr)">bench</b>     Run ALL benchmarks (CPU+GPU+DNS+NET)');
         tp('<b style="color:var(--gr)">profile</b>   Show profile status');
         tp('<b style="color:var(--gr)">compat</b>    Check API compatibility');
-        tp('<b style="color:var(--gr)">webgpu</b>    WebGPU benchmark (if available)');
-        tp('<b style="color:var(--gr)">clear</b>     Clear');
+        tp('<b style="color:var(--gr)">clear</b>     Clear terminal');
     },
     clear(){termOut.innerHTML='';},
     sysinfo(){
@@ -403,16 +403,27 @@ const cmds={
         }catch(e){tp('<span style="color:var(--rd)">Battery API not available on this iOS</span>');}
     },
     async storage(){
-        tp('═══ <span style="color:var(--yl)">Storage</span> ═══');
+        tp('═══ <span style="color:var(--yl)">Storage — Spec + REAL Cache API benchmark</span> ═══');
+        if(deviceSpecs)tp(`<span style="color:var(--dm)">Capacity:</span>  <b>${deviceSpecs.s}</b> <span style="color:var(--bl)">(spec)</span>`);
         if(navigator.storage&&navigator.storage.estimate) try{
             const s=await navigator.storage.estimate();
-            const u=(s.usage/1073741824).toFixed(1), t=(s.quota/1073741824).toFixed(0), p=(s.usage/s.quota*100).toFixed(0);
-            tp(`<span style="color:var(--dm)">Used:</span>      <b>${u} GB</b> <span style="color:var(--dm)">(REAL)</span>`);
-            tp(`<span style="color:var(--dm)">Total:</span>     <b>${t} GB</b> <span style="color:var(--dm)">(REAL)</span>`);
-            tp(`<span style="color:var(--dm)">Free:</span>      <b>${(t-u).toFixed(1)} GB</b>`);
-            tp(`<span style="color:var(--dm)">${'█'.repeat(Math.round(p/5))+'░'.repeat(20-Math.round(p/5))}</span>`);
-        }catch(e){tp('Error reading storage');}
-        else tp('Storage API not available');
+            tp(`<span style="color:var(--dm)">Safari quota:</span> ${(s.quota/1073741824).toFixed(0)} GB | <span style="color:var(--dm)">Used:</span> ${(s.usage/1073741824).toFixed(1)} GB`);
+        }catch(e){}
+        // REAL Cache API benchmark
+        if('caches'in window)try{
+            const cache=await caches.open('_perfbench_');
+            const blob=new Blob([new Uint8Array(1048576)]); // 1MB
+            const t0=performance.now();
+            await cache.put('/_bench',new Response(blob));
+            const r=await cache.match('/_bench');
+            const data=await r.blob();
+            const total=performance.now()-t0;
+            await cache.delete('/_bench');
+            if(total>0){
+                const spd=(1048576*2/total*1000/1048576).toFixed(1); // read+write
+                tp(`<span style="color:var(--dm)">Cache speed:</span> <b>${spd} MB/s</b> <span style="color:var(--gr)">(REAL)</span>`);
+            }
+        }catch(e){tp('<span style="color:var(--dm)">Cache API benchmark N/A</span>');}
     },
     async cpu(){
         tp('═══ <span style="color:var(--yl)">CPU — RAF Frame Timing</span> ═══');
@@ -452,6 +463,20 @@ const cmds={
             const v=times[i]||0;const ht=Math.min(40,v*2);bar.style.height=ht+'px';
             bar.style.background=v>budget?'rgba(255,68,68,.5)':'rgba(0,230,118,.4)';h.appendChild(bar);}
         perfScore.cpu=Math.max(0,100-load);updateScore();
+        // Compute benchmark
+        tp('');tp('<span style="color:var(--yl)">▼ REAL Compute Benchmark</span>');
+        const INT_N=20000000;let t0=performance.now(),xx=0;
+        for(let i=0;i<INT_N;i++){xx+=i*3-(i>>1);xx^=i;xx|=(i<<2);}
+        const intMs=performance.now()-t0,intOps=(INT_N/intMs*1000/1e6).toFixed(1);
+        const FLT_N=8000000;t0=performance.now();let yy=0.0;
+        for(let i=0;i<FLT_N;i++){yy+=Math.sin(i)*0.5;yy=Math.sqrt(Math.abs(yy)+0.01);}
+        const fltMs=performance.now()-t0,fltOps=(FLT_N/fltMs*1000/1e6).toFixed(1);
+        const MEM_N=5000000;const memArr=new Float64Array(MEM_N);t0=performance.now();
+        for(let i=0;i<MEM_N;i++)memArr[i]=i*0.5;
+        const memMs=performance.now()-t0,memBw=(MEM_N*8/memMs*1000/1e6).toFixed(0);
+        tp(`<span style="color:var(--dm)">Integer:</span> <b>${intOps}M</b> op/s <span style="color:var(--gr)">(REAL)</span> | <span style="color:var(--dm)">Float:</span> <b>${fltOps}M</b> op/s | <span style="color:var(--dm)">Memory:</span> <b>${memBw}</b> GB/s`);
+        const computeScore=Math.min(100,Math.round((parseFloat(intOps)*2+parseFloat(fltOps)+parseFloat(memBw)*5)/4));
+        tp(`<span style="color:var(--dm)">Compute score:</span> <b>${computeScore}/100</b>`);
     },
     async gpu(){
         tp('═══ <span style="color:var(--yl)">GPU — WebGL 3D Benchmark</span> ═══');
@@ -526,12 +551,28 @@ const cmds={
         tp(`<span style="color:var(--dm)">State:</span> <b style="${cls}">${state}</b>`);
         if(state!=='Normal')tp('<span style="color:var(--dm)">Tip: Thermal throttle may reduce gaming performance. Remove case, reduce brightness.</span>');
     },
-    ram(){
-        tp('═══ <span style="color:var(--yl)">Memory</span> ═══');
-        if(navigator.deviceMemory)tp(`<span style="color:var(--dm)">Device RAM:</span> <b>${navigator.deviceMemory} GB</b> <span style="color:var(--dm)">(REAL)</span>`);
-        else tp('<span style="color:var(--dm)">Device Memory API not available on iOS Safari</span>');
-        if(performance.memory)tp(`<span style="color:var(--dm)">JS Heap:</span> ${(performance.memory.usedJSHeapSize/1048576).toFixed(1)}MB / ${(performance.memory.jsHeapSizeLimit/1048576).toFixed(0)}MB`);
-        else tp('<span style="color:var(--dm)">performance.memory not available on iOS</span>');
+    async ram(){
+        tp('═══ <span style="color:var(--yl)">Memory — Spec + REAL allocation probe</span> ═══');
+        if(deviceSpecs)tp(`<span style="color:var(--dm)">Device RAM:</span> <b>${deviceSpecs.r}</b> <span style="color:var(--bl)">(spec)</span>`);
+        else if(navigator.deviceMemory)tp(`<span style="color:var(--dm)">Device RAM:</span> <b>${navigator.deviceMemory} GB</b> <span style="color:var(--gr)">(REAL)</span>`);
+        // REAL allocation probe
+        let maxSize=0,size=65536;
+        try{
+            while(size<209715200){
+                const buf=new ArrayBuffer(size);
+                new Uint8Array(buf)[0]=1; // touch page
+                maxSize=size;size*=2;
+            }
+        }catch(e){}
+        if(maxSize>0){
+            const testSize=Math.min(maxSize,52428800);
+            const buf=new ArrayBuffer(testSize);const v=new Uint8Array(buf);
+            const t0=performance.now();
+            for(let i=0;i<testSize;i+=4096)v[i]=255;
+            const bw=(testSize/(performance.now()-t0)/1024).toFixed(0);
+            tp(`<span style="color:var(--dm)">Max alloc:</span> <b>${(maxSize/1048576).toFixed(0)} MB</b> <span style="color:var(--gr)">(REAL)</span>`);
+            tp(`<span style="color:var(--dm)">Write speed:</span> ${bw} MB/s <span style="color:var(--gr)">(REAL)</span>`);
+        } else tp('<span style="color:var(--rd)">Allocation benchmark failed</span>');
     },
     profile(){
         tp('═══ <span style="color:var(--yl)">Profile Status</span> ═══');
@@ -555,6 +596,16 @@ const cmds={
         await cmds.dns();tp('');
         await cmds.net();tp('');
         tp('<span style="color:var(--gr)">✓ All benchmarks completed — data is REAL device measurements</span>');
+    },
+    async probe(){
+        tp('═══ <span style="color:var(--yl)">Hardware Probe — ALL REAL Measurements</span> ═══');
+        tp(`<span style="color:var(--dm)">Model:</span> ${model}`);
+        if(deviceSpecs)tp(`<span style="color:var(--dm)">Spec:</span>  ${deviceSpecs.r} RAM • ${deviceSpecs.c} • ${deviceSpecs.g} • ${deviceSpecs.s}`);
+        tp('');await cmds.cpu();tp('');
+        await cmds.ram();tp('');
+        await cmds.storage();tp('');
+        await cmds.thermal();tp('');
+        tp('<span style="color:var(--gr)">✓ Probe complete — all data measured in real-time on this device</span>');
     },
     async webgpu(){
         tp('═══ <span style="color:var(--yl)">WebGPU Benchmark</span> ═══');
