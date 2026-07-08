@@ -33,7 +33,7 @@ tr:hover td{background:rgba(79,172,254,.02)}
 <body>
 
 <h1>iOS Performance Optimizer v10</h1>
-<p class="sub">Configuration Profile vs MDM • REAL device measurements • WebGL/RAF/DNS benchmark methodology • 28 daemon analysis • API Compatibility Checker</p>
+<p class="sub">Configuration Profile vs MDM • REAL device measurements • WebGL/RAF/DNS/WebGPU benchmark methodology • 28 daemon analysis • API Compatibility Checker • Device specs database</p>
 
 <bq>
 <strong>Tóm tắt:</strong> Bài nghiên cứu này phân tích (1) MDM .vs Configuration Profile — khi nào cần MDM, khi nào profile đủ, (2) REAL device measurement — WebGL GPU benchmark hoạt động thế nào trên iOS Safari, RAF CPU profiling dựa trên requestAnimationFrame timing, multi-domain DNS probe, (3) 28 system daemon restrictions mới nhất.
@@ -128,6 +128,19 @@ Ví dụ: avgDelta = 20ms → load ≈ (18/16.67)*100 = 108% → clamp → 100% 
 
 <p>Kết quả 5/5 blocked = DNS profile hoạt động. Kết quả &lt; 5 = cần kiểm tra lại hoặc DNS cache.</p>
 
+<h3>2.5 Device Specs Database — Suy luận từ model</h3>
+<p>Vì iOS Safari không expose <code>navigator.deviceMemory</code> và <code>navigator.hardwareConcurrency</code>, tool sử dụng database mapping từ model code (iPhone17,1 → iPhone 16 Pro) sang thông số kỹ thuật (RAM 8GB, CPU A18 Pro 6-core, GPU A18 Pro 6-core, storage options 128/256/512/1024 GB). Database gồm 26 dòng iPhone từ SE/11 đến 16 Pro Max.</p>
+<p>Kết quả hiển thị với nhãn "from model DB" (màu xanh) để phân biệt với dữ liệu REAL (màu xanh lá) từ Web API.</p>
+
+<h3>2.6 Thermal State — RAF Degradation Analysis (v11)</h3>
+<p>Phương pháp mới gồm 2 phase:</p>
+<ol>
+<li><strong>Baseline (idle):</strong> 15 RAF frames không tải → đo avg frame time baseline</li>
+<li><strong>CPU stress:</strong> 40 RAF frames, mỗi frame chạy 2ms CPU-bound (sin/cos) → đo degradation slope</li>
+</ol>
+<p>Dùng linear regression trên frame times trong phase 2. Slope &gt; 0.08 + delta &gt; 20ms → thermal throttle likely. Slope &gt; 0.03 + delta &gt; 10ms → warm.</p>
+
+
 <h3>2.4 API Compatibility Checker</h3>
 <p>Terminal CLI bao gồm lệnh <code>compat</code> kiểm tra 11 Web APIs có sẵn trên thiết bị: WebGL 1.0/2.0, deviceMemory, hardwareConcurrency, getBattery, storage.estimate, connection, performance.memory, AbortSignal.timeout, localStorage, requestAnimationFrame. Kết quả hiển thị dạng ✓/✗ kèm tổng số API available.</p>
 
@@ -137,12 +150,12 @@ Ví dụ: avgDelta = 20ms → load ≈ (18/16.67)*100 = 108% → clamp → 100% 
 <div class="cd">Mbps = (fileSizeBytes * 8) / (timeMs / 1000) / 1_000_000</div>
 <p>Chạy 3 lần, lấy trung bình. Kết quả Mbps là REAL network throughput từ thiết bị đến CDN.</p>
 
-<h3>2.6 Battery Drain Tracking</h3>
+<h3>2.7 Battery Drain Tracking</h3>
 <p>Lưu battery level + timestamp vào localStorage. Khi user quay lại, so sánh với giá trị trước đó để tính drain rate:</p>
 <div class="cd">drainRate = (levelBefore - levelNow) / (timeElapsedHours)  // % per hour</div>
 <p>Kết quả là REAL battery drain rate, chỉ hiển thị khi đủ thời gian giữa 2 lần đo (&gt;5 phút).</p>
 
-<h3>2.7 Performance Score</h3>
+<h3>2.8 Performance Score</h3>
 <p>Tổng hợp 4 benchmark thành 1 score duy nhất (0-100):</p>
 <table>
 <tr><th>Component</th><th>Công thức</th><th>Trọng số</th></tr>
@@ -228,7 +241,7 @@ Ví dụ: avgDelta = 20ms → load ≈ (18/16.67)*100 = 108% → clamp → 100% 
 
 <ft>
 iOS Performance Optimizer v10 • iOS Performance Lab • 2026<br>
-REAL device measurements • 28 restrictions • MDM analysis • WebGL • RAF • DNS probe • API compat
+REAL device measurements • 28 restrictions • MDM analysis • WebGL • RAF • DNS probe • API compat • WebGPU • Device DB
 </ft>
 
 </body>
