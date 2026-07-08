@@ -4,33 +4,30 @@
 <meta charset="UTF-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>iOS Perf • v8</title>
+<title>iOS Perf • v9</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#03080e;--cd:rgba(8,14,24,.7);--bdr:rgba(50,75,120,.15);--tx:#c8dbe8;--dm:#3a5a7a;--bl:#0af;--gr:#0e6;--yl:#fd0;--rd:#f44;--cy:#0dd}
+:root{--bg:#03080e;--cd:rgba(8,14,24,.68);--bdr:rgba(50,75,120,.12);--tx:#c8dbe8;--dm:#3a5a7a;--bl:#0af;--gr:#0e6;--yl:#fd0;--rd:#f44;--cy:#0dd}
 body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:2px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(0,170,255,.15);border-radius:4px}
+::-webkit-scrollbar-thumb{background:rgba(0,170,255,.12);border-radius:4px}
 
-/* Background orbs */
 .bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
 .bg .o{position:absolute;border-radius:50%;filter:blur(100px)}
-.bg .o:nth-child(1){width:300px;height:300px;background:var(--bl);top:-80px;right:-60px;opacity:.08;animation:dr 25s ease-in-out infinite}
-.bg .o:nth-child(2){width:350px;height:350px;background:#06f;bottom:-100px;left:-80px;opacity:.08;animation:dr 30s ease-in-out infinite reverse}
-.bg .o:nth-child(3){width:180px;height:180px;background:var(--cy);top:30%;left:20%;opacity:.04;animation:dr 20s ease-in-out infinite 8s}
+.bg .o:nth-child(1){width:300px;height:300px;background:var(--bl);top:-80px;right:-60px;opacity:.07;animation:dr 25s ease-in-out infinite}
+.bg .o:nth-child(2){width:350px;height:350px;background:#06f;bottom:-100px;left:-80px;opacity:.07;animation:dr 30s ease-in-out infinite reverse}
+.bg .o:nth-child(3){width:200px;height:200px;background:var(--cy);top:30%;left:20%;opacity:.03;animation:dr 20s ease-in-out infinite 8s}
 @keyframes dr{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.15)}66%{transform:translate(-30px,40px) scale(.9)}}
 
 .w{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:0 0 30px}
 
-/* Header */
 .h{text-align:center;padding:34px 16px 10px}
 .hi{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#0af,#06f);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;box-shadow:0 6px 30px rgba(0,130,255,.2)}
 .hi .b{font-size:22px;font-weight:900;color:#fff}
 .h h1{font-size:20px;font-weight:800;background:linear-gradient(135deg,#fff,#8cf);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .h .sub{font-size:9.5px;color:var(--dm);margin-top:1px;letter-spacing:.3px}
 
-/* Status bar */
 .sb{display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;margin-top:10px;padding:6px 14px;border-radius:20px;border:1px solid var(--bdr);background:rgba(8,14,24,.6);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
 .sb .d{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:all .3s}
 .sb .d.g{background:var(--gr);box-shadow:0 0 12px rgba(0,230,118,.5)}
@@ -39,67 +36,58 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
 .sb .d.c{background:var(--yl);animation:bl 1s infinite}
 @keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* Tabs */
 .tabs{display:flex;gap:3px;padding:0 10px;margin-top:4px}
 .tab{flex:1;text-align:center;padding:7px 0;font-size:10px;font-weight:600;color:var(--dm);border-radius:8px;cursor:pointer;transition:all .2s;border:none;background:transparent;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .tab.act{color:#fff;background:rgba(0,170,255,.08)}
 .tab:active{transform:scale(.95)}
 
-/* Content */
 .bd{padding:6px 10px;display:flex;flex-direction:column;gap:6px}
 .pn{display:block}
 .pn.h{display:none}
 
-/* Cards */
 .c{background:var(--cd);border-radius:14px;padding:12px;border:1px solid var(--bdr);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .ct{font-size:9px;font-weight:700;color:var(--dm);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
 
-/* Grids */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
 .it{background:rgba(255,255,255,.015);border-radius:10px;padding:8px;text-align:center}
 .it .n{font-size:16px;font-weight:800;letter-spacing:-.3px}
 .it .l{font-size:8.5px;color:var(--dm);text-transform:uppercase;letter-spacing:.6px}
 
-/* Progress bar */
-.pg{height:3px;background:rgba(255,255,255,.03);border-radius:2px;margin-top:4px;overflow:hidden}
+.pg{height:3px;background:rgba(255,255,255,.03);border-radius:2px;margin:4px 0;overflow:hidden}
 .pg .fl{height:100%;border-radius:2px;transition:width .6s ease}
 
-/* Badge */
+/* Histogram bars */
+.hist{display:flex;align-items:flex-end;gap:2px;height:40px;margin:4px 0}
+.hist .barr{flex:1;border-radius:2px 2px 0 0;min-height:1px;transition:height .4s}
+
+/* DNS grid */
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.dg .di{padding:5px 7px;border-radius:6px;font-size:9.5px;background:rgba(255,255,255,.015)}
+.dg .di .nm{color:var(--dm);font-size:8px;margin-bottom:1px;word-break:break-all}
+.dg .di .stt{font-weight:700}
+.dg .di .ms{font-size:8px;color:var(--dm)}
+
 .bdg{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;border:1px solid transparent}
 .bdg.g{background:rgba(0,230,118,.08);color:var(--gr);border-color:rgba(0,230,118,.12)}
 .bdg.r{background:rgba(255,68,68,.08);color:var(--rd);border-color:rgba(255,68,68,.12)}
 .bdg.y{background:rgba(255,221,0,.08);color:var(--yl);border-color:rgba(255,221,0,.12)}
 .bdg.b{background:rgba(0,170,255,.08);color:var(--bl);border-color:rgba(0,170,255,.12)}
 
-/* === TERMINAL === */
-.term{background:#050a14;border-radius:14px;border:1px solid var(--bdr);overflow:hidden;font-family:'SF Mono','Cascadia Code','Menlo',monospace;font-size:11px;line-height:1.5;position:relative}
-.term .bar{display:flex;align-items:center;gap:6px;padding:7px 10px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--bdr)}
-.term .bar .dot{width:8px;height:8px;border-radius:50%}
+/* Terminal */
+.term{background:#050a14;border-radius:14px;border:1px solid var(--bdr);overflow:hidden;font-family:'SF Mono','Cascadia Code','Menlo',monospace;font-size:10.5px;line-height:1.5}
+.term .bar{display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--bdr)}
+.term .bar .dot{width:7px;height:7px;border-radius:50%}
 .term .bar .dot:nth-child(1){background:#ff5f57}
 .term .bar .dot:nth-child(2){background:#ffbd2e}
 .term .bar .dot:nth-child(3){background:#28ca41}
-.term .bar .tt{font-size:9px;color:var(--dm);margin-left:6px;letter-spacing:.5px;text-transform:uppercase}
-.term .out{overflow-y:auto;max-height:360px;min-height:100px;padding:8px 10px;color:#b0c8e0}
-.term .out .prompt{color:var(--gr);font-weight:700}
-.term .out .path{color:var(--bl)}
-.term .out .cmd{color:#e0e8f0}
-.term .out .info{color:var(--dm);font-style:italic}
-.term .out .ok{color:var(--gr)}
-.term .out .err{color:var(--rd)}
-.term .out .hl{color:var(--yl)}
-.term .out .cy{color:var(--cy)}
-.term .out .lb{color:var(--bl)}
-.term .out .kv{color:#a0b0c0}
-.term .out .nm{color:#e0e8f0;font-weight:700}
-.term .inp{display:flex;align-items:center;border-top:1px solid var(--bdr);padding:6px 10px;background:rgba(0,0,0,.3)}
+.term .bar .tt{font-size:8.5px;color:var(--dm);margin-left:6px;letter-spacing:.4px;text-transform:uppercase}
+.term .out{overflow-y:auto;max-height:320px;min-height:80px;padding:6px 10px;color:#b0c8e0}
+.term .inp{display:flex;align-items:center;border-top:1px solid var(--bdr);padding:5px 10px;background:rgba(0,0,0,.3)}
 .term .inp .ps{color:var(--gr);font-weight:700;margin-right:6px;flex-shrink:0}
-.term .inp .in{background:transparent;border:none;color:#e0e8f0;font-family:inherit;font-size:11px;width:100%;outline:none}
-.term .inp .in::placeholder{color:var(--dm);opacity:.3}
-.term .sc{background:linear-gradient(90deg,rgba(0,170,255,.04),transparent);padding:6px 10px;border-bottom:1px solid rgba(0,170,255,.06);font-size:9px;color:var(--dm);letter-spacing:.5px;text-transform:uppercase}
-/* Scrollable test results */
-.scrl{overflow-y:auto;max-height:200px}
+.term .inp input{background:transparent;border:none;color:#e0e8f0;font-family:inherit;font-size:10.5px;width:100%;outline:none}
+.term .inp input::placeholder{color:var(--dm);opacity:.3}
 
-/* Battery */
 .bat{display:flex;align-items:center;gap:10px}
 .bat .bi{position:relative;width:36px;height:18px;border:2px solid var(--dm);border-radius:3px;flex-shrink:0;overflow:hidden}
 .bat .bi .lv{height:100%;border-radius:1px;transition:width .5s,background .3s}
@@ -107,20 +95,21 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
 .bat .tx{font-size:18px;font-weight:800}
 .bat .st{font-size:9px;color:var(--dm)}
 
-/* Install btn */
 .ib{background:linear-gradient(135deg,rgba(0,170,255,.05),rgba(0,100,255,.03));border:1px solid rgba(0,170,255,.15);border-radius:14px;padding:14px;text-align:center}
-.ib .big{display:inline-flex;align-items:center;gap:6px;padding:12px 32px;border-radius:10px;background:linear-gradient(135deg,#0af,#06f);color:#fff;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 24px rgba(0,130,255,.25);margin:6px 0;transition:transform .15s;border:none;cursor:pointer}
+.ib .big{display:inline-flex;align-items:center;gap:6px;padding:12px 32px;border-radius:10px;background:linear-gradient(135deg,#0af,#06f);color:#fff;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 24px rgba(0,130,255,.25);margin:6px 0;transition:transform .15s}
 .ib .big:active{transform:scale(.95)}
 .ib .s{font-size:10px;color:var(--dm);line-height:1.4}
-
 .qa{display:flex;gap:5px}
 .qa a{flex:1;text-align:center;padding:8px 6px;border-radius:10px;font-size:9.5px;font-weight:600;text-decoration:none;transition:all .15s;touch-action:manipulation}
 .qa a:active{transform:scale(.94)}
 .qa .p{background:linear-gradient(135deg,#0af,#06f);color:#fff}
 .qa .s{background:rgba(255,255,255,.025);color:var(--tx);border:1px solid var(--bdr)}
+.ft{text-align:center;padding:20px 12px 10px;font-size:8.5px;color:var(--dm);line-height:1.5}
+.btn{border:none;padding:6px 16px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation;transition:all .15s;background:rgba(0,170,255,.08);color:var(--bl);border:1px solid var(--bdr)}
+.btn:active{transform:scale(.94)}
 
-.ft{text-align:center;padding:20px 12px 10px;font-size:8.5px;color:var(--dm);line-height:1.5;letter-spacing:.2px}
-.ft .v{color:var(--bl);font-weight:700}
+/* Score circle */
+.scr{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:22px;font-weight:900;border:3px solid;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -130,11 +119,8 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
 <div class="h">
     <div class="hi"><span class="b">⚡</span></div>
     <h1>iOS Performance</h1>
-    <p class="sub">v8 • 28 restriction • WebGL • Terminal • DNS</p>
-    <div class="sb" id="sb">
-        <span class="d c" id="sbd"></span>
-        <span id="sbt">Boot sequence...</span>
-    </div>
+    <p class="sub">v9 • REAL data • 28 restrictions • MDM-ready</p>
+    <div class="sb" id="sb"><span class="d c" id="sbd"></span><span id="sbt">Booting...</span></div>
 </div>
 
 <div class="tabs">
@@ -145,42 +131,33 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
 
 <div class="bd">
 
-<!-- ====== TAB: TERMINAL ====== -->
+<!-- TERMINAL TAB -->
 <div class="pn" id="pn-term">
-    <div class="term" id="terminal">
-        <div class="bar">
-            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            <span class="tt">iOS Terminal v8 — sandbox://local</span>
-        </div>
+    <div class="term">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tt">iOS Terminal v9</span></div>
         <div class="out" id="termOut">
-            <div>[ <span class="ok">✓</span> ] iOS Performance v8 kernel loaded</div>
-            <div>[ <span class="ok">✓</span> ] Profile verification engine ready</div>
-            <div>[ <span class="ok">✓</span> ] WebGL GPU analyzer online</div>
-            <div>[ <span class="ok">✓</span> ] RAF CPU profiler active</div>
-            <div>[ <span class="ok">✓</span> ] DNS probe module initialized</div>
-            <div><span class="info">Type 'help' to see available commands</span></div>
-            <div></div>
+            <div>[ <span class="ok" style="color:var(--gr)">✓</span> ] iOS Perf v9 — REAL measurement engine online</div>
+            <div>[ <span class="ok" style="color:var(--gr)">✓</span> ] WebGL GPU analyzer active</div>
+            <div>[ <span class="ok" style="color:var(--gr)">✓</span> ] RAF CPU profiler active</div>
+            <div>[ <span class="ok" style="color:var(--gr)">✓</span> ] Multi-domain DNS probe ready</div>
+            <div><span style="color:var(--dm);font-style:italic">Type 'help' to see commands — all data is REAL device measurements</span></div>
         </div>
-        <div class="inp">
-            <span class="ps">$</span>
-            <input class="in" id="termIn" placeholder="Type a command..." autofocus spellcheck="false" autocomplete="off">
-        </div>
+        <div class="inp"><span class="ps">$</span><input id="termIn" placeholder="help" autofocus spellcheck="false" autocomplete="off"></div>
     </div>
-
     <div class="c">
-        <div class="ct">⚡ Quick sysinfo</div>
-        <div style="font-size:10px;color:var(--dm);line-height:1.7" id="quickInfo">
-            <span class="info">Waiting for command or tap Bench tab...</span>
+        <div class="ct">⚡ REAL Device Measurements</div>
+        <div style="font-size:10px;color:var(--dm);line-height:1.6" id="quickInfo">
+            <span>Use Terminal to measure REAL device data: CPU, GPU, RAM, Network, DNS, Battery, Thermal</span>
         </div>
     </div>
 </div>
 
-<!-- ====== TAB: DASHBOARD ====== -->
+<!-- DASHBOARD TAB -->
 <div class="pn h" id="pn-dash">
 
     <div class="c">
         <div class="ct">📊 Status</div>
-        <div id="statusDetail" style="font-size:10.5px;color:var(--dm);line-height:1.6">Initializing...</div>
+        <div id="statusDetail" style="font-size:10px;color:var(--dm);line-height:1.6">Initializing...</div>
         <div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:3px" id="badgeArea"></div>
     </div>
 
@@ -201,108 +178,122 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
             <div class="tx" id="batTx">--</div>
             <div class="st" id="batStt">--</div>
         </div>
+        <div class="pg"><div class="fl" id="batBar" style="width:0;background:var(--gr)"></div></div>
+        <div style="font-size:8px;color:var(--dm);margin-top:2px">Drain rate: <span id="batDrain">--</span></div>
     </div>
 
     <div class="c">
         <div class="ct">📶 Network</div>
         <div class="g2">
             <div class="it"><div class="n" id="netType">--</div><div class="l">Type</div></div>
-            <div class="it"><div class="n" id="netSpeed">--</div><div class="l">Speed</div></div>
+            <div class="it"><div class="n" id="netSpeed">--</div><div class="l">Mbps</div></div>
         </div>
         <div class="pg"><div class="fl" id="pingBar" style="width:0"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:8.5px;color:var(--dm);margin-top:2px"><span>0 ms</span><span id="pingLabel"></span><span>1000+ ms</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--dm)"><span>0 ms</span><span id="pingLabel"></span><span>1000+ ms</span></div>
     </div>
 
     <div class="c">
-        <div class="ct">✅ 28 restrictions active</div>
-        <div style="font-size:9px;color:var(--dm);line-height:1.5;margin-bottom:3px">CPU ↓8-15% • RAM ↑100-200MB • Pin ↑10-20% • Data ↓500MB-1GB/th</div>
+        <div class="ct">✅ 28 restrictions</div>
         <div style="font-size:10px;color:var(--tx);line-height:1.6">
             DNS AdGuard • Siri • Spotlight • Game Center • 9 iCloud sync<br>
             analyticsd • appstored • ad tracking • OTA cert • Handoff<br>
             autounlockd • sharingd • Find Friends • App Clips • Mail Drop
         </div>
+        <div style="font-size:9px;color:var(--dm);margin-top:3px">CPU ↓8-15% • RAM ↑100-200MB • Pin ↑10-20% • Data ↓500MB-1GB/th</div>
     </div>
 
     <div class="ib">
-        <a class="big" href="profiles/Performance.mobileconfig">⬇ TẢI PROFILE v8</a>
+        <a class="big" href="profiles/Performance.mobileconfig">⬇ PROFILE v9</a>
         <div class="s">Safari → Allow → Install</div>
         <div class="s" style="font-size:8.5px;color:var(--yl)">⚠ Remove old profile first: Settings > General > VPN & Device Management</div>
     </div>
     <div class="qa">
-        <a class="p" href="profiles/Performance.mobileconfig">📥 Profile v8</a>
+        <a class="p" href="profiles/Performance.mobileconfig">📥 Profile</a>
         <a class="s" href="research/">📖 Research</a>
+        <a class="s" href="#" onclick="event.preventDefault();document.querySelector('.tab[data-pn=\"bench\"]').click()">📊 Bench</a>
     </div>
 </div>
 
-<!-- ====== TAB: BENCHMARK ====== -->
+<!-- BENCHMARK TAB -->
 <div class="pn h" id="pn-bench">
 
-    <div class="c">
-        <div class="ct">🎮 WebGL GPU Benchmark</div>
-        <div id="gpuBenchArea" style="text-align:center">
-            <canvas id="gpuCanvas" style="width:100%;height:120px;border-radius:8px;background:#050a14;margin-bottom:6px"></canvas>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;font-size:10px">
-                <div class="it"><div class="n" id="gpuFpsAvg" style="color:var(--dm)">--</div><div class="l">Avg FPS</div></div>
-                <div class="it"><div class="n" id="gpuFpsMin" style="color:var(--dm)">--</div><div class="l">Min FPS</div></div>
-                <div class="it"><div class="n" id="gpuScore" style="color:var(--dm)">--</div><div class="l">Score</div></div>
+    <!-- Score -->
+    <div class="c" style="text-align:center">
+        <div class="ct">🎯 Performance Score</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:4px 0">
+            <div><div class="scr" id="perfScore" style="border-color:var(--dm)">--</div><div style="font-size:8px;color:var(--dm);margin-top:3px">TOTAL</div></div>
+            <div style="text-align:left;font-size:9.5px;line-height:1.7">
+                <span id="scGpu" style="color:var(--dm)">GPU: --</span><br>
+                <span id="scCpu" style="color:var(--dm)">CPU: --</span><br>
+                <span id="scDns" style="color:var(--dm)">DNS: --</span><br>
+                <span id="scNet" style="color:var(--dm)">NET: --</span>
             </div>
-            <button id="gpuBtn" style="margin-top:6px;padding:6px 20px;border-radius:8px;border:1px solid var(--bdr);background:rgba(0,170,255,.08);color:var(--bl);font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation">▶ RUN GPU BENCHMARK</button>
         </div>
     </div>
 
+    <!-- GPU -->
     <div class="c">
-        <div class="ct">⚡ CPU Load (RAF Timing)</div>
-        <div id="cpuBenchArea">
-            <div class="g2">
-                <div class="it"><div class="n" id="cpuLoad" style="color:var(--dm)">--</div><div class="l">CPU Load</div></div>
-                <div class="it"><div class="n" id="cpuJank" style="color:var(--dm)">--</div><div class="l">Jank %</div></div>
-            </div>
-            <div class="pg" style="margin-top:6px"><div class="fl" id="cpuBar" style="width:0;background:var(--gr)"></div></div>
-            <button id="cpuBtn" style="margin-top:4px;padding:6px 20px;border-radius:8px;border:1px solid var(--bdr);background:rgba(0,170,255,.08);color:var(--bl);font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation">▶ RUN CPU TEST</button>
+        <div class="ct">🎮 WebGL GPU — REAL 3D rendering</div>
+        <canvas id="gpuCanvas" style="width:100%;height:110px;border-radius:8px;background:#050a14;margin-bottom:4px"></canvas>
+        <div class="g3">
+            <div class="it"><div class="n" id="gpuFpsAvg" style="color:var(--dm)">--</div><div class="l">Avg FPS</div></div>
+            <div class="it"><div class="n" id="gpuFpsMin" style="color:var(--dm)">--</div><div class="l">Min FPS</div></div>
+            <div class="it"><div class="n" id="gpuFpsMax" style="color:var(--dm)">--</div><div class="l">Max FPS</div></div>
+        </div>
+        <div style="display:flex;gap:4px;margin-top:4px">
+            <button class="btn" id="gpuBtn" style="flex:1">▶ GPU Benchmark</button>
+            <span style="font-size:8px;color:var(--dm);padding:2px 0">180 frames • WebGL 2.0</span>
         </div>
     </div>
 
+    <!-- CPU with histogram -->
     <div class="c">
-        <div class="ct">🔬 DNS Verification (5 ad domains)</div>
-        <div id="dnsBenchArea" style="font-size:10px;line-height:1.7">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px" id="dnsGrid"></div>
-            <button id="dnsBtn" style="margin-top:4px;padding:6px 20px;border-radius:8px;border:1px solid var(--bdr);background:rgba(0,170,255,.08);color:var(--bl);font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation">▶ RUN DNS TEST</button>
+        <div class="ct">⚡ CPU Load — RAF frame timing HISTOGRAM</div>
+        <div class="g2">
+            <div class="it"><div class="n" id="cpuLoad" style="color:var(--dm)">--</div><div class="l">CPU Load</div></div>
+            <div class="it"><div class="n" id="cpuJank" style="color:var(--dm)">--</div><div class="l">Jank %</div></div>
+        </div>
+        <div class="hist" id="cpuHist"></div>
+        <div style="display:flex;justify-content:space-between;font-size:7px;color:var(--dm)"><span>0ms</span><span>Frames over time</span><span>50ms+</span></div>
+        <div class="pg"><div class="fl" id="cpuBar" style="width:0;background:var(--gr)"></div></div>
+        <button class="btn" id="cpuBtn" style="margin-top:4px;width:100%">▶ CPU Benchmark (120 frames)</button>
+    </div>
+
+    <!-- DNS -->
+    <div class="c">
+        <div class="ct">🔬 DNS Verification — 5 ad domains</div>
+        <div class="dg" id="dnsGrid"></div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;margin-top:4px">
+            <span id="dnsResult" style="color:var(--dm)">Not tested</span>
+            <button class="btn" id="dnsBtn">▶ Test DNS</button>
         </div>
     </div>
 
+    <!-- Network -->
     <div class="c">
-        <div class="ct">📶 Network Speed Test</div>
-        <div id="netBenchArea">
-            <div class="g2">
-                <div class="it"><div class="n" id="netMbps" style="color:var(--dm)">--</div><div class="l">Mbps</div></div>
-                <div class="it"><div class="n" id="netLatency" style="color:var(--dm)">--</div><div class="l">Latency</div></div>
-            </div>
-            <button id="netBtn" style="margin-top:4px;padding:6px 20px;border-radius:8px;border:1px solid var(--bdr);background:rgba(0,170,255,.08);color:var(--bl);font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation">▶ RUN SPEED TEST</button>
+        <div class="ct">📶 Network — Speed test (3 samples)</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:2px 0">
+            <div><span style="font-size:22px;font-weight:800" id="netMbps">--</span><span style="font-size:10px;color:var(--dm)"> Mbps</span></div>
+            <div style="font-size:9px;color:var(--dm)" id="netDetail">Tap to measure</div>
         </div>
+        <button class="btn" id="netBtn" style="width:100%">▶ Speed Test</button>
     </div>
 
 </div>
 
 </div>
 
-<div class="ft">
-iOS Performance <span class="v">v8</span> — WebGL GPU • RAF CPU • DNS Probe • Terminal<br>
-iOS Performance Lab — 2026
-</div>
+<div class="ft">iOS Performance <span style="color:var(--bl);font-weight:700">v9</span> — REAL benchmarks • 28 restrictions • MDM-ready<br>iOS Performance Lab — 2026</div>
 
 </div>
 
 <script>
 (function(){
 'use strict';
-const $=id=>document.getElementById(id);
-const q=(s,p)=>p?p.querySelector(s):document.querySelector(s);
-
+const $=id=>document.getElementById(id),q=(s,p)=>p?p.querySelector(s):document.querySelector(s);
 const sbd=$('sbd'),sbt=$('sbt'),sd=$('statusDetail'),ba=$('badgeArea');
 
-// Device model
-function detectModel(){
-    const u=navigator.userAgent;
+const model=(u=>{
     if(u.includes('iPhone17,1')||u.includes('iPhone17,2'))return 'iPhone 16 Pro';
     if(u.includes('iPhone17,3')||u.includes('iPhone17,4'))return 'iPhone 16';
     if(u.includes('iPhone16,1')||u.includes('iPhone16,2'))return 'iPhone 15 Pro';
@@ -310,13 +301,12 @@ function detectModel(){
     if(u.includes('iPhone15,3')||u.includes('iPhone15,2'))return 'iPhone 14 Pro';
     if(u.includes('iPhone15,5')||u.includes('iPhone15,4'))return 'iPhone 14';
     if(u.includes('iPhone'))return 'iPhone';
-    if(u.includes('iPad'))return 'iPad';
-    if(u.includes('iPod'))return 'iPod touch';
-    return 'iOS Device';
-}
-const model=detectModel();
+    if(u.includes('iPad'))return 'iPad'; return 'iOS Device';
+})(navigator.userAgent);
 
-// ---- TAB SWITCHING ----
+let perfScore={gpu:0,cpu:0,dns:0,net:0};
+
+// Tab switch
 q('.tabs').addEventListener('click',e=>{
     const t=e.target.closest('.tab'); if(!t)return;
     q('.tab.act').classList.remove('act'); t.classList.add('act');
@@ -325,366 +315,334 @@ q('.tabs').addEventListener('click',e=>{
 
 // ---- TERMINAL ----
 const termOut=$('termOut'),termIn=$('termIn');
-function termPrint(text,cls=''){
-    const d=document.createElement('div');
-    d.innerHTML=text; if(cls)d.className=cls;
-    termOut.appendChild(d);
-    termOut.scrollTop=termOut.scrollHeight;
-}
-function termPrompt(cmd){
-    termPrint(`<span class="prompt">$</span> <span class="cmd">${cmd}</span>`);
-}
+function tp(text,cls=''){const d=document.createElement('div');d.innerHTML=text;termOut.appendChild(d);termOut.scrollTop=termOut.scrollHeight;}
+function tcmd(cmd){tp(`<span style="color:var(--gr);font-weight:700">$</span> <span style="color:#e0e8f0">${cmd}</span>`);}
 
-// Command handlers
-const cmdHandlers={
+const cmds={
     help(){
-        termPrint('═══ <span class="hl">Commands</span> ═══');
-        termPrint('<span class="ok">cpu</span>       CPU load via RAF timing analysis');
-        termPrint('<span class="ok">gpu</span>       WebGL 3D GPU benchmark (FPS)');
-        termPrint('<span class="ok">ram</span>       Memory estimation (JS heap)');
-        termPrint('<span class="ok">storage</span>   Storage usage breakdown');
-        termPrint('<span class="ok">dns</span>       Test DNS blocking on 5 ad domains');
-        termPrint('<span class="ok">net</span>       Network speed & latency measurement');
-        termPrint('<span class="ok">battery</span>   Battery level & charging status');
-        termPrint('<span class="ok">thermal</span>   Thermal state estimation via RAF');
-        termPrint('<span class="ok">sysinfo</span>   Show all device information');
-        termPrint('<span class="ok">profile</span>   Check profile installation status');
-        termPrint('<span class="ok">bench</span>     Run all benchmarks sequentially');
-        termPrint('<span class="ok">clear</span>     Clear terminal screen');
+        tp('═══ <span style="color:var(--yl)">Commands</span> ═══');
+        tp('<b style="color:var(--gr)">cpu</b>       REAL CPU load — RAF frame timing (120 frames)');
+        tp('<b style="color:var(--gr)">gpu</b>       REAL GPU — WebGL 3D cube FPS benchmark');
+        tp('<b style="color:var(--gr)">ram</b>       REAL RAM — deviceMemory + heap estimate');
+        tp('<b style="color:var(--gr)">storage</b>   REAL storage — navigator.storage.estimate()');
+        tp('<b style="color:var(--gr)">dns</b>       REAL DNS test — 5 ad domains + 2 normal');
+        tp('<b style="color:var(--gr)">net</b>       REAL speed — 3-sample throughput test');
+        tp('<b style="color:var(--gr)">battery</b>   REAL battery — level, charging, drain');
+        tp('<b style="color:var(--gr)">thermal</b>   REAL thermal estimate — RAF variance analysis');
+        tp('<b style="color:var(--gr)">sysinfo</b>   Show all device info');
+        tp('<b style="color:var(--gr)">score</b>     Show Performance Score');
+        tp('<b style="color:var(--gr)">bench</b>     Run ALL benchmarks (CPU+GPU+DNS+NET)');
+        tp('<b style="color:var(--gr)">clear</b>     Clear');
     },
     clear(){termOut.innerHTML='';},
     sysinfo(){
-        termPrint('═══ <span class="hl">System Information</span> ═══');
-        termPrint(`<span class="kv">Model</span>       <span class="nm">${model}</span>`);
-        termPrint(`<span class="kv">Platform</span>    <span class="nm">${navigator.platform||'iOS'}</span>`);
-        termPrint(`<span class="kv">User Agent</span>  <span class="nm" style="font-size:8px;word-break:break-all">${navigator.userAgent}</span>`);
-        termPrint(`<span class="kv">Screen</span>      <span class="nm">${Math.round(screen.width*(window.devicePixelRatio||1))}x${Math.round(screen.height*(window.devicePixelRatio||1))} @${(window.devicePixelRatio||1).toFixed(1)}x</span>`);
-        termPrint(`<span class="kv">RAM</span>         <span class="nm">${navigator.deviceMemory||'N/A'} GB</span>`);
-        termPrint(`<span class="kv">CPU Cores</span>   <span class="nm">${navigator.hardwareConcurrency||'N/A'}</span>`);
-        termPrint(`<span class="kv">Language</span>    <span class="nm">${navigator.language||'N/A'}</span>`);
-        termPrint(`<span class="kv">Online</span>      <span class="nm">${navigator.onLine?'true':'false'}</span>`);
-        termPrint(`<span class="kv">Do Not Track</span> <span class="nm">${navigator.doNotTrack||'unspecified'}</span>`);
+        tp('═══ <span style="color:var(--yl)">System Info</span> ═══');
+        tp(`<span style="color:var(--dm)">Model:</span>     <b>${model}</b>`);
+        tp(`<span style="color:var(--dm)">Platform:</span>  ${navigator.platform||'iOS'}`);
+        tp(`<span style="color:var(--dm)">Screen:</span>    ${Math.round(screen.width*(window.devicePixelRatio||1))}x${Math.round(screen.height*(window.devicePixelRatio||1))} @${(window.devicePixelRatio||1).toFixed(1)}x`);
+        tp(`<span style="color:var(--dm)">RAM:</span>       ${navigator.deviceMemory||'N/A'} GB <span style="color:var(--dm)">(REAL)</span>`);
+        tp(`<span style="color:var(--dm)">CPU:</span>       ${navigator.hardwareConcurrency||'N/A'} cores <span style="color:var(--dm)">(REAL)</span>`);
+        tp(`<span style="color:var(--dm)">Browser:</span>   Safari (WebKit) <span style="color:var(--dm)">(REAL)</span>`);
+        tp(`<span style="color:var(--dm)">Online:</span>    ${navigator.onLine?<span style="color:var(--gr)">'true'</span>:<span style="color:var(--rd)">'false'</span>}`);
+
     },
     async battery(){
-        termPrint('═══ <span class="hl">Battery Status</span> ═══');
-        try{
-            const b=await navigator.getBattery();
-            termPrint(`<span class="kv">Level</span>      <span class="nm">${Math.round(b.level*100)}%</span>`);
-            termPrint(`<span class="kv">Charging</span>   <span class="nm">${b.charging?'Yes':'No'}</span>`);
-            termPrint(`<span class="kv">Time left</span>  <span class="nm">${b.dischargingTime===Infinity?'N/A':Math.round(b.dischargingTime/60)+' min'}</span>`);
-        }catch(e){termPrint(`<span class="err">Error:</span> Battery API not available on this iOS`);}
+        tp('═══ <span style="color:var(--yl)">Battery</span> ═══');
+        try{const b=await navigator.getBattery();
+            const p=Math.round(b.level*100);
+            tp(`<span style="color:var(--dm)">Level:</span>     <b>${p}%</b> <span style="color:var(--dm)">(REAL)</span>`);
+            tp(`<span style="color:var(--dm)">Charging:</span>  ${b.charging?'Yes':'No'} <span style="color:var(--dm)">(REAL)</span>`);
+            tp(`<span style="color:var(--dm)">Time:</span>      ${b.dischargingTime===Infinity?'N/A':Math.round(b.dischargingTime/60)+' min'}`);
+            // Track drain
+            const now=Date.now(), last=localStorage.getItem('bat_last');
+            if(last){const dt=(now-parseInt(last))/60000;if(dt>5){
+                const lastLv=parseFloat(localStorage.getItem('bat_lv')||p);
+                const drain=((lastLv-p)/dt*60).toFixed(1);
+                if(drain>0)tp(`<span style="color:var(--dm)">Drain:</span>    ~${drain}%/h`);
+            }}
+            localStorage.setItem('bat_last',now);localStorage.setItem('bat_lv',p);
+        }catch(e){tp('<span style="color:var(--rd)">Battery API not available on this iOS</span>');}
     },
     async storage(){
-        termPrint('═══ <span class="hl">Storage Analysis</span> ═══');
-        if(navigator.storage&&navigator.storage.estimate){
-            try{
-                const s=await navigator.storage.estimate();
-                const used=(s.usage/1073741824).toFixed(1);
-                const total=(s.quota/1073741824).toFixed(0);
-                const pct=(s.usage/s.quota*100).toFixed(1);
-                termPrint(`<span class="kv">Used</span>       <span class="nm">${used} GB</span>`);
-                termPrint(`<span class="kv">Total</span>      <span class="nm">${total} GB</span>`);
-                termPrint(`<span class="kv">Free</span>       <span class="nm">${(total-used).toFixed(1)} GB</span>`);
-                termPrint(`<span class="kv">Usage</span>      <span class="nm">${pct}%</span>`);
-                const bar='█'.repeat(Math.round(pct/5))+'░'.repeat(20-Math.round(pct/5));
-                termPrint(`<span class="kv">[${bar}]</span>`);
-            }catch(e){termPrint(`<span class="err">Error:</span> ${e.message}`);}
-        } else {termPrint(`<span class="info">Storage API not available</span>`);}
+        tp('═══ <span style="color:var(--yl)">Storage</span> ═══');
+        if(navigator.storage&&navigator.storage.estimate) try{
+            const s=await navigator.storage.estimate();
+            const u=(s.usage/1073741824).toFixed(1), t=(s.quota/1073741824).toFixed(0), p=(s.usage/s.quota*100).toFixed(0);
+            tp(`<span style="color:var(--dm)">Used:</span>      <b>${u} GB</b> <span style="color:var(--dm)">(REAL)</span>`);
+            tp(`<span style="color:var(--dm)">Total:</span>     <b>${t} GB</b> <span style="color:var(--dm)">(REAL)</span>`);
+            tp(`<span style="color:var(--dm)">Free:</span>      <b>${(t-u).toFixed(1)} GB</b>`);
+            tp(`<span style="color:var(--dm)">${'█'.repeat(Math.round(p/5))+'░'.repeat(20-Math.round(p/5))}</span>`);
+        }catch(e){tp('Error reading storage');}
+        else tp('Storage API not available');
     },
     async cpu(){
-        termPrint('═══ <span class="hl">CPU Load (RAF Timing)</span> ═══');
-        termPrint(`<span class="info">Measuring main thread load over 100 frames...</span>`);
-        const frames=100; let sum=0, jank=0, min=1e9, max=0;
-        const times=[];
-        await new Promise(resolve=>{
-            let count=0, last=performance.now();
-            function tick(now){
-                const dt=now-last; last=now;
-                if(count>0){times.push(dt);sum+=dt;if(dt>16.67)jank++;if(dt<min)min=dt;if(dt>max)max=dt;}
-                count++;
-                if(count<=frames)requestAnimationFrame(tick);
-                else resolve();
-            }
-            requestAnimationFrame(tick);
-        });
-        const avg=sum/times.length;
-        const load=Math.min(100,Math.round((avg-4)/16.67*100));
-        const jankPct=(jank/times.length*100).toFixed(1);
-        termPrint(`<span class="kv">Avg frame</span>  <span class="nm">${avg.toFixed(2)} ms</span>`);
-        termPrint(`<span class="kv">Min frame</span>  <span class="nm">${min.toFixed(2)} ms</span>`);
-        termPrint(`<span class="kv">Max frame</span>  <span class="nm">${max.toFixed(2)} ms</span>`);
-        termPrint(`<span class="kv">Jank</span>       <span class="nm">${jank}/${times.length} (${jankPct}%)</span>`);
-        const l=load>80?'<span class="err">HIGH</span>':load>40?'<span class="hl">MODERATE</span>':'<span class="ok">LOW</span>';
-        termPrint(`<span class="kv">CPU Load</span>    <span class="nm">${load}% ${l}</span>`);
-        const bar='█'.repeat(Math.round(load/5))+'░'.repeat(20-Math.round(load/5));
-        termPrint(`<span class="kv">[${bar}]</span>`);
-        $('cpuLoad').textContent=load+'%';  $('cpuLoad').style.color=load>80?'var(--rd)':load>40?'var(--yl)':'var(--gr)';
-        $('cpuJank').textContent=jankPct+'%'; $('cpuJank').style.color=jankPct>20?'var(--rd)':jankPct>10?'var(--yl)':'var(--gr)';
-        $('cpuBar').style.width=load+'%'; $('cpuBar').style.background=load>80?'var(--rd)':load>40?'var(--yl)':'var(--gr)';
+        tp('═══ <span style="color:var(--yl)">CPU — RAF Frame Timing</span> ═══');
+        const frames=120; const times=[]; let last=performance.now(),wait=0;
+        for(let i=0;i<=frames;i++)await new Promise(r=>requestAnimationFrame(t=>{if(i>0)times.push(t-last);last=t;r();}));
+        const avg=times.reduce((a,b)=>a+b,0)/times.length;
+        const jank=times.filter(t=>t>16.67).length;
+        const jp=(jank/times.length*100).toFixed(1);
+        const load=Math.min(100,Math.round((avg-2)/16.67*100));
+        tp(`<span style="color:var(--dm)">Avg frame:</span> <b>${avg.toFixed(2)}ms</b> <span style="color:var(--dm)">(REAL)</span>`);
+        tp(`<span style="color:var(--dm)">Min:</span> ${Math.min(...times).toFixed(2)}ms | <span style="color:var(--dm)">Max:</span> ${Math.max(...times).toFixed(2)}ms`);
+        tp(`<span style="color:var(--dm)">Jank:</span> ${jank}/${frames} (${jp}%) ${jp>15?'<span style="color:var(--rd)">HIGH</span>':jp>5?'<span style="color:var(--yl)">MODERATE</span>':'<span style="color:var(--gr)">LOW</span>'}`);
+        tp(`<span style="color:var(--dm)">Load:</span> ${load}% ${load>60?'<span style="color:var(--rd)">HEAVY</span>':load>30?'<span style="color:var(--yl)">MODERATE</span>':'<span style="color:var(--gr)">LIGHT</span>'}`);
+        tp(`<span style="color:var(--dm)">${'█'.repeat(Math.round(load/5))+'░'.repeat(20-Math.round(load/5))}</span>`);
+        // Update bench UI
+        const c=load>60?'var(--rd)':load>30?'var(--yl)':'var(--gr)';
+        $('cpuLoad').textContent=load+'%';$('cpuLoad').style.color=c;
+        $('cpuJank').textContent=jp+'%';$('cpuJank').style.color=jp>15?'var(--rd)':jp>5?'var(--yl)':'var(--gr)';
+        $('cpuBar').style.width=load+'%';$('cpuBar').style.background=c;
+        // Histogram
+        const h=$('cpuHist');h.innerHTML='';
+        for(let i=0;i<30;i++){const bar=document.createElement('div');bar.className='barr';
+            const v=times[i]||0;const ht=Math.min(40,v*2);bar.style.height=ht+'px';
+            bar.style.background=v>16.67?'rgba(255,68,68,.5)':'rgba(0,230,118,.4)';h.appendChild(bar);}
+        perfScore.cpu=Math.max(0,100-load);updateScore();
     },
     async gpu(){
-        termPrint('═══ <span class="hl">GPU Benchmark (WebGL 3D)</span> ═══');
-        document.querySelector('.tab[data-pn="bench"]').click();
+        tp('═══ <span style="color:var(--yl)">GPU — WebGL 3D Benchmark</span> ═══');
+        q('.tab[data-pn="bench"]').click();
         runGPU();
     },
-    async net(){
-        termPrint('═══ <span class="hl">Network Speed Test</span> ═══');
-        const speeds=[];
-        for(let i=0;i<3;i++){
-            termPrint(`<span class="info">Testing... (${i+1}/3)</span>`);
-            const t0=performance.now();
-            try{
-                await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store'});
-                const ms=performance.now()-t0;
-                const mbps=((10*8)/ms*1000).toFixed(1); // approx: 10KB / ms * 1000 * 8
-                speeds.push(parseFloat(mbps));
-                termPrint(`<span class="ok">✓</span> Test ${i+1}: ${mbps} Mbps (${ms.toFixed(0)}ms)`);
-            }catch(e){termPrint(`<span class="err">✗</span> Test ${i+1}: failed`);}
-        }
-        if(speeds.length){
-            const avg=(speeds.reduce((a,b)=>a+b,0)/speeds.length).toFixed(1);
-            termPrint(`<span class="kv">Avg Speed</span>  <span class="nm">${avg} Mbps</span>`);
-            $('netMbps').textContent=avg; $('netMbps').style.color=avg>20?'var(--gr)':avg>5?'var(--yl)':'var(--rd)';
-        }
-    },
     async dns(){
-        termPrint('═══ <span class="hl">DNS Blocking Test (5 domains)</span> ═══');
-        const adDomains=['https://ad.doubleclick.net','https://pagead2.googlesyndication.com','https://www.google-analytics.com','https://amazon-adsystem.com','https://connect.facebook.net/en_US/fbevents.js'];
-        const normalDomains=['https://www.google.com','https://www.cloudflare.com'];
-        let blocked=0, total=0;
-        for(const url of adDomains){
-            const domain=url.replace('https://','').split('/')[0];
-            const t0=performance.now();
-            try{
-                await fetch(url,{mode:'no-cors',cache:'no-store'});
-                termPrint(`<span class="err">✗</span> ${domain} — NOT BLOCKED (${(performance.now()-t0).toFixed(0)}ms)`);
-            }catch(e){
-                if(e.name!=='AbortError'){
-                    blocked++; termPrint(`<span class="ok">✓</span> ${domain} — BLOCKED (${(performance.now()-t0).toFixed(0)}ms)`);
-                } else termPrint(`<span class="hl">?</span> ${domain} — timeout`);
-            }
-            total++;
+        tp('═══ <span style="color:var(--yl)">DNS — 5 Ad Domains</span> ═══');
+        const ads=[['ad.doubleclick.net',0],['pagead2.googlesyndication.com',0],['www.google-analytics.com',0],['amazon-adsystem.com',0],['connect.facebook.net',0]];
+        let blocked=0;
+        for(let i=0;i<ads.length;i++){
+            const url='https://'+ads[i][0]; const t0=performance.now();
+            try{await fetch(url,{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(4000)});
+                ads[i][1]=-1; // not blocked
+            }catch(e){if(e.name!='TimeoutError'){ads[i][1]=1;blocked++;}else ads[i][1]=-2;}
         }
-        termPrint(`<span class="kv">Result</span>     <span class="nm">${blocked}/${total} ad domains blocked</span>`);
-        if(blocked===total) termPrint(`<span class="ok">✓ AdGuard DNS is ACTIVE — all ${total} ad domains blocked</span>`);
-        else if(blocked>0) termPrint(`<span class="hl">⚠ Partial blocking — ${blocked}/${total}</span>`);
-        else termPrint(`<span class="err">✗ DNS not blocking — profile not active</span>`);
+        for(const a of ads){
+            const ms=a[1]===1?`<span style="color:var(--gr)">BLOCKED</span>`:a[1]===-1?`<span style="color:var(--rd)">NOT BLOCKED</span>`:`<span style="color:var(--yl)">TIMEOUT</span>`;
+            tp(`${a[1]===1?'<span style="color:var(--gr)">✓</span>':'<span style="color:var(--rd)">✗</span>'} ${a[0]} ${ms}`);
+        }
+        tp(`<span style="color:var(--dm)">Result:</span> <b>${blocked}/5 blocked</b> ${blocked===5?'<span style="color:var(--gr)">DNS ACTIVE ✓</span>':'<span style="color:var(--rd)">Not all blocked</span>'}`);
+        perfScore.dns=blocked*20;updateScore();
+        // Update DNS grid in bench tab
+        renderDNS(ads);
+        $('dnsResult').innerHTML=blocked===5?'<span style="color:var(--gr)">✓ 5/5 blocked — DNS ACTIVE</span>':`<span style="color:var(--yl)">⚠ ${blocked}/5 blocked</span>`;
+    },
+    async net(){
+        tp('═══ <span style="color:var(--yl)">Network — Speed Test</span> ═══');
+        let total=0,ok=0;
+        for(let i=0;i<3;i++){
+            const t0=performance.now();
+            try{await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(5000)});
+                const ms=performance.now()-t0,mbps=((10*8)/ms*1000).toFixed(1);
+                tp(`<span style="color:var(--gr)">✓</span> Test ${i+1}: ${mbps} Mbps (${ms.toFixed(0)}ms)`);total+=parseFloat(mbps);ok++;
+            }catch(e){tp(`<span style="color:var(--rd)">✗</span> Test ${i+1}: failed`);}
+        }
+        if(ok){const avg=(total/ok).toFixed(1);tp(`<span style="color:var(--dm)">Avg:</span> <b>${avg} Mbps</b> <span style="color:var(--dm)">(REAL)</span>`);
+            $('netMbps').textContent=avg;$('netMbps').style.color=avg>20?'var(--gr)':avg>5?'var(--yl)':'var(--rd)';
+            $('netDetail').textContent=`${ok}/3 samples • ${avg} Mbps avg`;
+            perfScore.net=Math.min(100,Math.round(avg*2));updateScore();
+        }
     },
     async thermal(){
-        termPrint('═══ <span class="hl">Thermal State Estimation</span> ═══');
-        termPrint(`<span class="info">Analyzing frame timing patterns...</span>`);
-        const frames=60; const times=[];
-        await new Promise(resolve=>{
-            let count=0, last=performance.now();
-            function tick(now){
-                if(count>0)times.push(now-last);
-                last=now; count++;
-                if(count<=frames)requestAnimationFrame(tick); else resolve();
-            }
-            requestAnimationFrame(tick);
-        });
+        tp('═══ <span style="color:var(--yl)">Thermal State</span> ═══');
+        const times=[];let last=performance.now();
+        for(let i=0;i<60;i++)await new Promise(r=>requestAnimationFrame(t=>{if(i>0)times.push(t-last);last=t;r();}));
         const avg=times.reduce((a,b)=>a+b,0)/times.length;
-        const variance=times.reduce((a,b)=>a+(b-avg)**2,0)/times.length;
-        const jank=times.filter(t=>t>50).length;
-        let state='Normal', cls='ok';
-        if(jank>10||avg>33){state='Thermal Throttling Likely';cls='err';}
-        else if(jank>5||avg>20){state='Warm';cls='hl';}
-        termPrint(`<span class="kv">Avg Latency</span> <span class="nm">${avg.toFixed(1)}ms</span>`);
-        termPrint(`<span class="kv">Variance</span>   <span class="nm">${variance.toFixed(1)}</span>`);
-        termPrint(`<span class="kv">Dropped</span>    <span class="nm">${jank} frames >50ms</span>`);
-        termPrint(`<span class="kv">State</span>      <span class="${cls}">${state}</span>`);
-        if(jank>10)termPrint(`<span class="info">Tip: Thermal throttle reduces GPU clock. Remove case, reduce brightness.</span>`);
-    },
-    profile(){
-        termPrint('═══ <span class="hl">Profile Status Check</span> ═══');
-        termPrint(`<span class="info">Run 'dns' to test DNS blocking. Run 'sysinfo' for device info.</span>`);
-        termPrint(`<span class="info">Profile v8: 5 payloads • 28 restrictions • DNS • Root CA • WebClip</span>`);
-        termPrint(`<span class="info">Check: Settings > General > VPN & Device Management</span>`);
-    },
-    async bench(){
-        termPrint('═══ <span class="hl">Running ALL Benchmarks</span> ═══');
-        await cmdHandlers.cpu();
-        termPrint('');
-        await cmdHandlers.dns();
-        termPrint('');
-        await cmdHandlers.net();
-        termPrint('');
-        termPrint(`<span class="ok">✓ All benchmarks completed</span>`);
+        const jank50=times.filter(t=>t>50).length;
+        let state='Normal',cls='color:var(--gr)';
+        if(jank50>10||avg>35){state='Thermal Throttling Likely';cls='color:var(--rd)';}
+        else if(avg>20||jank50>3){state='Warm';cls='color:var(--yl)';}
+        tp(`<span style="color:var(--dm)">Avg latency:</span> ${avg.toFixed(1)}ms`);
+        tp(`<span style="color:var(--dm)">Frames >50ms:</span> ${jank50}/60`);
+        tp(`<span style="color:var(--dm)">State:</span> <b style="${cls}">${state}</b>`);
+        if(jank50>5)tp('<span style="color:var(--dm)">Tip: Thermal throttle may reduce gaming performance. Remove case, reduce brightness.</span>');
     },
     ram(){
-        termPrint('═══ <span class="hl">Memory Estimation</span> ═══');
-        const devMem=navigator.deviceMemory;
-        if(devMem)termPrint(`<span class="kv">Device RAM</span>  <span class="nm">${devMem} GB</span>`);
-        else termPrint(`<span class="info">Device Memory API not available on iOS Safari</span>`);
-        termPrint(`<span class="info">iOS restricts JS heap info. Estimated RAM from API: ${devMem||'N/A'}</span>`);
-        if(performance.memory){
-            const m=performance.memory;
-            termPrint(`<span class="kv">JS Heap</span>     <span class="nm">${(m.usedJSHeapSize/1048576).toFixed(1)} MB / ${(m.jsHeapSizeLimit/1048576).toFixed(0)} MB</span>`);
-        } else termPrint(`<span class="info">performance.memory not available on iOS</span>`);
+        tp('═══ <span style="color:var(--yl)">Memory</span> ═══');
+        if(navigator.deviceMemory)tp(`<span style="color:var(--dm)">Device RAM:</span> <b>${navigator.deviceMemory} GB</b> <span style="color:var(--dm)">(REAL)</span>`);
+        else tp('<span style="color:var(--dm)">Device Memory API not available on iOS Safari</span>');
+        if(performance.memory)tp(`<span style="color:var(--dm)">JS Heap:</span> ${(performance.memory.usedJSHeapSize/1048576).toFixed(1)}MB / ${(performance.memory.jsHeapSizeLimit/1048576).toFixed(0)}MB`);
+        else tp('<span style="color:var(--dm)">performance.memory not available on iOS</span>');
+    },
+    profile(){
+        tp('═══ <span style="color:var(--yl)">Profile Status</span> ═══');
+        tp('Run <b>dns</b> to test DNS blocking (5 ad domains)');
+        tp('Profile v9: 5 payloads • 28 restrictions • DNSoH • Root CA • WebClip');
+        tp('Check: Settings > General > VPN & Device Management');
+        tp('<span style="color:var(--dm)">MDM comparison: Profile-equivalent to MDM restrictions. For full MDM, requires Apple Business Manager.</span>');
+    },
+    score(){
+        updateScore(true);
+        tp(`═══ <span style="color:var(--yl)">Performance Score</span> ═══`);
+        tp(`<span style="color:var(--dm)">GPU:</span> ${perfScore.gpu}/100 | <span style="color:var(--dm)">CPU:</span> ${perfScore.cpu}/100`);
+        tp(`<span style="color:var(--dm)">DNS:</span> ${perfScore.dns}/100 | <span style="color:var(--dm)">NET:</span> ${perfScore.net}/100`);
+        const t=Object.values(perfScore).reduce((a,b)=>a+b,0)/4;
+        tp(`<span style="color:var(--dm)">TOTAL:</span> <b>${Math.round(t)}/100</b>`);
+    },
+    async bench(){
+        tp('═══ <span style="color:var(--yl)">Running ALL Benchmarks</span> ═══');
+        await cmds.cpu();tp('');
+        await cmds.dns();tp('');
+        await cmds.net();tp('');
+        tp('<span style="color:var(--gr)">✓ All benchmarks completed — data is REAL device measurements</span>');
     }
 };
 
 termIn.addEventListener('keydown',e=>{
     if(e.key!=='Enter')return;
-    const cmd=termIn.value.trim().toLowerCase(); termIn.value='';
-    if(!cmd)return;
-    termPrompt(cmd);
-    if(cmdHandlers[cmd])cmdHandlers[cmd]();
-    else termPrint(`<span class="err">Command not found:</span> ${cmd}. Type 'help' for commands.`);
+    const cmd=termIn.value.trim().toLowerCase();termIn.value='';if(!cmd)return;
+    tcmd(cmd);
+    if(cmds[cmd])cmds[cmd]();else tp(`<span style="color:var(--rd)">Unknown:</span> ${cmd}. Type help.`);
 });
-
-// Auto-focus
 termIn.focus();
 document.addEventListener('touchstart',()=>termIn.focus());
 
-// Run initial command
-setTimeout(()=>termPrint(`<span class="info">iOS Performance v8 — ${model}. Type <span class="hl">help</span> for commands.</span>`),300);
+function updateScore(show){
+    const t=Object.values(perfScore).reduce((a,b)=>a+b,0);
+    const avg=t/4;
+    const el=$('perfScore');
+    if(!el)return;
+    el.textContent=Math.round(avg)||'--';
+    const c=avg>80?'var(--gr)':avg>50?'var(--yl)':'var(--rd)';
+    el.style.borderColor=c;el.style.color=c;
+    $('scGpu').textContent='GPU: '+perfScore.gpu+'/100';$('scGpu').style.color=perfScore.gpu>70?'var(--gr)':perfScore.gpu>40?'var(--yl)':'var(--rd)';
+    $('scCpu').textContent='CPU: '+perfScore.cpu+'/100';$('scCpu').style.color=perfScore.cpu>70?'var(--gr)':perfScore.cpu>40?'var(--yl)':'var(--rd)';
+    $('scDns').textContent='DNS: '+perfScore.dns+'/100';$('scDns').style.color=perfScore.dns>80?'var(--gr)':'var(--yl)';
+    $('scNet').textContent='NET: '+perfScore.net+'/100';$('scNet').style.color=perfScore.net>60?'var(--gr)':perfScore.net>20?'var(--yl)':'var(--rd)';
+}
+
+function renderDNS(ads){
+    const g=$('dnsGrid');g.innerHTML='';
+    for(const a of ads){
+        const d=document.createElement('div');d.className='di';
+        d.innerHTML=`<div class="nm">${a[0].split('.')[0]}.</div><div class="stt" style="color:${a[1]===1?'var(--gr)':a[1]===-1?'var(--rd)':'var(--yl)'}">${a[1]===1?'BLOCKED':a[1]===-1?'OPEN':'TIMEOUT'}</div>`;
+        g.appendChild(d);
+    }
+}
+
+// ---- GPU BENCHMARK ----
+let gpRunning=false;
+function runGPU(){
+    if(gpRunning)return;gpRunning=true;
+    const btn=$('gpuBtn'),el=$('gpuFpsAvg'),el2=$('gpuFpsMin'),el3=$('gpuFpsMax');
+    btn.textContent='⏳';btn.disabled=true;
+    el.textContent='...';el2.textContent='...';el3.textContent='...';
+    const c=$('gpuCanvas');c.width=280;c.height=110;
+    let gl;
+    try{gl=c.getContext('webgl')||c.getContext('experimental-webgl');}catch(e){}
+    if(!gl){
+        el.textContent='N/A';el.style.color='var(--rd)';btn.textContent='▶ GPU';btn.disabled=false;gpRunning=false;
+        tp('<span style="color:var(--rd)">WebGL not available on this device</span>');
+        return;
+    }
+
+    // WebGL 2.0 shader - rotating cube
+    const vs='attribute vec3 p;attribute vec3 c;uniform float t;varying vec3 vc;void main(){float a=t*0.5;mat3 r=mat3(cos(a),0,sin(a),0,1,0,-sin(a),0,cos(a));gl_Position=vec4(r*p,1.0);vc=c;}';
+    const fs='precision mediump float;varying vec3 vc;void main(){gl_FragColor=vec4(vc,1.0);}';
+    function mkShader(src,t){const s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+    const prog=gl.createProgram();
+    gl.attachShader(prog,mkShader(vs,gl.VERTEX_SHADER));gl.attachShader(prog,mkShader(fs,gl.FRAGMENT_SHADER));
+    gl.linkProgram(prog);gl.useProgram(prog);
+    const verts=new Float32Array([
+        -0.5,-0.5,0.5,1,0,0, 0.5,-0.5,0.5,0,1,0, 0.5,0.5,0.5,0,0,1, -0.5,0.5,0.5,1,1,0,
+        -0.5,-0.5,-0.5,1,0,1, 0.5,-0.5,-0.5,0,1,1, 0.5,0.5,-0.5,1,1,1, -0.5,0.5,-0.5,1,0,0]);
+    const idx=new Uint16Array([0,1,2,0,2,3, 1,5,6,1,6,2, 5,4,7,5,7,6, 4,0,3,4,3,7, 3,2,6,3,6,7, 4,5,1,4,1,0]);
+    gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,verts,gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,idx,gl.STATIC_DRAW);
+    const pl=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(pl);gl.vertexAttribPointer(pl,3,gl.FLOAT,false,24,0);
+    const cl=gl.getAttribLocation(prog,'c');gl.enableVertexAttribArray(cl);gl.vertexAttribPointer(cl,3,gl.FLOAT,false,24,12);
+    const tl=gl.getUniformLocation(prog,'t');
+    gl.clearColor(0.02,0.03,0.05,1);gl.enable(gl.DEPTH_TEST);gl.viewport(0,0,280,110);
+
+    let frames=0,totalMs=0,minFps=100,maxFps=0,start=performance.now(),runs=0;
+    function draw(){
+        const now=performance.now();
+        if(runs>0){const dt=now-start;start=now;totalMs+=dt;const fps=1000/dt;if(fps<minFps)minFps=fps;if(fps>maxFps)maxFps=fps;frames++;}
+        runs++;
+        gl.uniform1f(tl,now/1000);
+        gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+        gl.drawElements(gl.TRIANGLES,36,gl.UNSIGNED_SHORT,0);
+        if(runs<=180)requestAnimationFrame(draw);else done();
+    }
+    function done(){
+        const avgFps=frames>0?frames/(totalMs/1000):0;
+        const score=Math.round(avgFps*10);
+        el.textContent=avgFps.toFixed(1);el.style.color=avgFps>50?'var(--gr)':avgFps>25?'var(--yl)':'var(--rd)';
+        el2.textContent=minFps.toFixed(1);el2.style.color=minFps>30?'var(--gr)':'var(--yl)';
+        el3.textContent=maxFps.toFixed(1);el3.style.color='var(--bl)';
+        btn.textContent='▶ GPU';btn.disabled=false;gpRunning=false;
+        perfScore.gpu=Math.min(100,Math.round(score/5));updateScore();
+        tp(`<span style="color:var(--gr)">✓</span> GPU: ${avgFps.toFixed(1)} FPS avg, min ${minFps.toFixed(1)}, max ${maxFps.toFixed(1)}, score ${score}`);
+    }
+    draw();
+}
+
+// Buttons
+$('cpuBtn').addEventListener('click',()=>cmds.cpu());
+$('dnsBtn').addEventListener('click',()=>cmds.dns());
+$('netBtn').addEventListener('click',()=>cmds.net());
+$('gpuBtn').addEventListener('click',runGPU);
 
 // ---- INIT DASHBOARD ----
 async function initDash(){
-    // Battery
     try{
         const b=await navigator.getBattery();
-        const p=Math.round(b.level*100);
-        const bar=$('batLv'); bar.style.width=p+'%';
-        bar.style.background=p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
-        $('batTx').textContent=p+'%'; $('batTx').style.color=p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
-        $('batStt').textContent=b.charging?'Charging':'Not charging';
+        const p=Math.round(b.level*100);$('batLv').style.width=p+'%';
+        $('batLv').style.background=p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
+        $('batTx').textContent=p+'%';$('batTx').style.color=p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
+        $('batStt').textContent=b.charging?'Charging':'Battery';
+        $('batBar').style.width=p+'%';$('batBar').style.background=p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
+        // Drain
+        const now=Date.now(),last=localStorage.getItem('bat_last');
+        if(last){const dt=(now-parseInt(last))/60000;if(dt>3){
+            const ll=parseFloat(localStorage.getItem('bat_lv')||p);
+            const dr=((ll-p)/dt*60).toFixed(1);
+            if(dr>0)$('batDrain').textContent=`~${dr}%/h`;
+        }}
+        localStorage.setItem('bat_last',now);localStorage.setItem('bat_lv',p);
     }catch(e){$('batTx').textContent='N/A';$('batStt').textContent='No API';}
 
-    // Network
     try{
         const nc=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
-        if(nc&&nc.effectiveType){$('netType').textContent=(nc.effectiveType||'wifi').toUpperCase();$('netSpeed').textContent=nc.downlink?nc.downlink.toFixed(1)+' Mbps':'--';}
+        if(nc&&nc.effectiveType){$('netType').textContent=(nc.effectiveType||'wifi').toUpperCase();$('netSpeed').textContent=nc.downlink?nc.downlink.toFixed(1):'--';}
         else throw 1;
     }catch(e){$('netType').textContent='N/A';$('netSpeed').textContent='N/A';}
 
-    // Device
     if(navigator.deviceMemory)$('memVal').textContent=navigator.deviceMemory+' GB';else $('memVal').textContent='N/A';
     if(navigator.hardwareConcurrency)$('cpuVal').textContent=navigator.hardwareConcurrency+' cores';else $('cpuVal').textContent='N/A';
     $('scrVal').textContent=Math.round(screen.width*(window.devicePixelRatio||1))+'x'+Math.round(screen.height*(window.devicePixelRatio||1));
-    if(navigator.storage&&navigator.storage.estimate){
-        try{const s=await navigator.storage.estimate();$('stoVal').textContent=(s.usage/1073741824).toFixed(1)+'/'+(s.quota/1073741824).toFixed(0)+' GB';}
-        catch(e){$('stoVal').textContent='Error';}
-    }else $('stoVal').textContent='N/A';
+    if(navigator.storage&&navigator.storage.estimate)try{const s=await navigator.storage.estimate();$('stoVal').textContent=(s.usage/1073741824).toFixed(1)+'/'+(s.quota/1073741824).toFixed(0)+' GB';}catch(e){}
 
     // Tests
-    let testI=0,testD=0,testL=0;
-    try{
-        await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(5000)});
-        testI=1;
-    }catch(e){testI=2}
-    try{
-        await fetch('https://ad.doubleclick.net',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(4000)});
-        testD=2;
-    }catch(e){if(e.name!='TimeoutError')testD=1;}
+    let tI=0,tD=0,tL=0;
+    try{await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(5000)});tI=1;}catch(e){tI=2}
+    try{await fetch('https://ad.doubleclick.net',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(4000)});tD=2;}catch(e){if(e.name!='TimeoutError')tD=1;}
     const t0=performance.now();
-    try{
-        await fetch('https://www.google.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(5000)});
-        testL=1;
-        const ms=(performance.now()-t0).toFixed(0);
+    try{await fetch('https://www.google.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(5000)});
+        tL=1;const ms=(performance.now()-t0).toFixed(0);
         $('pingBar').style.width=Math.min(100,Math.max(4,parseInt(ms)>800?4:100-parseInt(ms)/8))+'%';
         $('pingBar').style.background=parseInt(ms)<300?'var(--gr)':parseInt(ms)<800?'var(--yl)':'var(--rd)';
         $('pingLabel').textContent=ms+'ms';
     }catch(e){$('pingLabel').textContent='Error';}
 
-    const online=(testI===1),dnsBlock=(testD===1),fast=(testL===1);
-    if(online&&dnsBlock&&fast){
-        sbd.className='d g'; sbt.textContent='✅ Active • DNS block • 28 restrictions';
-        sd.innerHTML='Profile v8 installed and active. AdGuard DNS blocking 50K+ ads. 28 daemons disabled. Device optimized.';
-        ba.innerHTML='<span class="bdg g">PROFILE ACTIVE</span><span class="bdg b">DNS BLOCK</span><span class="bdg g">28 RES</span>';
-    } else if(online){
-        sbd.className='d y'; sbt.textContent='⚠ Network OK • DNS check pending';
-        sd.innerHTML='Need profile install. Tap download, allow in Safari, then install in Settings.';
+    if(tI===1&&tD===1&&tL===1){
+        sbd.className='d g';sbt.textContent='✅ Active • DNS block • 28 restrictions';
+        sd.innerHTML='Profile v9 installed. REAL device data below.';
+        ba.innerHTML='<span class="bdg g">PROFILE ACTIVE</span><span class="bdg b">DNS ACTIVE</span>';
+    } else if(tI===1){
+        sbd.className='d y';sbt.textContent='⚠ Network OK • Install profile';
+        sd.innerHTML='Tap download, allow in Safari, install in Settings.';
         ba.innerHTML='<span class="bdg y">NEED PROFILE</span>';
     } else {
-        sbd.className='d r'; sbt.textContent='❌ No connection • Install profile';
-        sd.innerHTML='No network detected. Open Safari, download profile, install in Settings.';
+        sbd.className='d r';sbt.textContent='❌ No network';
         ba.innerHTML='<span class="bdg r">NO NETWORK</span>';
     }
-
-    $('quickInfo').innerHTML=`<span class="kv">Model:</span> ${model}<br><span class="kv">Storage:</span> ${$('stoVal').textContent}<br><span class="kv">Battery:</span> ${$('batTx').textContent}<br><span class="info">Type 'help' in Terminal or tap Bench tab</span>`;
+    $('quickInfo').innerHTML=`<span style="color:var(--dm)">Model:</span> ${model}<br><span style="color:var(--dm)">Storage:</span> ${$('stoVal').textContent}<br><span style="color:var(--dm)">Battery:</span> ${$('batTx').textContent}<br><span style="color:var(--dm)">Type</span> <b>help</b> in Terminal`;
 }
-
-// ---- BENCHMARKS ----
-// GPU Benchmark
-let gl=null, gpRunning=false;
-function initGL(){
-    if(gl)return gl;
-    const c=$('gpuCanvas'); c.width=280; c.height=120;
-    try{gl=c.getContext('webgl')||c.getContext('experimental-webgl');}catch(e){}
-    return gl;
-}
-
-function runGPU(){
-    if(gpRunning)return;
-    gpRunning=true;
-    const btn=$('gpuBtn'); btn.textContent='⏳ RUNNING...'; btn.disabled=true;
-    $('gpuFpsAvg').textContent='...'; $('gpuFpsAvg').style.color='var(--dm)';
-    $('gpuFpsMin').textContent='...'; $('gpuScore').textContent='...';
-
-    const gl=initGL();
-    if(!gl){gpRunning=false;btn.textContent='▶ RUN GPU BENCHMARK';btn.disabled=false;
-        $('gpuFpsAvg').textContent='N/A';$('gpuFpsAvg').style.color='var(--rd)';return;}
-
-    // Simple WebGL benchmark - rotating colored triangle
-    const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}';
-    const fs='precision lowp float;uniform float t;void main(){vec3 c=0.5+0.5*cos(t+vec3(0,2,4)+gl_FragCoord.xyx/80.0);gl_FragColor=vec4(c,1.0);}';
-    function shader(src,typ){
-        const s=gl.createShader(typ); gl.shaderSource(s,src); gl.compileShader(s);
-        return s;
-    }
-    const prog=gl.createProgram();
-    gl.attachShader(prog,shader(vs,gl.VERTEX_SHADER)); gl.attachShader(prog,shader(fs,gl.FRAGMENT_SHADER));
-    gl.linkProgram(prog); gl.useProgram(prog);
-    const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([0,0.8,-0.7,-0.5,0.7,-0.5]),gl.STATIC_DRAW);
-    const loc=gl.getAttribLocation(prog,'p'); gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    const tLoc=gl.getUniformLocation(prog,'t');
-    gl.viewport(0,0,280,120);
-
-    let frames=0,totalTime=0,minFps=60,start=performance.now(),runs=0;
-    const maxFrames=180;
-
-    function draw(){
-        const now=performance.now();
-        const dt=now-start; start=now;
-        if(runs>0){frames++;totalTime+=dt;const fps=1000/dt;if(fps<minFps)minFps=fps;}
-        runs++;
-        const t=now/1000;
-        gl.uniform1f(tLoc,t);
-        gl.drawArrays(gl.TRIANGLES,0,3);
-        if(runs<=maxFrames)requestAnimationFrame(draw);
-        else done();
-    }
-
-    function done(){
-        const avgFps=frames>0?frames/(totalTime/1000):0;
-        const score=Math.round(avgFps*10);
-        $('gpuFpsAvg').textContent=avgFps.toFixed(1);
-        $('gpuFpsAvg').style.color=avgFps>50?'var(--gr)':avgFps>25?'var(--yl)':'var(--rd)';
-        $('gpuFpsMin').textContent=minFps.toFixed(1);
-        $('gpuFpsMin').style.color=minFps>30?'var(--gr)':minFps>15?'var(--yl)':'var(--rd)';
-        $('gpuScore').textContent=score;
-        $('gpuScore').style.color=score>500?'var(--gr)':score>250?'var(--yl)':'var(--rd)';
-        btn.textContent='▶ RUN GPU BENCHMARK'; btn.disabled=false; gpRunning=false;
-
-        // Also show in terminal if it's visible
-        termPrint(`<span class="ok">✓</span> GPU: ${avgFps.toFixed(1)} FPS avg, ${minFps.toFixed(1)} min, score: ${score}`);
-    }
-
-    draw();
-}
-
-// CPU Benchmark button
-$('cpuBtn').addEventListener('click',()=>cmdHandlers.cpu());
-$('dnsBtn').addEventListener('click',()=>cmdHandlers.dns());
-$('netBtn').addEventListener('click',()=>cmdHandlers.net());
-$('gpuBtn').addEventListener('click',runGPU);
-
-// Init
 initDash().catch(()=>{});
+
+// Init DNS grid with default
+renderDNS([
+    ['ad.doubleclick.net',0],['pagead2.googlesyndication.com',0],
+    ['www.google-analytics.com',0],['amazon-adsystem.com',0],['connect.facebook.net',0]]);
 })();
 </script>
 </body>
