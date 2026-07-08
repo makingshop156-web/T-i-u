@@ -206,11 +206,12 @@ Ví dụ: avgDelta = 20ms → load ≈ (18/16.67)*100 = 108% → clamp → 100% 
 <h2>5. Hạn chế REAL Measurement trên iOS</h2>
 <ul>
 <li><strong>Battery API deprecated:</strong> Apple deprecated navigator.getBattery() trên iOS Safari 16+. Có thể không hoạt động ở iOS mới</li>
-<li><strong>Device Memory:</strong> navigator.deviceMemory chỉ hiển thị trên một số thiết bị/phiên bản</li>
-<li><strong>WebGL:</strong> FPS thấp hơn native game do WebGL driver overhead (ANGLE layer)</li>
+<li><strong>Device Memory:</strong> navigator.deviceMemory KHÔNG có trên iOS Safari — luôn báo N/A</li>
+<li><strong>CPU cores:</strong> navigator.hardwareConcurrency KHÔNG có trên iOS Safari — luôn báo N/A</li>
+<li><strong>Storage:</strong> navigator.storage.estimate() trả về quota của Safari (~38GB), KHÔNG phải dung lượng ổ cứng máy. Không có web API nào đọc được total device storage</li>
+<li><strong>WebGL GPU:</strong> FPS thấp hơn native game do WebGL driver overhead (ANGLE layer). Cần reset timestamp ở frame đầu để tránh FPS ảo 1000+</li>
 <li><strong>RAF CPU:</strong> Chỉ đo main thread, không measure GPU hay background threads</li>
 <li><strong>Network:</strong> Speed test dùng resource nhỏ (~10KB) — không chính xác bằng download file lớn</li>
-<li><strong>Storage:</strong> navigator.storage.estimate() chỉ ước tính storage của browser origin</li>
 </ul>
 
 <h2>Tham khảo</h2>
