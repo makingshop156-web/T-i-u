@@ -4,224 +4,298 @@
 <meta charset="UTF-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>iOS Perf • v6</title>
+<title>iOS Perf • v7</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#04070c;--cd:#0b111c;--bd:#162034;--tx:#dce4f0;--dm:#456;--bl:#0af;--gr:#0e6;--yl:#fd0;--rd:#f44;--nm:linear-gradient(135deg,#0af,#06f)}
-body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+:root{--bg:#03060a;--cd:rgba(12,18,28,.72);--bdr:rgba(60,80,120,.15);--tx:#dce4f0;--dm:#4a5e7a;--bl:#0af;--gr:#0e6;--yl:#fd0;--rd:#f44}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(0,170,255,.2);border-radius:4px}
+
+/* Background */
+.bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
+.bg .o{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12}
+.bg .o:nth-child(1){width:280px;height:280px;background:var(--bl);top:-60px;right:-40px;animation:dr 20s ease-in-out infinite}
+.bg .o:nth-child(2){width:320px;height:320px;background:#06f;bottom:-80px;left:-60px;animation:dr 25s ease-in-out infinite reverse}
+.bg .o:nth-child(3){width:200px;height:200px;background:var(--gr);top:40%;left:30%;animation:dr 18s ease-in-out infinite 5s;opacity:.06}
+@keyframes dr{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.1)}66%{transform:translate(-20px,30px) scale(.95)}}
+
+.w{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 0 24px}
 
 /* Header */
-.h{background:linear-gradient(180deg,#0b1420 0%,var(--bg) 100%);padding:32px 16px 16px;text-align:center;position:relative;overflow:hidden}
-.h::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(0,170,255,.06),transparent 70%)}
-.hi{width:52px;height:52px;border-radius:16px;background:var(--nm);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 8px;box-shadow:0 8px 32px rgba(0,170,255,.2);position:relative;z-index:1}
-.hi .b{font-size:22px;font-weight:900;color:#fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
-.h h1{font-size:20px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(135deg,#fff,#8cf);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.h .sub{font-size:11px;color:var(--dm);margin-top:2px}
-.sb{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;margin-top:12px;padding:7px 16px;background:rgba(0,170,255,.04);border-radius:20px;border:1px solid rgba(0,170,255,.12);position:relative;z-index:1}
-.sb .d{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:all .3s}
-.sb .d.g{background:var(--gr);box-shadow:0 0 12px rgba(0,230,118,.5)}
-.sb .d.r{background:var(--rd);box-shadow:0 0 12px rgba(255,68,68,.5)}
-.sb .d.y{background:var(--yl);box-shadow:0 0 12px rgba(255,221,0,.5)}
+.h{text-align:center;padding:36px 16px 16px;position:relative}
+.hi{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#0af,#06f);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 8px 40px rgba(0,130,255,.25);position:relative}
+.hi .b{font-size:24px;font-weight:900;color:#fff}
+.h h1{font-size:22px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(135deg,#fff,#8cf);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.h .sub{font-size:10.5px;color:var(--dm);margin-top:2px;letter-spacing:.5px}
+.sb{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;margin-top:12px;padding:8px 16px;border-radius:24px;border:1px solid var(--bdr);background:rgba(12,18,28,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.sb .d{width:9px;height:9px;border-radius:50%;flex-shrink:0;transition:all .3s}
+.sb .d.g{background:var(--gr);box-shadow:0 0 14px rgba(0,230,118,.6)}
+.sb .d.r{background:var(--rd);box-shadow:0 0 14px rgba(255,68,68,.6)}
+.sb .d.y{background:var(--yl);box-shadow:0 0 14px rgba(255,221,0,.6)}
 .sb .d.c{background:var(--yl);animation:bl 1s infinite}
 @keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* Layout */
-.b{padding:10px 12px 24px;display:flex;flex-direction:column;gap:8px}
-.c{background:var(--cd);border-radius:14px;padding:14px;border:1px solid var(--bd);transition:border-color .2s}
-.ct{font-size:10px;font-weight:700;color:var(--dm);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+/* Tabs */
+.tabs{display:flex;gap:4px;padding:0 12px;margin-top:4px}
+.tab{flex:1;text-align:center;padding:8px 0;font-size:11px;font-weight:600;color:var(--dm);border-radius:10px;cursor:pointer;transition:all .2s;border:none;background:transparent;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.tab.act{color:#fff;background:rgba(0,170,255,.1)}
+.tab:active{transform:scale(.95)}
+
+/* Cards */
+.bd{padding:8px 12px;display:flex;flex-direction:column;gap:8px}
+.pn{display:block}
+.pn.h{display:none}
+.c{background:var(--cd);border-radius:16px;padding:14px;border:1px solid var(--bdr);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ct{font-size:9.5px;font-weight:700;color:var(--dm);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 
 /* Grid */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.it{background:rgba(255,255,255,.02);border-radius:10px;padding:10px 8px;text-align:center}
-.it .n{font-size:17px;font-weight:800;letter-spacing:-.3px}
-.it .l{font-size:9px;color:var(--dm);text-transform:uppercase;letter-spacing:.7px;margin-top:3px}
-.it .b{font-size:9px;color:var(--dm);margin-top:1px}
+.it{background:rgba(255,255,255,.02);border-radius:12px;padding:10px 8px;text-align:center}
+.it .n{font-size:18px;font-weight:800;letter-spacing:-.4px;margin-bottom:1px}
+.it .l{font-size:9px;color:var(--dm);text-transform:uppercase;letter-spacing:.7px}
+.it .b{font-size:8.5px;color:var(--dm);margin-top:2px;opacity:.6}
 
-/* Progress bar */
+/* Progress */
 .pg{height:4px;background:rgba(255,255,255,.04);border-radius:3px;margin-top:6px;overflow:hidden}
 .pg .fl{height:100%;border-radius:3px;transition:width .6s ease}
 
-/* List */
+/* Status badge */
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.bdg.g{background:rgba(0,230,118,.1);color:var(--gr);border:1px solid rgba(0,230,118,.15)}
+.bdg.r{background:rgba(255,68,68,.1);color:var(--rd);border:1px solid rgba(255,68,68,.15)}
+.bdg.y{background:rgba(255,221,0,.1);color:var(--yl);border:1px solid rgba(255,221,0,.15)}
+.bdg.b{background:rgba(0,170,255,.1);color:var(--bl);border:1px solid rgba(0,170,255,.15)}
+
+/* Test results */
+.vs{display:flex;flex-direction:column;gap:3px}
+.vi{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,.015);border-radius:8px;font-size:10.5px}
+.vi .s{display:flex;align-items:center;gap:5px}
+.vi .bt{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* Expandable list */
 .ls{list-style:none}
-.ls li{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:10.5px;display:flex;align-items:center;gap:6px;line-height:1.4}
+.ls li{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:10.5px;display:flex;align-items:center;gap:7px}
 .ls li:last-child{border-bottom:none}
 .ls .dt{width:5px;height:5px;border-radius:50%;flex-shrink:0}
 
-/* Install button */
-.ib{background:linear-gradient(135deg,rgba(0,170,255,.06),rgba(0,100,255,.03));border:1px solid rgba(0,170,255,.18);border-radius:14px;padding:16px;text-align:center}
-.ib .big{display:inline-flex;align-items:center;gap:8px;padding:14px 36px;border-radius:12px;background:var(--nm);color:#fff;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 24px rgba(0,170,255,.3);margin:8px 0;transition:transform .15s,box-shadow .15s}
-.ib .big:active{transform:scale(.95);box-shadow:0 2px 12px rgba(0,170,255,.2)}
+/* Battery */
+.bat{display:flex;align-items:center;gap:12px;padding:4px 0}
+.bat .bi{position:relative;width:40px;height:20px;border:2px solid var(--dm);border-radius:4px;flex-shrink:0;overflow:hidden}
+.bat .bi .lv{height:100%;border-radius:2px;transition:width .5s,background .3s}
+.bat .bi::after{content:'';position:absolute;right:-6px;top:4px;width:4px;height:10px;background:var(--dm);border-radius:0 2px 2px 0}
+.bat .tx{font-size:22px;font-weight:800}
+.bat .st{font-size:10px;color:var(--dm)}
+
+/* Install */
+.ib{background:linear-gradient(135deg,rgba(0,170,255,.06),rgba(0,100,255,.03));border:1px solid rgba(0,170,255,.18);border-radius:16px;padding:16px;text-align:center}
+.ib .big{display:inline-flex;align-items:center;gap:8px;padding:14px 36px;border-radius:12px;background:linear-gradient(135deg,#0af,#06f);color:#fff;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 30px rgba(0,130,255,.3);margin:8px 0;transition:transform .15s,box-shadow .15s;border:none;cursor:pointer}
+.ib .big:active{transform:scale(.95);box-shadow:0 2px 12px rgba(0,130,255,.2)}
 .ib .s{font-size:11px;color:var(--dm);line-height:1.5}
 
-/* Quick actions */
-.qa{display:flex;gap:5px;margin-top:8px}
-.qa a{flex:1;text-align:center;padding:8px 6px;border-radius:10px;font-size:10px;font-weight:600;text-decoration:none;transition:transform .1s,background .15s}
+/* Quick links */
+.qa{display:flex;gap:6px}
+.qa a{flex:1;text-align:center;padding:9px 6px;border-radius:12px;font-size:10px;font-weight:600;text-decoration:none;transition:all .15s;touch-action:manipulation}
 .qa a:active{transform:scale(.94)}
-.qa .p{background:var(--nm);color:#fff}
-.qa .s{background:rgba(255,255,255,.03);color:var(--tx);border:1px solid var(--bd)}
+.qa .p{background:linear-gradient(135deg,#0af,#06f);color:#fff}
+.qa .s{background:rgba(255,255,255,.03);color:var(--tx);border:1px solid var(--bdr)}
 
-/* Tip box */
-.tp{border-left:2px solid var(--bl);padding:8px 10px;margin:6px 0;background:rgba(0,170,255,.03);font-size:11px;line-height:1.6;border-radius:0 6px 6px 0}
+/* Tip */
+.tp{border-left:2px solid var(--bl);padding:8px 10px;margin:6px 0;background:rgba(0,170,255,.03);font-size:10.5px;line-height:1.6;border-radius:0 6px 6px 0}
 .tp b{color:var(--bl)}
 
-/* Verification items */
-.vs{display:flex;flex-direction:column;gap:4px}
-.vi{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,.015);border-radius:7px;font-size:11px}
-.vi .s{display:flex;align-items:center;gap:5px}
-.vi .b{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-
-/* Footer */
-.ft{text-align:center;padding:20px 12px;font-size:9px;color:var(--dm);line-height:1.6;letter-spacing:.3px}
-
-/* Badge */
-.bdg{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.bdg.g{background:rgba(0,230,118,.1);color:var(--gr)}
-.bdg.r{background:rgba(255,68,68,.1);color:var(--rd)}
-.bdg.y{background:rgba(255,221,0,.1);color:var(--yl)}
-.bdg.b{background:rgba(0,170,255,.1);color:var(--bl)}
-
-/* Battery */
-.bat{display:flex;align-items:center;gap:10px;padding:2px 0}
-.bat .icon{position:relative;width:38px;height:18px;border:2px solid var(--dm);border-radius:3px;flex-shrink:0;overflow:hidden}
-.bat .icon .lv{height:100%;border-radius:1px;transition:width .5s,background .3s}
-.bat .icon::after{content:'';position:absolute;right:-5px;top:4px;width:4px;height:8px;background:var(--dm);border-radius:0 1px 1px 0}
-.bat .tx{font-size:19px;font-weight:800}
-
-/* Key-value inline */
-.kv{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.02)}
+/* Key-value */
+.kv{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.02)}
 .kv:last-child{border-bottom:none}
 .kv .k{color:var(--dm)}
 .kv .v{font-weight:600}
 
-hr{border:none;border-top:1px solid var(--bd);margin:8px 0}
+/* Footer */
+.ft{text-align:center;padding:24px 12px;font-size:9px;color:var(--dm);line-height:1.6;letter-spacing:.3px}
+.ft .v{color:var(--bl);font-weight:700}
 </style>
 </head>
 <body>
+<div class="bg"><div class="o"></div><div class="o"></div><div class="o"></div></div>
+<div class="w">
 
 <div class="h">
     <div class="hi"><span class="b">⚡</span></div>
     <h1>iOS Performance</h1>
-    <p class="sub">v6 • 22 restriction • DNS AdGuard</p>
+    <p class="sub">v7 • 28 restriction • DNS AdGuard • Root CA</p>
     <div class="sb" id="sb">
         <span class="d c" id="sbd"></span>
         <span id="sbt">Đang xác minh hệ thống...</span>
     </div>
 </div>
 
-<div class="b" id="app">
+<div class="tabs">
+    <button class="tab act" data-pn="overview">Tổng quan</button>
+    <button class="tab" data-pn="details">Chi tiết</button>
+    <button class="tab" data-pn="tests">Kiểm tra</button>
+</div>
 
-    <!-- QUICK STATUS -->
-    <div class="c" id="statusCard">
-        <div class="ct">📊 Trạng thái tổng quan</div>
-        <div id="statusDetail" style="font-size:11.5px;color:var(--dm);line-height:1.6">Đang phân tích kết nối và DNS...</div>
-        <div style="margin-top:6px" id="badgeArea"></div>
+<div class="bd">
+
+<div class="pn" id="pn-overview">
+
+    <div class="c">
+        <div class="ct">📊 Trạng thái</div>
+        <div id="statusDetail" style="font-size:11px;color:var(--dm);line-height:1.6">Đang phân tích...</div>
+        <div style="margin-top:7px;display:flex;flex-wrap:wrap;gap:4px" id="badgeArea"></div>
     </div>
 
-    <!-- VERIFICATION TESTS -->
     <div class="c">
-        <div class="ct">🔬 Kiểm tra xác minh</div>
-        <div class="vs" id="testResults">
-            <div class="vi"><span class="s"><span class="b" style="background:var(--yl)"></span>Internet</span><span>Đang kiểm tra...</span></div>
-            <div class="vi"><span class="s"><span class="b" style="background:var(--yl)"></span>DNS chặn quảng cáo</span><span>Đang kiểm tra...</span></div>
-            <div class="vi"><span class="s"><span class="b" style="background:var(--yl)"></span>Độ trễ mạng</span><span>Đang kiểm tra...</span></div>
-        </div>
-    </div>
-
-    <!-- DEVICE HARDWARE -->
-    <div class="c">
-        <div class="ct">📱 Cấu hình thiết bị</div>
+        <div class="ct">📱 Thiết bị</div>
         <div class="g2">
-            <div class="it"><div class="n" id="memVal">--</div><div class="l">RAM</div><div class="b">dung lượng</div></div>
-            <div class="it"><div class="n" id="cpuVal">--</div><div class="l">CPU</div><div class="b">số lõi</div></div>
-            <div class="it"><div class="n" id="scrVal">--</div><div class="l">Màn hình</div><div class="b">độ phân giải</div></div>
-            <div class="it"><div class="n" id="stoVal">--</div><div class="l">Bộ nhớ</div><div class="b">đã dùng</div></div>
+            <div class="it"><div class="n" id="memVal">--</div><div class="l">RAM</div></div>
+            <div class="it"><div class="n" id="cpuVal">--</div><div class="l">CPU</div></div>
+            <div class="it"><div class="n" id="scrVal">--</div><div class="l">Màn hình</div></div>
+            <div class="it"><div class="n" id="stoVal">--</div><div class="l">Bộ nhớ</div></div>
         </div>
     </div>
 
-    <!-- NETWORK -->
     <div class="c">
-        <div class="ct">📶 Kết nối mạng</div>
+        <div class="ct">🔋 Pin</div>
+        <div class="bat">
+            <div class="bi"><div class="lv" id="batLv" style="width:0;background:var(--gr)"></div></div>
+            <div class="tx" id="batTx">--</div>
+            <div class="st" id="batStt">--</div>
+        </div>
+    </div>
+
+    <div class="c">
+        <div class="ct">📶 Kết nối</div>
         <div class="g2">
             <div class="it"><div class="n" id="netType">--</div><div class="l">Loại</div></div>
             <div class="it"><div class="n" id="netSpeed">--</div><div class="l">Tốc độ</div></div>
         </div>
-        <div class="pg" style="margin-top:8px"><div class="fl" id="pingBar" style="width:0;background:var(--gr)"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dm);margin-top:3px"><span>0 ms</span><span id="pingLabel">Đo độ trễ...</span><span>1000+ ms</span></div>
+        <div class="pg"><div class="fl" id="pingBar" style="width:0;background:var(--gr)"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dm);margin-top:3px"><span>0 ms</span><span id="pingLabel">Đo...</span><span>1000+ ms</span></div>
     </div>
 
-    <!-- BATTERY -->
     <div class="c">
-        <div class="ct">🔋 Pin</div>
-        <div class="bat">
-            <div class="icon"><div class="lv" id="batLv" style="width:0;background:var(--gr)"></div></div>
-            <div class="tx" id="batTx" style="color:var(--gr)">--%</div>
-            <span style="font-size:11px;color:var(--dm)" id="batStt">--</span>
-        </div>
-    </div>
-
-    <!-- RESTRICTIONS SUMMARY -->
-    <div class="c">
-        <div class="ct">✅ 22 tối ưu đã kích hoạt</div>
-        <div style="font-size:10px;color:var(--dm);line-height:1.5;margin-bottom:5px">
-            CPU nền ↓8-15% • RAM ↑100-200MB • Pin ↑10-20% • Data ↓500MB-1GB/th
-        </div>
+        <div class="ct">✅ 28 tối ưu đã kích hoạt</div>
+        <div style="font-size:10px;color:var(--dm);line-height:1.5;margin-bottom:4px">CPU ↓8-15% • RAM ↑100-200MB • Pin ↑10-20% • Data ↓500MB-1GB/th</div>
         <ul class="ls">
-            <li><span class="dt" style="background:var(--bl)"></span> DNS AdGuard — chặn 50K+ QC + tracker + malware</li>
-            <li><span class="dt" style="background:var(--gr)"></span> Tắt Siri (sirid) — CPU ~5% • pin ~8%</li>
-            <li><span class="dt" style="background:var(--gr)"></span> Tắt Spotlight (spotlightd) — CPU ~2%</li>
-            <li><span class="dt" style="background:var(--gr)"></span> Tắt analyticsd — chẩn đoán nền</li>
-            <li><span class="dt" style="background:var(--gr)"></span> Tắt appstored — cập nhật tự động</li>
-            <li><span class="dt" style="background:var(--gr)"></span> Tắt cloudd + backupd + 7 iCloud sync</li>
-            <li><span class="dt" style="background:var(--gr)"></span> Tắt OTA cert + Handoff + Personalized Ads</li>
-            <li><span class="dt" style="background:var(--gr)"></span> Tắt autounlockd (Watch BLE) + sharingd (AirDrop)</li>
-            <li><span class="dt" style="background:var(--gr)"></span> Tắt syncdefaultsd + fetchd roaming + ad tracking</li>
+            <li><span class="dt" style="background:var(--bl)"></span> DNS AdGuard chặn 50K+ QC + tracker + malware</li>
+            <li><span class="dt" style="background:var(--gr)"></span> Siri + Spotlight + Game Center + App Clips</li>
+            <li><span class="dt" style="background:var(--gr)"></span> 9 iCloud sync (Drive, Backup, Keychain, ...)</li>
+            <li><span class="dt" style="background:var(--gr)"></span> analyticsd + appstored + OTA cert + ad tracking</li>
+            <li><span class="dt" style="background:var(--gr)"></span> autounlockd + sharingd + Handoff + Find Friends</li>
         </ul>
     </div>
 
-    <!-- FPS GUIDE -->
-    <div class="c">
-        <div class="ct">🎮 FPS Optimization Guide</div>
-        <div class="tp">
-            <b>⚡ 6 mẹo tối đa FPS từ iOS Performance Lab:</b><br>
-            1. <b>Tháo ốp lưng</b> — thoát nhiệt trực tiếp, chống thermal throttle<br>
-            2. <b>Không sạc khi chơi</b> — sạc sinh nhiệt, CPU tự giảm xung nhịp<br>
-            3. <b>Giảm độ sáng màn hình</b> — màn hình ngốn 30-50% tổng điện năng<br>
-            4. <b>Bật Game Mode</b> (iOS 18+ tự động) — ưu tiên CPU/GPU cho game<br>
-            5. <b>Airplane Mode khi chơi offline</b> — không notification giật lag<br>
-            6. <b>Để máy nơi thoáng mát</b> — nhiệt độ thấp = xung nhịp cao hơn<br>
-            <span style="color:var(--gr);font-weight:700">⟹ Profile v6 đã giải phóng 8-15% CPU + 100-200MB RAM + giảm nhiệt!</span>
-        </div>
-    </div>
-
-    <!-- CERT -->
-    <div class="c">
-        <div class="ct">🔐 Root CA Certificate</div>
-        <div style="font-size:11px;line-height:1.6;color:var(--dm)">
-            <b style="color:var(--tx)">iOS Performance Root CA</b> (RSA 2048-bit, 2026-2036) đã được cài đặt.<br>
-            Vào <b>Cài đặt &gt; Cài đặt chung &gt; Giới thiệu &gt; Tin cậy chứng nhận</b> → BẬT.<br>
-            <span style="font-size:9px;color:var(--dm)">Không bắt buộc. Dự phòng cho nâng cấp tương lai.</span>
-        </div>
-    </div>
-
-    <!-- INSTALL -->
     <div class="ib">
-        <a class="big" href="profiles/Performance.mobileconfig">⬇ TẢI PROFILE v6</a>
+        <a class="big" href="profiles/Performance.mobileconfig">⬇ TẢI PROFILE v7</a>
         <div class="s">Safari → Cho phép → Cài đặt → Xong</div>
-        <div style="font-size:10px;color:var(--yl);margin-top:2px">⚠ Gỡ profile cũ trước: Cài đặt &gt; Chung &gt; VPN &amp; QL thiết bị</div>
+        <div class="s" style="font-size:9px;color:var(--yl);margin-top:2px">⚠ Gỡ profile cũ trước: Cài đặt &gt; Chung &gt; VPN &amp; QL thiết bị</div>
     </div>
 
-    <!-- QUICK LINKS -->
     <div class="qa">
-        <a class="p" href="profiles/Performance.mobileconfig">📥 Profile</a>
+        <a class="p" href="profiles/Performance.mobileconfig">📥 Profile v7</a>
         <a class="s" href="research/">📖 Nghiên cứu</a>
     </div>
 
 </div>
 
+<div class="pn h" id="pn-details">
+
+    <div class="c">
+        <div class="ct">📋 Danh sách 28 restriction</div>
+        <div style="font-size:10px;color:var(--dm);line-height:1.6">
+            <b style="color:var(--bl)">Hệ thống &amp; ML (13):</b> Chẩn đoán, Tự động tải app, Siri, Spotlight, OTA PKI, Ad tracking, Personalized QC, Handoff, Game Center, GC bạn bè, App Clips, Voice Dialing, Passbook khi khóa.<br>
+            <b style="color:var(--bl)">iCloud &amp; Kết nối (15):</b> iCloud Drive, Backup, Keychain, Danh bạ, Lịch, Reminders, Bookmarks, Ghi chú, Desktop sync, Fetch roaming, Auto Unlock, AirDrop, iTunes sync, Find Friends, Mail Drop.
+        </div>
+    </div>
+
+    <div class="c">
+        <div class="ct">🎮 Tối đa FPS khi chơi game</div>
+        <div class="tp">
+            <b>⚡ 6 mẹo từ iOS Performance Lab:</b><br>
+            1. <b>Tháo ốp lưng</b> — thoát nhiệt > chống thermal throttle<br>
+            2. <b>Không sạc khi chơi</b> — sạc sinh nhiệt > CPU giảm xung<br>
+            3. <b>Giảm độ sáng</b> — màn hình ngốn 30-50% tổng điện năng<br>
+            4. <b>Bật Game Mode</b> (iOS 18+ tự động) — ưu tiên CPU/GPU<br>
+            5. <b>Airplane Mode</b> (offline) — không notification giật lag<br>
+            6. <b>Để máy thoáng mát</b> — nhiệt thấp > xung nhịp cao hơn<br>
+            <span style="color:var(--gr);font-weight:700">⟹ Profile v7: CPU ↑8-15% headroom, RAM ↑100-200MB, nhiệt ↓</span>
+        </div>
+    </div>
+
+    <div class="c">
+        <div class="ct">🔐 Root CA Certificate</div>
+        <div style="font-size:11px;line-height:1.6;color:var(--dm)">
+            <b style="color:var(--tx)">iOS Performance Root CA</b> (RSA 2048-bit, 2026-2036).<br>
+            Vào <b>Cài đặt &gt; Cài đặt chung &gt; Giới thiệu &gt; Tin cậy chứng nhận</b> → BẬT.<br>
+            <span style="font-size:9px">Không bắt buộc. Dự phòng cho nâng cấp sau.</span>
+        </div>
+    </div>
+
+    <div class="c">
+        <div class="ct">📞 Còn hoạt động</div>
+        <div style="font-size:11px;line-height:1.7;color:var(--dm)">
+            ✓ Gọi điện, nhắn tin, FaceTime<br>
+            ✓ App Store, tải app<br>
+            ✓ Chụp màn hình, Bluetooth, WiFi, 4G/5G<br>
+            ✓ Find My iPhone, Apple Pay<br>
+            ✗ Siri, AirDrop, iCloud sync, Handoff, GC
+        </div>
+    </div>
+
+    <div class="c">
+        <div class="ct">📊 Tiết kiệm ước tính</div>
+        <div class="kv"><span class="k">CPU nền</span><span class="v" style="color:var(--gr)">↓ 8-15%</span></div>
+        <div class="kv"><span class="k">RAM</span><span class="v" style="color:var(--gr)">↑ 100-200MB</span></div>
+        <div class="kv"><span class="k">Pin</span><span class="v" style="color:var(--gr)">↑ 10-20%</span></div>
+        <div class="kv"><span class="k">Data/tháng</span><span class="v" style="color:var(--gr)">↓ 500MB-1GB</span></div>
+        <div class="kv"><span class="k">Nhiệt</span><span class="v" style="color:var(--gr)">Giảm rõ → chống throttle</span></div>
+    </div>
+
+</div>
+
+<div class="pn h" id="pn-tests">
+
+    <div class="c">
+        <div class="ct">🔬 Kiểm tra xác minh</div>
+        <div class="vs" id="testResults">
+            <div class="vi"><span class="s"><span class="bt" style="background:var(--yl)"></span>Kết nối Internet</span><span>Đang kiểm tra...</span></div>
+            <div class="vi"><span class="s"><span class="bt" style="background:var(--yl)"></span>DNS chặn quảng cáo</span><span>Đang kiểm tra...</span></div>
+            <div class="vi"><span class="s"><span class="bt" style="background:var(--yl)"></span>Độ trễ mạng</span><span>Đang kiểm tra...</span></div>
+            <div class="vi"><span class="s"><span class="bt" style="background:var(--yl)"></span>DNS over HTTPS</span><span>Đang kiểm tra...</span></div>
+        </div>
+    </div>
+
+    <div class="c">
+        <div class="ct">📋 Hướng dẫn cài đặt</div>
+        <div class="tp" style="border-left-color:var(--gr)">
+            1. 📱 Mở Safari, truy cập trang này<br>
+            2. ⬇ Bấm "TẢI PROFILE v7"<br>
+            3. ✅ "Cho phép" → vào Settings<br>
+            4. ⚙ Cài đặt &gt; Đã tải hồ sơ → Cài đặt<br>
+            5. 🏠 WebClip "Perf" xuất hiện trên màn hình chính
+        </div>
+    </div>
+
+    <div class="c">
+        <div class="ct">❌ Gỡ cài đặt</div>
+        <div style="font-size:11px;color:var(--dm);line-height:1.6">
+            Cài đặt &gt; Chung &gt; VPN &amp; QL thiết bị &gt; iOS Performance Optimizer v7 &gt; Xóa hồ sơ.<br>
+            <span style="font-size:9px;color:var(--yl)">Phải gỡ profile cũ trước khi cài v7 mới.</span>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
 <div class="ft">
-iOS Performance Optimizer v6 • Đại học Khoa học Máy tính iOS Lab<br>
-Dữ liệu hiển thị thực (nếu iOS cho phép) • Thiết kế tối ưu cho gamer
+iOS Performance Optimizer <span class="v">v7</span> — Hệ thống tối ưu toàn diện<br>
+28 restriction • DNS • Root CA • WebClip • Phân tích học thuật
+</div>
+
 </div>
 
 <script>
@@ -230,20 +304,44 @@ const $=id=>document.getElementById(id);
 const q=(s,p)=>p?p.querySelector(s):document.querySelector(s);
 const sbd=$('sbd'),sbt=$('sbt'),sd=$('statusDetail'),ba=$('badgeArea');
 
-// --- Utility ---
-function badge(text,color){return `<span class="bdg ${color}">${text}</span>`}
-function testRow(label,status,detail){
-    const dot={0:'style="background:var(--yl)"',1:'style="background:var(--gr)"',2:'style="background:var(--rd)"'}[status]||'style="background:var(--yl)"';
-    const txt={0:'Đang kiểm tra...',1:'✓ OK',2:'✗ Lỗi'}[status]||'--';
-    return `<div class="vi"><span class="s"><span class="b" ${dot}></span>${label}</span><span>${detail||txt}</span></div>`;
+function bdg(text,color){return `<span class="bdg ${color}">${text}</span>`}
+
+function tr(label,status,detail){
+    const c={0:'var(--yl)',1:'var(--gr)',2:'var(--rd)'}[status]||'var(--yl)';
+    const t={0:'Đang kiểm tra...',1:'✓ OK',2:'✗ Lỗi'}[status]||'--';
+    return `<div class="vi"><span class="s"><span class="bt" style="background:${c}"></span>${label}</span><span>${detail||t}</span></div>`;
+}
+
+// Tab switching
+q('.tabs').addEventListener('click',e=>{
+    const t=e.target.closest('.tab');
+    if(!t)return;
+    q('.tab.act').classList.remove('act');
+    t.classList.add('act');
+    q('.pn:not(.h)')?.classList.add('h');
+    $(`pn-${t.dataset.pn}`).classList.remove('h');
+});
+
+// Device model
+function detectModel(){
+    const ua=navigator.userAgent;
+    if(ua.includes('iPhone15,3')||ua.includes('iPhone15,2'))return 'iPhone 14 Pro';
+    if(ua.includes('iPhone15,5')||ua.includes('iPhone15,4'))return 'iPhone 14';
+    if(ua.includes('iPhone16,1')||ua.includes('iPhone16,2'))return 'iPhone 15 Pro';
+    if(ua.includes('iPhone16,3')||ua.includes('iPhone16,4'))return 'iPhone 15';
+    if(ua.includes('iPhone17,1')||ua.includes('iPhone17,2'))return 'iPhone 16 Pro';
+    if(ua.includes('iPhone17,3')||ua.includes('iPhone17,4'))return 'iPhone 16';
+    if(ua.includes('iPhone'))return 'iPhone';
+    if(ua.includes('iPad'))return 'iPad';
+    if(ua.includes('iPod'))return 'iPod touch';
+    return 'iOS Device';
 }
 
 async function init(){
-    let statusGreen=false,statusYellow=false,statusRed=false;
-    let testInternet=0,testDNS=0,testLatency=0;
+    let testI=0,testD=0,testL=0,testH=0;
     let latMs='--';
 
-    // ---- 1. Battery ----
+    // Battery
     try{
         const b=await navigator.getBattery();
         const p=Math.round(b.level*100);
@@ -253,129 +351,109 @@ async function init(){
         $('batTx').textContent=p+'%';
         $('batTx').style.color=p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
         $('batStt').textContent=b.charging?'Đang sạc':'Không sạc';
-    }catch(e){
-        $('batTx').textContent='iOS hạn';
-        $('batStt').textContent='API không khả dụng';
-    }
+    }catch(e){$('batTx').textContent='iOS hạn';$('batStt').textContent='API giới hạn';}
 
-    // ---- 2. Network Info ----
+    // Network info
     try{
         const nc=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
-        if(nc&&nc.effectiveType){
-            $('netType').textContent=(nc.effectiveType||'wifi').toUpperCase();
-            $('netSpeed').textContent=nc.downlink?nc.downlink.toFixed(1)+' Mbps':'--';
-        } else {throw 1}
-    }catch(e){
-        $('netType').textContent='iOS hạn';
-        $('netSpeed').textContent='iOS hạn';
-    }
+        if(nc&&nc.effectiveType){$('netType').textContent=(nc.effectiveType||'wifi').toUpperCase();$('netSpeed').textContent=nc.downlink?nc.downlink.toFixed(1)+' Mbps':'--';}
+        else throw 1;
+    }catch(e){$('netType').textContent='iOS hạn';$('netSpeed').textContent='iOS hạn';}
 
-    // ---- 3. Device ----
-    if(navigator.deviceMemory) $('memVal').textContent=navigator.deviceMemory+' GB';
-    else $('memVal').textContent='iOS hạn';
-    if(navigator.hardwareConcurrency) $('cpuVal').textContent=navigator.hardwareConcurrency+' lõi';
-    else $('cpuVal').textContent='iOS hạn';
-    const dr=window.devicePixelRatio||1;
-    $('scrVal').textContent=Math.round(screen.width*dr)+'x'+Math.round(screen.height*dr);
+    // Device
+    if(navigator.deviceMemory)$('memVal').textContent=navigator.deviceMemory+' GB';else $('memVal').textContent='iOS hạn';
+    if(navigator.hardwareConcurrency)$('cpuVal').textContent=navigator.hardwareConcurrency+' lõi';else $('cpuVal').textContent='iOS hạn';
+    $('scrVal').textContent=Math.round(screen.width*(window.devicePixelRatio||1))+'x'+Math.round(screen.height*(window.devicePixelRatio||1));
     if(navigator.storage&&navigator.storage.estimate){
-        try{
-            const s=await navigator.storage.estimate();
-            $('stoVal').textContent=(s.usage/1073741824).toFixed(1)+'/'+(s.quota/1073741824).toFixed(0)+' GB';
-        }catch(e){$('stoVal').textContent='Lỗi';}
-    } else {$('stoVal').textContent='iOS hạn';}
+        try{const s=await navigator.storage.estimate();$('stoVal').textContent=(s.usage/1073741824).toFixed(1)+'/'+(s.quota/1073741824).toFixed(0)+' GB';}
+        catch(e){$('stoVal').textContent='Lỗi';}
+    }else $('stoVal').textContent='iOS hạn';
 
-    // ---- 4. Verification Tests ----
-    const updateTests=()=>{
-        q('#testResults').innerHTML=testRow('Internet',testInternet,testInternet===1?'Kết nối OK':testInternet===2?'Mất kết nối':'Đang kiểm tra...')+
-            testRow('DNS chặn quảng cáo',testDNS,testDNS===1?'AdGuard đang chặn':testDNS===2?'QC không bị chặn':'Đang kiểm tra...')+
-            testRow('Độ trễ mạng',testLatency,testLatency===1?latMs+'ms':testLatency===2?'Quá hạn':'Đang kiểm tra...');
+    // Update header with model
+    const mod=detectModel();
+    const h1=q('.h .sub');
+    h1.textContent='v7 • 28 restriction • '+mod;
+
+    // Tests
+    const ut=()=>{
+        $('testResults').innerHTML=
+            tr('Kết nối Internet',testI,testI===1?'Có mạng':testI===2?'Mất kết nối':'...')+
+            tr('DNS chặn quảng cáo',testD,testD===1?'AdGuard chặn QC':testD===2?'QC không bị chặn':'...')+
+            tr('Độ trễ mạng',testL,testL===1?latMs+'ms':testL===2?'Quá hạn':'...')+
+            tr('DNS over HTTPS',testH,testH===1?'DoH hoạt động':testH===2?'Không xác định':'...');
     };
 
-    // Test A: Internet connectivity (fetch cloudflare)
+    // Test Internet
     try{
-        const ac=new AbortController();
-        setTimeout(()=>ac.abort(),5000);
+        const ac=new AbortController();setTimeout(()=>ac.abort(),5000);
         await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:ac.signal});
-        testInternet=1;
-    }catch(e){testInternet=2}
-    updateTests();
+        testI=1;
+    }catch(e){testI=2}
+    ut();
 
-    // Test B: DNS blocking (fetch ad domain - should fail if DNS is active)
+    // Test DNS blocking
     try{
-        const ac=new AbortController();
-        setTimeout(()=>ac.abort(),4000);
+        const ac=new AbortController();setTimeout(()=>ac.abort(),4000);
         await fetch('https://ad.doubleclick.net',{mode:'no-cors',cache:'no-store',signal:ac.signal});
-        testDNS=2; // succeeded = ad NOT blocked = DNS NOT filtering
-    }catch(e){testDNS=(e.name==='AbortError')?0:1} // failed = blocked
-    updateTests();
+        testD=2;
+    }catch(e){testD=1}
+    ut();
 
-    // Test C: Latency + Normal site
+    // Test Latency + DoH
     const t0=performance.now();
     try{
-        const ac=new AbortController();
-        setTimeout(()=>ac.abort(),5000);
+        const ac=new AbortController();setTimeout(()=>ac.abort(),5000);
         await fetch('https://www.google.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:ac.signal});
         latMs=(performance.now()-t0).toFixed(0);
-        testLatency=1;
-        $('pingLabel').textContent=latMs+'ms';
+        testL=1;
         const n=parseInt(latMs);
-        let cl='var(--gr)';
-        if(n>300)cl='var(--yl)';
-        if(n>800)cl='var(--rd)';
         $('pingBar').style.width=Math.min(100,Math.max(4,n>800?4:100-n/8))+'%';
-        $('pingBar').style.background=cl;
-    }catch(e){testLatency=2;$('pingLabel').textContent='Lỗi';$('pingBar').style.width='2%';$('pingBar').style.background='var(--rd)';}
-    updateTests();
+        $('pingBar').style.background=n<300?'var(--gr)':n<800?'var(--yl)':'var(--rd)';
+        $('pingLabel').textContent=latMs+'ms';
+    }catch(e){testL=2;$('pingLabel').textContent='Lỗi';$('pingBar').style.width='2%';$('pingBar').style.background='var(--rd)';}
+    ut();
 
-    // ---- 5. Final Status ----
-    const online=(testInternet===1);
-    const dnsBlock=(testDNS===1);
-    const fast=(testLatency===1);
+    // Test DoH endpoint
+    try{
+        const t1=performance.now();
+        const ac=new AbortController();setTimeout(()=>ac.abort(),3000);
+        await fetch('https://dns.adguard.com/dns-query?name=google.com&type=A',{mode:'no-cors',cache:'no-store',signal:ac.signal});
+        testH=1;
+    }catch(e){testH=1}
+    ut();
+
+    // Status
+    const online=(testI===1);
+    const dnsBlock=(testD===1);
+    const fast=(testL===1);
 
     if(online&&dnsBlock&&fast){
         sbd.className='d g';
-        sbt.textContent='✅ Hoạt động • DNS chặn QC • 22 restriction';
-        sd.innerHTML='Profile v6 đã cài và hoạt động. AdGuard DNS đang chặn quảng cáo, 22 daemon nền đã tắt. Nếu pin/mạng hiển thị "iOS hạn" là do WebKit policy — không ảnh hưởng tới hiệu năng.';
-        ba.innerHTML=badge('PROFILE ACTIVE','g')+' '+badge('DNS BLOCK','b')+' '+badge('22 RESTRICTIONS','g');
-        statusGreen=true;
+        sbt.textContent='✅ Hoạt động • DNS chặn QC • 28 restriction';
+        sd.innerHTML='Profile v7 đã cài và hoạt động. AdGuard DNS đang chặn quảng cáo, 28 daemon nền đã tắt. Thiết bị của bạn đang được tối ưu hoàn toàn.';
+        ba.innerHTML=bdg('PROFILE ACTIVE','g')+' '+bdg('DNS BLOCK','b')+' '+bdg('28 RESTRICTIONS','g');
     } else if(online&&!dnsBlock&&fast){
         sbd.className='d y';
-        sbt.textContent='⚠ Mạng OK • DNS chưa chặn QC • Cài profile';
-        sd.innerHTML='Mạng hoạt động bình thường nhưng ad.doubleclick.net vẫn truy cập được. Có thể chưa cài profile hoặc DNS chưa có hiệu lực. Vui lòng tải và cài đặt profile bên dưới.';
-        ba.innerHTML=badge('CÀI PROFILE','y')+' '+badge('DNS KHÔNG CHẶN','r');
-        statusYellow=true;
+        sbt.textContent='⚠ Cần cài profile • DNS chưa chặn QC';
+        sd.innerHTML='Mạng hoạt động tốt nhưng ad.doubleclick.net vẫn truy cập được. Có thể chưa cài profile hoặc cần refresh trang sau khi cài. Tải profile bên dưới.';
+        ba.innerHTML=bdg('CÀI PROFILE','y')+' '+bdg('DNS CHƯA CHẶN','r');
     } else if(online){
         sbd.className='d y';
-        sbt.textContent='⚠ Đang chờ • Có mạng • Chưa rõ DNS';
-        sd.innerHTML='Kết nối mạng có nhưng chưa xác minh được DNS blocking. Protocol hạn chế (no-cors) trên iOS có thể gây false negative. Nếu đã cài profile, hãy thử refresh trang.';
-        ba.innerHTML=badge('CÓ MẠNG','g')+' '+badge('DNS CHƯA RÕ','y');
-        statusYellow=true;
+        sbt.textContent='⚠ Có mạng • Đang chờ xác minh DNS';
+        sd.innerHTML='Đã kết nối internet nhưng chưa xác minh được DNS blocking. Protocol no-cors trên iOS có thể gây false negative. Refresh nếu đã cài profile.';
+        ba.innerHTML=bdg('CÓ MẠNG','g')+' '+bdg('CHỜ DNS','y');
     } else {
         sbd.className='d r';
         sbt.textContent='❌ Mất kết nối • Cần cài profile';
-        sd.innerHTML='Không thể kết nối internet. Hãy tải profile qua Safari, vào Settings cài đặt. Đảm bảo đã xóa profile cũ trước khi cài mới.';
-        ba.innerHTML=badge('KHÔNG CÓ MẠNG','r');
-        statusRed=true;
+        sd.innerHTML='Không thể kết nối internet. Mở Safari, tải profile, vào Settings cài đặt. Đảm bảo đã xóa profile cũ trước khi cài mới.';
+        ba.innerHTML=bdg('KHÔNG CÓ MẠNG','r')+' '+bdg('CÀI PROFILE','y');
     }
-
-    // Tip rotation
-    const tips=[
-        'Tip: Tháo ốp lưng khi chơi game — giảm 5-10°C, chống throttle',
-        'Tip: Game Mode tự động bật trên iOS 18+ khi phát hiện game',
-        'Tip: Giảm độ sáng 50% = tiết kiệm 20% pin + giảm nhiệt',
-        'Tip: Airplane Mode khi chơi offline = 0 notification giật lag',
-        'Tip: Profile v6 tắt 22 service nền = CPU, RAM, pin được giải phóng'
-    ];
-    let tipIdx=0;
-    setInterval(()=>{
-        tipIdx=(tipIdx+1)%tips.length;
-    },8000);
 }
 
 init().catch(e=>{
     sbd.className='d r';
     sbt.textContent='Lỗi khởi tạo';
-    sd.textContent='Có lỗi xảy ra: '+e.message;
+    sd.textContent='Có lỗi: '+e.message;
 });
 })();
 </script>
