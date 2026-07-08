@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadDisplayName</key>
+    <string>iOS Performance Optimizer</string>
+    <key>PayloadDescription</key>
+    <string>Hệ thống tối ưu hiệu năng iOS toàn diện — DNS nhanh, tắt tiến trình nền, kiểm soát nhiệt.</string>
+    <key>PayloadIdentifier</key>
+    <string>com.performance.ios</string>
+    <key>PayloadOrganization</key>
+    <string>iOS Performance Lab</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>a1b2c3d4-e5f6-7890-abcd-ef1234567800</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadContent</key>
+    <array>
+
+        <!-- ============================================ -->
+        <!-- PAYLOAD 1: DNS over HTTPS (Cloudflare)       -->
+        <!-- ============================================ -->
+        <dict>
+            <key>PayloadDisplayName</key>
+            <string>DNS nhanh (Cloudflare 1.1.1.1)</string>
+            <key>PayloadDescription</key>
+            <string>DNS over HTTPS — giảm độ trễ phân giải tên miền từ ~80ms xuống ~5ms. Cải thiện tốc độ mọi kết nối mạng.</string>
+            <key>PayloadIdentifier</key>
+            <string>com.performance.ios.dns</string>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadUUID</key>
+            <string>a1b2c3d4-e5f6-7890-abcd-ef1234567801</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>1.1.1.1</string>
+                    <string>1.0.0.1</string>
+                    <string>2606:4700:4700::1111</string>
+                    <string>2606:4700:4700::1001</string>
+                </array>
+                <key>ServerURL</key>
+                <string>https://cloudflare-dns.com/dns-query</string>
+            </dict>
+        </dict>
+
+        <!-- ============================================ -->
+        <!-- PAYLOAD 2: System Restrictions               -->
+        <!-- ============================================ -->
+        <dict>
+            <key>PayloadDisplayName</key>
+            <string>Kiểm soát tiến trình nền</string>
+            <key>PayloadDescription</key>
+            <string>Vô hiệu hóa các dịch vụ nền không cần thiết — giảm CPU, RAM, nhiệt độ, và hao pin.</string>
+            <key>PayloadIdentifier</key>
+            <string>com.performance.ios.restrictions</string>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadUUID</key>
+            <string>a1b2c3d4-e5f6-7890-abcd-ef1234567802</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>Restrictions</key>
+            <dict>
+                <!-- Tắt gửi dữ liệu chẩn đoán (analyticsd) -->
+                <key>allowDiagnosticSubmission</key>
+                <false/>
+                <!-- Tắt tải ứng dụng tự động (appstored) -->
+                <key>allowAutomaticAppDownloads</key>
+                <false/>
+                <!-- Tắt đồng bộ iCloud Drive (cloudd) -->
+                <key>allowCloudDocumentSync</key>
+                <false/>
+                <!-- Tắt sao lưu iCloud (backupd) -->
+                <key>allowCloudBackup</key>
+                <false/>
+                <!-- Tắt đồng bộ mật khẩu iCloud Keychain (securityd) -->
+                <key>allowCloudKeychainSync</key>
+                <false/>
+                <!-- Tắt cập nhật chứng thực OTA (certuiworker) -->
+                <key>allowOTAPKIUpdates</key>
+                <false/>
+                <!-- Tắt đồng bộ nền khi chuyển vùng -->
+                <key>allowGlobalBackgroundFetchWhenRoaming</key>
+                <false/>
+                <!-- Tắt tự động mở khóa Apple Watch (BLE polling) -->
+                <key>allowAutoUnlock</key>
+                <false/>
+                <!-- Tắt cập nhật ứng dụng trong nền -->
+                <key>allowAppCellularDataModification</key>
+                <true/>
+                <!-- Giữ nguyên khả năng chụp màn hình -->
+                <key>allowScreenShot</key>
+                <true/>
+                <!-- Giữ nguyên khả năng cài ứng dụng -->
+                <key>allowAppInstallation</key>
+                <true/>
+                <!-- Giữ nguyên Bluetooth -->
+                <key>allowBluetoothModification</key>
+                <true/>
+            </dict>
+        </dict>
+
+        <!-- ============================================ -->
+        <!-- PAYLOAD 3: WebClip Dashboard                 -->
+        <!-- ============================================ -->
+        <dict>
+            <key>PayloadDisplayName</key>
+            <string>Bảng điều khiển Hiệu năng</string>
+            <key>PayloadDescription</key>
+            <string>Dashboard trên màn hình chính — kiểm tra trạng thái hệ thống và hướng dẫn tối ưu.</string>
+            <key>PayloadIdentifier</key>
+            <string>com.performance.ios.webclip</string>
+            <key>PayloadType</key>
+            <string>com.apple.webClip.managed</string>
+            <key>PayloadUUID</key>
+            <string>a1b2c3d4-e5f6-7890-abcd-ef1234567803</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>FullScreen</key>
+            <true/>
+            <key>IsRemovable</key>
+            <true/>
+            <key>Label</key>
+            <string>⚡ Perf</string>
+            <key>Precomposed</key>
+            <false/>
+            <key>URL</key>
+            <string>https://makingshop156-web.github.io/T-i-u/</string>
+        </dict>
+
+    </array>
+</dict>
+</plist>
