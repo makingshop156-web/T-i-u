@@ -317,6 +317,7 @@ q('.tabs').addEventListener('click',e=>{
 const termOut=$('termOut'),termIn=$('termIn');
 function tp(text,cls=''){const d=document.createElement('div');d.innerHTML=text;termOut.appendChild(d);termOut.scrollTop=termOut.scrollHeight;}
 function tcmd(cmd){tp(`<span style="color:var(--gr);font-weight:700">$</span> <span style="color:#e0e8f0">${cmd}</span>`);}
+let cmdHistory=[],histIdx=-1;
 
 const cmds={
     help(){
@@ -379,15 +380,29 @@ const cmds={
     },
     async cpu(){
         tp('═══ <span style="color:var(--yl)">CPU — RAF Frame Timing</span> ═══');
-        const frames=120; const times=[]; let last=performance.now();
-        for(let i=0;i<=frames;i++)await new Promise(r=>requestAnimationFrame(t=>{if(i>0)times.push(t-last);last=t;r();}));
+        // Calibrate refresh rate
+        let cal=[];let cl=performance.now();
+        for(let i=0;i<12;i++)await new Promise(r=>requestAnimationFrame(t=>{if(i>0)cal.push(t-cl);cl=t;r();}));
+        const calAvg=cal.reduce((a,b)=>a+b,0)/cal.length;
+        const refreshRate=Math.round(1000/calAvg/10)*10;
+        const budget=1000/refreshRate;
+        // Main benchmark with timeout
+        const frames=120;const times=[];let last=performance.now(),aborted=false;
+        const timer=setTimeout(()=>{aborted=true;},30000);
+        for(let i=0;i<=frames;i++){
+            if(aborted)break;
+            await new Promise(r=>requestAnimationFrame(t=>{if(i>0)times.push(t-last);last=t;r();}));
+        }
+        clearTimeout(timer);
+        if(aborted){tp('<span style="color:var(--rd)">CPU benchmark timed out after 30s</span>');return;}
         const avg=times.reduce((a,b)=>a+b,0)/times.length;
-        const jank=times.filter(t=>t>16.67).length;
+        const jank=times.filter(t=>t>budget).length;
         const jp=(jank/times.length*100).toFixed(1);
-        const load=Math.min(100,Math.round((avg-2)/16.67*100));
+        const load=Math.min(100,Math.round((avg-2)/budget*100));
+        tp(`<span style="color:var(--dm)">Display:</span>   <b>${refreshRate}Hz</b> <span style="color:var(--dm)">(calibrated)</span>`);
         tp(`<span style="color:var(--dm)">Avg frame:</span> <b>${avg.toFixed(2)}ms</b> <span style="color:var(--dm)">(REAL)</span>`);
         tp(`<span style="color:var(--dm)">Min:</span> ${Math.min(...times).toFixed(2)}ms | <span style="color:var(--dm)">Max:</span> ${Math.max(...times).toFixed(2)}ms`);
-        tp(`<span style="color:var(--dm)">Jank:</span> ${jank}/${frames} (${jp}%) ${jp>15?'<span style="color:var(--rd)">HIGH</span>':jp>5?'<span style="color:var(--yl)">MODERATE</span>':'<span style="color:var(--gr)">LOW</span>'}`);
+        tp(`<span style="color:var(--dm)">Jank (>${budget.toFixed(1)}ms):</span> ${jank}/${frames} (${jp}%) ${jp>15?'<span style="color:var(--rd)">HIGH</span>':jp>5?'<span style="color:var(--yl)">MODERATE</span>':'<span style="color:var(--gr)">LOW</span>'}`);
         tp(`<span style="color:var(--dm)">Load:</span> ${load}% ${load>60?'<span style="color:var(--rd)">HEAVY</span>':load>30?'<span style="color:var(--yl)">MODERATE</span>':'<span style="color:var(--gr)">LIGHT</span>'}`);
         tp(`<span style="color:var(--dm)">${'█'.repeat(Math.round(load/5))+'░'.repeat(20-Math.round(load/5))}</span>`);
         // Update bench UI
@@ -399,7 +414,7 @@ const cmds={
         const h=$('cpuHist');h.innerHTML='';
         for(let i=0;i<30;i++){const bar=document.createElement('div');bar.className='barr';
             const v=times[i]||0;const ht=Math.min(40,v*2);bar.style.height=ht+'px';
-            bar.style.background=v>16.67?'rgba(255,68,68,.5)':'rgba(0,230,118,.4)';h.appendChild(bar);}
+            bar.style.background=v>budget?'rgba(255,68,68,.5)':'rgba(0,230,118,.4)';h.appendChild(bar);}
         perfScore.cpu=Math.max(0,100-load);updateScore();
     },
     async gpu(){
@@ -513,10 +528,17 @@ const cmds={
 };
 
 termIn.addEventListener('keydown',e=>{
-    if(e.key!=='Enter')return;
-    const cmd=termIn.value.trim().toLowerCase();termIn.value='';if(!cmd)return;
-    tcmd(cmd);
-    if(cmds[cmd])cmds[cmd]();else tp(`<span style="color:var(--rd)">Unknown:</span> ${cmd}. Type help.`);
+    if(e.key==='Enter'){
+        const cmd=termIn.value.trim().toLowerCase();termIn.value='';if(!cmd)return;
+        tcmd(cmd);cmdHistory.push(cmd);histIdx=cmdHistory.length;
+        if(cmds[cmd])cmds[cmd]();else tp(`<span style="color:var(--rd)">Unknown:</span> ${cmd}. Type help.`);
+    }else if(e.key==='ArrowUp'&&histIdx>0){
+        histIdx--;termIn.value=cmdHistory[histIdx];e.preventDefault();
+    }else if(e.key==='ArrowDown'){
+        if(histIdx<cmdHistory.length-1){histIdx++;termIn.value=cmdHistory[histIdx];}
+        else{histIdx=cmdHistory.length;termIn.value='';}
+        e.preventDefault();
+    }
 });
 termIn.focus();
 document.addEventListener('touchstart',()=>termIn.focus());
@@ -549,16 +571,21 @@ let gpRunning=false;
 function runGPU(){
     if(gpRunning)return;gpRunning=true;
     const btn=$('gpuBtn'),el=$('gpuFpsAvg'),el2=$('gpuFpsMin'),el3=$('gpuFpsMax');
-    btn.textContent='⏳';btn.disabled=true;
+    btn.textContent='⏳ 0/180';btn.disabled=true;
     el.textContent='...';el2.textContent='...';el3.textContent='...';
-    const c=$('gpuCanvas');c.width=280;c.height=110;
-    let gl;
+    const c=$('gpuCanvas');c.width=Math.round(280*(window.devicePixelRatio||1));c.height=Math.round(110*(window.devicePixelRatio||1));
+    let gl,ctxLost=false;
     try{gl=c.getContext('webgl')||c.getContext('experimental-webgl');}catch(e){}
     if(!gl){
         el.textContent='N/A';el.style.color='var(--rd)';btn.textContent='▶ GPU';btn.disabled=false;gpRunning=false;
         tp('<span style="color:var(--rd)">WebGL not available on this device</span>');
         return;
     }
+    // Handle WebGL context loss
+    const onLost=e=>{e.preventDefault();ctxLost=true;abortBench('WebGL context lost');};
+    const onRestored=()=>{if(!gpRunning)tp('<span style="color:var(--gr)">WebGL context restored — tap GPU to retry</span>');};
+    c.addEventListener('webglcontextlost',onLost);
+    c.addEventListener('webglcontextrestored',onRestored);
 
     // WebGL 2.0 shader - rotating cube
     const vs='attribute vec3 p;attribute vec3 c;uniform float t;varying vec3 vc;void main(){float a=t*0.5;mat3 r=mat3(cos(a),0,sin(a),0,1,0,-sin(a),0,cos(a));gl_Position=vec4(r*p,1.0);vc=c;}';
@@ -581,19 +608,36 @@ function runGPU(){
     const pl=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(pl);gl.vertexAttribPointer(pl,3,gl.FLOAT,false,24,0);
     const cl=gl.getAttribLocation(prog,'c');gl.enableVertexAttribArray(cl);gl.vertexAttribPointer(cl,3,gl.FLOAT,false,24,12);
     const tl=gl.getUniformLocation(prog,'t');
-    gl.clearColor(0.02,0.03,0.05,1);gl.enable(gl.DEPTH_TEST);gl.viewport(0,0,280,110);
+    const dpr=window.devicePixelRatio||1;
+    gl.clearColor(0.02,0.03,0.05,1);gl.enable(gl.DEPTH_TEST);gl.viewport(0,0,c.width,c.height);
 
     let frames=0,totalMs=0,minFps=100,maxFps=0,start=performance.now(),runs=0;
+    // Timeout watchdog — 30s total
+    const gpTimer=setTimeout(()=>{if(gpRunning)abortBench('GPU benchmark timed out');},30000);
+    function abortBench(msg){
+        ctxLost=true;gpRunning=false;btn.textContent='▶ GPU';btn.disabled=false;
+        el.textContent='T/O';el.style.color='var(--rd)';
+        tp(`<span style="color:var(--rd)">${msg}</span>`);
+        clearTimeout(gpTimer);
+        c.removeEventListener('webglcontextlost',onLost);
+        c.removeEventListener('webglcontextrestored',onRestored);
+    }
     function draw(){
+        if(ctxLost)return;
         const now=performance.now();
         if(runs>0){const dt=now-start;start=now;totalMs+=dt;const fps=1000/dt;if(fps<minFps)minFps=fps;if(fps>maxFps)maxFps=fps;frames++;}
         runs++;
+        btn.textContent=`⏳ ${runs}/${180}`;
         gl.uniform1f(tl,now/1000);
         gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
         gl.drawElements(gl.TRIANGLES,36,gl.UNSIGNED_SHORT,0);
-        if(runs<=180)requestAnimationFrame(draw);else done();
+        if(runs<=180&&!ctxLost)requestAnimationFrame(draw);else done();
     }
     function done(){
+        clearTimeout(gpTimer);
+        c.removeEventListener('webglcontextlost',onLost);
+        c.removeEventListener('webglcontextrestored',onRestored);
+        if(ctxLost)return;
         const avgFps=frames>0?frames/(totalMs/1000):0;
         const score=Math.round(avgFps*10);
         el.textContent=avgFps.toFixed(1);el.style.color=avgFps>50?'var(--gr)':avgFps>25?'var(--yl)':'var(--rd)';
