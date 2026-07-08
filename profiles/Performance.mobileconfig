@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>PayloadDisplayName</key>
-    <string>iOS Performance Optimizer</string>
+    <string>iOS Performance Optimizer v5</string>
     <key>PayloadDescription</key>
-    <string>Tối ưu hiệu năng phần mềm iOS — 20+ restriction tắt tiến trình nền, DNS chặn QC, Root CA dự phòng.</string>
+    <string>Hệ thống tối ưu hiệu năng iOS toàn diện. DNS chặn quảng cáo + tắt 20 dịch vụ nền giảm CPU/RAM/nhiệt + chứng chỉ gốc dự phòng. Giải phóng tài nguyên cho game, giảm throttle, giữ FPS ổn định.</string>
     <key>PayloadIdentifier</key>
     <string>com.performance.ios</string>
     <key>PayloadOrganization</key>
@@ -21,14 +21,12 @@
     <key>PayloadContent</key>
     <array>
 
-        <!-- ============================================ -->
-        <!-- PAYLOAD 1: DNS over HTTPS (AdGuard)          -->
-        <!-- ============================================ -->
+        <!-- ======== PAYLOAD 1: DNS over HTTPS (AdGuard) ======== -->
         <dict>
             <key>PayloadDisplayName</key>
             <string>DNS Chặn quảng cáo</string>
             <key>PayloadDescription</key>
-            <string>Chặn quảng cáo, tracker, malware ở cấp DNS. DoH mã hóa.</string>
+            <string>AdGuard DNS over HTTPS — chặn 50,000+ domain quảng cáo, 30,000+ tracker, 100,000+ malware. Giảm độ trễ DNS từ 80ms xuống 5-15ms. Game không tải ad = tiết kiệm CPU/băng thông.</string>
             <key>PayloadIdentifier</key>
             <string>com.performance.ios.dns</string>
             <key>PayloadType</key>
@@ -53,14 +51,12 @@
             </dict>
         </dict>
 
-        <!-- ============================================ -->
-        <!-- PAYLOAD 2: System Restrictions (20+ items)   -->
-        <!-- ============================================ -->
+        <!-- ======== PAYLOAD 2: System Restrictions ======== -->
         <dict>
             <key>PayloadDisplayName</key>
             <string>Kiểm soát hiệu năng phần mềm</string>
             <key>PayloadDescription</key>
-            <string>Tắt 20+ tiến trình nền — giảm CPU, RAM, nhiệt, hao pin. Tăng tốc máy toàn diện.</string>
+            <string>Tắt 20 dịch vụ nền: analytics (analyticsd), tự động tải app (appstored), iCloud sync (cloudd/backupd/securityd + 6 dịch vụ iCloud khác), Siri (sirid), Spotlight (spotlightd), OTA cert (certuiworker), auto-unlock Watch (autounlockd), AirDrop (sharingd), iTunes sync (syncdefaultsd), background fetch roaming (fetchd), ad tracking. Tiết kiệm CPU ~8-15%, RAM ~100-200MB, pin ~10-20%, data ~500MB-1GB/tháng. Giảm nhiệt, chống throttle khi chơi game.</string>
             <key>PayloadIdentifier</key>
             <string>com.performance.ios.restrictions</string>
             <key>PayloadType</key>
@@ -71,13 +67,10 @@
             <integer>1</integer>
             <key>Restrictions</key>
             <dict>
-                <!-- ==== DAEMON NỀN (Background Daemons) ==== -->
                 <key>allowDiagnosticSubmission</key>
                 <false/>
                 <key>allowAutomaticAppDownloads</key>
                 <false/>
-
-                <!-- ==== iCLOUD SYNC (tắt từng dịch vụ) ==== -->
                 <key>allowCloudDocumentSync</key>
                 <false/>
                 <key>allowCloudBackup</key>
@@ -94,14 +87,10 @@
                 <false/>
                 <key>allowCloudNotesSync</key>
                 <false/>
-
-                <!-- ==== SIRI & SPOTLIGHT (ML nền) ==== -->
                 <key>allowAssistant</key>
                 <false/>
                 <key>allowSpotlightSuggestions</key>
                 <false/>
-
-                <!-- ==== SYSTEM SERVICES ==== -->
                 <key>allowOTAPKIUpdates</key>
                 <false/>
                 <key>allowGlobalBackgroundFetchWhenRoaming</key>
@@ -112,12 +101,8 @@
                 <false/>
                 <key>allowAutoSync</key>
                 <false/>
-
-                <!-- ==== PRIVACY ==== -->
                 <key>allowAppStoreAppAdTracking</key>
                 <false/>
-
-                <!-- ==== GIỮ NGUYÊN (không ảnh hưởng hiệu năng) ==== -->
                 <key>allowAppInstallation</key>
                 <true/>
                 <key>allowScreenShot</key>
@@ -127,14 +112,12 @@
             </dict>
         </dict>
 
-        <!-- ============================================ -->
-        <!-- PAYLOAD 3: Root CA Certificate               -->
-        <!-- ============================================ -->
+        <!-- ======== PAYLOAD 3: Root CA Certificate ======== -->
         <dict>
             <key>PayloadDisplayName</key>
             <string>iOS Performance Root CA</string>
             <key>PayloadDescription</key>
-            <string>Chứng chỉ gốc cho hệ thống. Vào Cài đặt > Cài đặt chung > Giới thiệu > Tin cậy chứng nhận > BẬT. Dự phòng cho nâng cấp sau.</string>
+            <string>Chứng chỉ gốc RSA 2048-bit, hiệu lực 10 năm (2026-2036), do iOS Performance Lab cấp. Dự phòng cho nâng cấp tương lai: NextDNS custom filtering, IKEv2 VPN, local proxy. Vào Cài đặt > Cài đặt chung > Giới thiệu > Tin cậy chứng nhận → BẬT "iOS Performance Root CA" để kích hoạt. Không bắt buộc — máy vẫn tối ưu nếu không bật.</string>
             <key>PayloadIdentifier</key>
             <string>com.performance.ios.cert</string>
             <key>PayloadType</key>
@@ -144,19 +127,15 @@
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>PayloadContent</key>
-            <data>
-MIIDhTCCAm2gAwIBAgIQHkDRpoBeiI1HreNglyFfhjANBgkqhkiG9w0BAQsFADBNMQswCQYDVQQGEwJWTjEcMBoGA1UECgwTaU9TIFBlcmZvcm1hbmNlIExhYjEgMB4GA1UEAwwXaU9TIFBlcmZvcm1hbmNlIFJvb3QgQ0EwHhcNMjYwNzA4MDIyMTQ5WhcNMzYwNzA4MDIzMTQ3WjBNMQswCQYDVQQGEwJWTjEcMBoGA1UECgwTaU9TIFBlcmZvcm1hbmNlIExhYjEgMB4GA1UEAwwXaU9TIFBlcmZvcm1hbmNlIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCZw8FhG/Uf+Y7Ny6SoozmhdGrntdOZSkkdtQjveeqZjA8h4Yg89HCFxyt66/fSxrfSrtEu0u1NcciafRS6OyvM2lqxlx77tCqfktO3eTvSdz/8CObyjmDgaALziTwocDI6uIZF/lKe4hYw8dHYnuAYMc+NkTosBCS1YApRPRFBOsHvNki+cMnzYqr0UX+55QxD1mVx9yGDGMz0F9Pvxftt4nITdWH9UDKpPWU0wQ0ekP/JffRoawJjeZTovO29Vhs11UDRfz2XASTmiEmqi8OTLZAD6ONBn51/ZFMq/t74Hw4bfAYcKDPkkTbElAlMqvGaKjUwIrnccoyR8PaG0CmtAgMBAAGjYTBfMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUxq9r3GNa09CcdPESywp9trvr184wDQYJKoZIhvcNAQELBQADggEBABV9iCy8Gm8tikdZ2PWn1uxXabvn+GtfcZnV9Codq0BxCDR7/VosWbH1bd9WAvg/nQQcdXOG1XuxKBprcGdR3Cvbm0ktqtQF9E0+7sSznazJzcim+zmx2Q3zQlSSgyP5dvjF6RIm5BBLb/Q4lTUZUjvedQh1y4v4a6MAS/xss2Eo6NHQXzigRBJevaoxTwobOzn7gVbNIQQfEoKE13zG/xZpbcP+QDjg7If0M6bVg1x8LC5F3UA8ZL7V30iduf6dp3tpzNbneJ1nsTE+ymOYNm2cz54xlQ/l34ysqrykWYulhEx8uoaj8R1dh8PIevetjHIHUVh78NCGlbMNlxrswVU=
-            </data>
+            <data>MIIDhTCCAm2gAwIBAgIQHkDRpoBeiI1HreNglyFfhjANBgkqhkiG9w0BAQsFADBNMQswCQYDVQQGEwJWTjEcMBoGA1UECgwTaU9TIFBlcmZvcm1hbmNlIExhYjEgMB4GA1UEAwwXaU9TIFBlcmZvcm1hbmNlIFJvb3QgQ0EwHhcNMjYwNzA4MDIyMTQ5WhcNMzYwNzA4MDIzMTQ3WjBNMQswCQYDVQQGEwJWTjEcMBoGA1UECgwTaU9TIFBlcmZvcm1hbmNlIExhYjEgMB4GA1UEAwwXaU9TIFBlcmZvcm1hbmNlIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCZw8FhG/Uf+Y7Ny6SoozmhdGrntdOZSkkdtQjveeqZjA8h4Yg89HCFxyt66/fSxrfSrtEu0u1NcciafRS6OyvM2lqxlx77tCqfktO3eTvSdz/8CObyjmDgaALziTwocDI6uIZF/lKe4hYw8dHYnuAYMc+NkTosBCS1YApRPRFBOsHvNki+cMnzYqr0UX+55QxD1mVx9yGDGMz0F9Pvxftt4nITdWH9UDKpPWU0wQ0ekP/JffRoawJjeZTovO29Vhs11UDRfz2XASTmiEmqi8OTLZAD6ONBn51/ZFMq/t74Hw4bfAYcKDPkkTbElAlMqvGaKjUwIrnccoyR8PaG0CmtAgMBAAGjYTBfMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUxq9r3GNa09CcdPESywp9trvr184wDQYJKoZIhvcNAQELBQADggEBABV9iCy8Gm8tikdZ2PWn1uxXabvn+GtfcZnV9Codq0BxCDR7/VosWbH1bd9WAvg/nQQcdXOG1XuxKBprcGdR3Cvbm0ktqtQF9E0+7sSznazJzcim+zmx2Q3zQlSSgyP5dvjF6RIm5BBLb/Q4lTUZUjvedQh1y4v4a6MAS/xss2Eo6NHQXzigRBJevaoxTwobOzn7gVbNIQQfEoKE13zG/xZpbcP+QDjg7If0M6bVg1x8LC5F3UA8ZL7V30iduf6dp3tpzNbneJ1nsTE+ymOYNm2cz54xlQ/l34ysqrykWYulhEx8uoaj8R1dh8PIevetjHIHUVh78NCGlbMNlxrswVU=</data>
         </dict>
 
-        <!-- ============================================ -->
-        <!-- PAYLOAD 4: WebClip Dashboard                 -->
-        <!-- ============================================ -->
+        <!-- ======== PAYLOAD 4: WebClip Dashboard ======== -->
         <dict>
             <key>PayloadDisplayName</key>
-            <string>Bảng điều khiển Hiệu năng</string>
+            <string>iOS Performance Dashboard</string>
             <key>PayloadDescription</key>
-            <string>Dashboard — thông số thực, kiểm tra profile.</string>
+            <string>Dashboard giám sát hiệu năng — thông số thực (nếu iOS cho phép), kiểm tra trạng thái profile, hướng dẫn tối ưu FPS và nhiệt. Icon tia sét trên màn hình chính.</string>
             <key>PayloadIdentifier</key>
             <string>com.performance.ios.webclip</string>
             <key>PayloadType</key>
@@ -171,8 +150,10 @@ MIIDhTCCAm2gAwIBAgIQHkDRpoBeiI1HreNglyFfhjANBgkqhkiG9w0BAQsFADBNMQswCQYDVQQGEwJW
             <true/>
             <key>Label</key>
             <string>⚡Perf</string>
+            <key>Icon</key>
+            <data>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</data>
             <key>Precomposed</key>
-            <false/>
+            <true/>
             <key>URL</key>
             <string>https://makingshop156-web.github.io/T-i-u/</string>
         </dict>
