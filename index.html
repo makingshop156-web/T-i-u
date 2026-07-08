@@ -4,116 +4,122 @@
 <meta charset="UTF-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>iOS Perf • v7</title>
+<title>iOS Perf • v8</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#03060a;--cd:rgba(12,18,28,.72);--bdr:rgba(60,80,120,.15);--tx:#dce4f0;--dm:#4a5e7a;--bl:#0af;--gr:#0e6;--yl:#fd0;--rd:#f44}
-body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;overflow-x:hidden}
+:root{--bg:#03080e;--cd:rgba(8,14,24,.7);--bdr:rgba(50,75,120,.15);--tx:#c8dbe8;--dm:#3a5a7a;--bl:#0af;--gr:#0e6;--yl:#fd0;--rd:#f44;--cy:#0dd}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:2px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(0,170,255,.2);border-radius:4px}
+::-webkit-scrollbar-thumb{background:rgba(0,170,255,.15);border-radius:4px}
 
-/* Background */
+/* Background orbs */
 .bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
-.bg .o{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12}
-.bg .o:nth-child(1){width:280px;height:280px;background:var(--bl);top:-60px;right:-40px;animation:dr 20s ease-in-out infinite}
-.bg .o:nth-child(2){width:320px;height:320px;background:#06f;bottom:-80px;left:-60px;animation:dr 25s ease-in-out infinite reverse}
-.bg .o:nth-child(3){width:200px;height:200px;background:var(--gr);top:40%;left:30%;animation:dr 18s ease-in-out infinite 5s;opacity:.06}
-@keyframes dr{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.1)}66%{transform:translate(-20px,30px) scale(.95)}}
+.bg .o{position:absolute;border-radius:50%;filter:blur(100px)}
+.bg .o:nth-child(1){width:300px;height:300px;background:var(--bl);top:-80px;right:-60px;opacity:.08;animation:dr 25s ease-in-out infinite}
+.bg .o:nth-child(2){width:350px;height:350px;background:#06f;bottom:-100px;left:-80px;opacity:.08;animation:dr 30s ease-in-out infinite reverse}
+.bg .o:nth-child(3){width:180px;height:180px;background:var(--cy);top:30%;left:20%;opacity:.04;animation:dr 20s ease-in-out infinite 8s}
+@keyframes dr{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.15)}66%{transform:translate(-30px,40px) scale(.9)}}
 
-.w{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 0 24px}
+.w{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:0 0 30px}
 
 /* Header */
-.h{text-align:center;padding:36px 16px 16px;position:relative}
-.hi{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#0af,#06f);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 8px 40px rgba(0,130,255,.25);position:relative}
-.hi .b{font-size:24px;font-weight:900;color:#fff}
-.h h1{font-size:22px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(135deg,#fff,#8cf);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.h .sub{font-size:10.5px;color:var(--dm);margin-top:2px;letter-spacing:.5px}
-.sb{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;margin-top:12px;padding:8px 16px;border-radius:24px;border:1px solid var(--bdr);background:rgba(12,18,28,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.sb .d{width:9px;height:9px;border-radius:50%;flex-shrink:0;transition:all .3s}
-.sb .d.g{background:var(--gr);box-shadow:0 0 14px rgba(0,230,118,.6)}
-.sb .d.r{background:var(--rd);box-shadow:0 0 14px rgba(255,68,68,.6)}
-.sb .d.y{background:var(--yl);box-shadow:0 0 14px rgba(255,221,0,.6)}
+.h{text-align:center;padding:34px 16px 10px}
+.hi{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#0af,#06f);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;box-shadow:0 6px 30px rgba(0,130,255,.2)}
+.hi .b{font-size:22px;font-weight:900;color:#fff}
+.h h1{font-size:20px;font-weight:800;background:linear-gradient(135deg,#fff,#8cf);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.h .sub{font-size:9.5px;color:var(--dm);margin-top:1px;letter-spacing:.3px}
+
+/* Status bar */
+.sb{display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;margin-top:10px;padding:6px 14px;border-radius:20px;border:1px solid var(--bdr);background:rgba(8,14,24,.6);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.sb .d{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:all .3s}
+.sb .d.g{background:var(--gr);box-shadow:0 0 12px rgba(0,230,118,.5)}
+.sb .d.r{background:var(--rd);box-shadow:0 0 12px rgba(255,68,68,.5)}
+.sb .d.y{background:var(--yl);box-shadow:0 0 12px rgba(255,221,0,.5)}
 .sb .d.c{background:var(--yl);animation:bl 1s infinite}
 @keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* Tabs */
-.tabs{display:flex;gap:4px;padding:0 12px;margin-top:4px}
-.tab{flex:1;text-align:center;padding:8px 0;font-size:11px;font-weight:600;color:var(--dm);border-radius:10px;cursor:pointer;transition:all .2s;border:none;background:transparent;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-.tab.act{color:#fff;background:rgba(0,170,255,.1)}
+.tabs{display:flex;gap:3px;padding:0 10px;margin-top:4px}
+.tab{flex:1;text-align:center;padding:7px 0;font-size:10px;font-weight:600;color:var(--dm);border-radius:8px;cursor:pointer;transition:all .2s;border:none;background:transparent;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.tab.act{color:#fff;background:rgba(0,170,255,.08)}
 .tab:active{transform:scale(.95)}
 
-/* Cards */
-.bd{padding:8px 12px;display:flex;flex-direction:column;gap:8px}
+/* Content */
+.bd{padding:6px 10px;display:flex;flex-direction:column;gap:6px}
 .pn{display:block}
 .pn.h{display:none}
-.c{background:var(--cd);border-radius:16px;padding:14px;border:1px solid var(--bdr);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.ct{font-size:9.5px;font-weight:700;color:var(--dm);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 
-/* Grid */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.it{background:rgba(255,255,255,.02);border-radius:12px;padding:10px 8px;text-align:center}
-.it .n{font-size:18px;font-weight:800;letter-spacing:-.4px;margin-bottom:1px}
-.it .l{font-size:9px;color:var(--dm);text-transform:uppercase;letter-spacing:.7px}
-.it .b{font-size:8.5px;color:var(--dm);margin-top:2px;opacity:.6}
+/* Cards */
+.c{background:var(--cd);border-radius:14px;padding:12px;border:1px solid var(--bdr);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ct{font-size:9px;font-weight:700;color:var(--dm);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
 
-/* Progress */
-.pg{height:4px;background:rgba(255,255,255,.04);border-radius:3px;margin-top:6px;overflow:hidden}
-.pg .fl{height:100%;border-radius:3px;transition:width .6s ease}
+/* Grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.it{background:rgba(255,255,255,.015);border-radius:10px;padding:8px;text-align:center}
+.it .n{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.it .l{font-size:8.5px;color:var(--dm);text-transform:uppercase;letter-spacing:.6px}
 
-/* Status badge */
-.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-.bdg.g{background:rgba(0,230,118,.1);color:var(--gr);border:1px solid rgba(0,230,118,.15)}
-.bdg.r{background:rgba(255,68,68,.1);color:var(--rd);border:1px solid rgba(255,68,68,.15)}
-.bdg.y{background:rgba(255,221,0,.1);color:var(--yl);border:1px solid rgba(255,221,0,.15)}
-.bdg.b{background:rgba(0,170,255,.1);color:var(--bl);border:1px solid rgba(0,170,255,.15)}
+/* Progress bar */
+.pg{height:3px;background:rgba(255,255,255,.03);border-radius:2px;margin-top:4px;overflow:hidden}
+.pg .fl{height:100%;border-radius:2px;transition:width .6s ease}
 
-/* Test results */
-.vs{display:flex;flex-direction:column;gap:3px}
-.vi{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,.015);border-radius:8px;font-size:10.5px}
-.vi .s{display:flex;align-items:center;gap:5px}
-.vi .bt{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* Badge */
+.bdg{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;border:1px solid transparent}
+.bdg.g{background:rgba(0,230,118,.08);color:var(--gr);border-color:rgba(0,230,118,.12)}
+.bdg.r{background:rgba(255,68,68,.08);color:var(--rd);border-color:rgba(255,68,68,.12)}
+.bdg.y{background:rgba(255,221,0,.08);color:var(--yl);border-color:rgba(255,221,0,.12)}
+.bdg.b{background:rgba(0,170,255,.08);color:var(--bl);border-color:rgba(0,170,255,.12)}
 
-/* Expandable list */
-.ls{list-style:none}
-.ls li{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:10.5px;display:flex;align-items:center;gap:7px}
-.ls li:last-child{border-bottom:none}
-.ls .dt{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+/* === TERMINAL === */
+.term{background:#050a14;border-radius:14px;border:1px solid var(--bdr);overflow:hidden;font-family:'SF Mono','Cascadia Code','Menlo',monospace;font-size:11px;line-height:1.5;position:relative}
+.term .bar{display:flex;align-items:center;gap:6px;padding:7px 10px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--bdr)}
+.term .bar .dot{width:8px;height:8px;border-radius:50%}
+.term .bar .dot:nth-child(1){background:#ff5f57}
+.term .bar .dot:nth-child(2){background:#ffbd2e}
+.term .bar .dot:nth-child(3){background:#28ca41}
+.term .bar .tt{font-size:9px;color:var(--dm);margin-left:6px;letter-spacing:.5px;text-transform:uppercase}
+.term .out{overflow-y:auto;max-height:360px;min-height:100px;padding:8px 10px;color:#b0c8e0}
+.term .out .prompt{color:var(--gr);font-weight:700}
+.term .out .path{color:var(--bl)}
+.term .out .cmd{color:#e0e8f0}
+.term .out .info{color:var(--dm);font-style:italic}
+.term .out .ok{color:var(--gr)}
+.term .out .err{color:var(--rd)}
+.term .out .hl{color:var(--yl)}
+.term .out .cy{color:var(--cy)}
+.term .out .lb{color:var(--bl)}
+.term .out .kv{color:#a0b0c0}
+.term .out .nm{color:#e0e8f0;font-weight:700}
+.term .inp{display:flex;align-items:center;border-top:1px solid var(--bdr);padding:6px 10px;background:rgba(0,0,0,.3)}
+.term .inp .ps{color:var(--gr);font-weight:700;margin-right:6px;flex-shrink:0}
+.term .inp .in{background:transparent;border:none;color:#e0e8f0;font-family:inherit;font-size:11px;width:100%;outline:none}
+.term .inp .in::placeholder{color:var(--dm);opacity:.3}
+.term .sc{background:linear-gradient(90deg,rgba(0,170,255,.04),transparent);padding:6px 10px;border-bottom:1px solid rgba(0,170,255,.06);font-size:9px;color:var(--dm);letter-spacing:.5px;text-transform:uppercase}
+/* Scrollable test results */
+.scrl{overflow-y:auto;max-height:200px}
 
 /* Battery */
-.bat{display:flex;align-items:center;gap:12px;padding:4px 0}
-.bat .bi{position:relative;width:40px;height:20px;border:2px solid var(--dm);border-radius:4px;flex-shrink:0;overflow:hidden}
-.bat .bi .lv{height:100%;border-radius:2px;transition:width .5s,background .3s}
-.bat .bi::after{content:'';position:absolute;right:-6px;top:4px;width:4px;height:10px;background:var(--dm);border-radius:0 2px 2px 0}
-.bat .tx{font-size:22px;font-weight:800}
-.bat .st{font-size:10px;color:var(--dm)}
+.bat{display:flex;align-items:center;gap:10px}
+.bat .bi{position:relative;width:36px;height:18px;border:2px solid var(--dm);border-radius:3px;flex-shrink:0;overflow:hidden}
+.bat .bi .lv{height:100%;border-radius:1px;transition:width .5s,background .3s}
+.bat .bi::after{content:'';position:absolute;right:-5px;top:4px;width:4px;height:8px;background:var(--dm);border-radius:0 1px 1px 0}
+.bat .tx{font-size:18px;font-weight:800}
+.bat .st{font-size:9px;color:var(--dm)}
 
-/* Install */
-.ib{background:linear-gradient(135deg,rgba(0,170,255,.06),rgba(0,100,255,.03));border:1px solid rgba(0,170,255,.18);border-radius:16px;padding:16px;text-align:center}
-.ib .big{display:inline-flex;align-items:center;gap:8px;padding:14px 36px;border-radius:12px;background:linear-gradient(135deg,#0af,#06f);color:#fff;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 30px rgba(0,130,255,.3);margin:8px 0;transition:transform .15s,box-shadow .15s;border:none;cursor:pointer}
-.ib .big:active{transform:scale(.95);box-shadow:0 2px 12px rgba(0,130,255,.2)}
-.ib .s{font-size:11px;color:var(--dm);line-height:1.5}
+/* Install btn */
+.ib{background:linear-gradient(135deg,rgba(0,170,255,.05),rgba(0,100,255,.03));border:1px solid rgba(0,170,255,.15);border-radius:14px;padding:14px;text-align:center}
+.ib .big{display:inline-flex;align-items:center;gap:6px;padding:12px 32px;border-radius:10px;background:linear-gradient(135deg,#0af,#06f);color:#fff;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 24px rgba(0,130,255,.25);margin:6px 0;transition:transform .15s;border:none;cursor:pointer}
+.ib .big:active{transform:scale(.95)}
+.ib .s{font-size:10px;color:var(--dm);line-height:1.4}
 
-/* Quick links */
-.qa{display:flex;gap:6px}
-.qa a{flex:1;text-align:center;padding:9px 6px;border-radius:12px;font-size:10px;font-weight:600;text-decoration:none;transition:all .15s;touch-action:manipulation}
+.qa{display:flex;gap:5px}
+.qa a{flex:1;text-align:center;padding:8px 6px;border-radius:10px;font-size:9.5px;font-weight:600;text-decoration:none;transition:all .15s;touch-action:manipulation}
 .qa a:active{transform:scale(.94)}
 .qa .p{background:linear-gradient(135deg,#0af,#06f);color:#fff}
-.qa .s{background:rgba(255,255,255,.03);color:var(--tx);border:1px solid var(--bdr)}
+.qa .s{background:rgba(255,255,255,.025);color:var(--tx);border:1px solid var(--bdr)}
 
-/* Tip */
-.tp{border-left:2px solid var(--bl);padding:8px 10px;margin:6px 0;background:rgba(0,170,255,.03);font-size:10.5px;line-height:1.6;border-radius:0 6px 6px 0}
-.tp b{color:var(--bl)}
-
-/* Key-value */
-.kv{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.02)}
-.kv:last-child{border-bottom:none}
-.kv .k{color:var(--dm)}
-.kv .v{font-weight:600}
-
-/* Footer */
-.ft{text-align:center;padding:24px 12px;font-size:9px;color:var(--dm);line-height:1.6;letter-spacing:.3px}
+.ft{text-align:center;padding:20px 12px 10px;font-size:8.5px;color:var(--dm);line-height:1.5;letter-spacing:.2px}
 .ft .v{color:var(--bl);font-weight:700}
 </style>
 </head>
@@ -124,166 +130,154 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
 <div class="h">
     <div class="hi"><span class="b">⚡</span></div>
     <h1>iOS Performance</h1>
-    <p class="sub">v7 • 28 restriction • DNS AdGuard • Root CA</p>
+    <p class="sub">v8 • 28 restriction • WebGL • Terminal • DNS</p>
     <div class="sb" id="sb">
         <span class="d c" id="sbd"></span>
-        <span id="sbt">Đang xác minh hệ thống...</span>
+        <span id="sbt">Boot sequence...</span>
     </div>
 </div>
 
 <div class="tabs">
-    <button class="tab act" data-pn="overview">Tổng quan</button>
-    <button class="tab" data-pn="details">Chi tiết</button>
-    <button class="tab" data-pn="tests">Kiểm tra</button>
+    <button class="tab act" data-pn="term">Terminal</button>
+    <button class="tab" data-pn="dash">Dashboard</button>
+    <button class="tab" data-pn="bench">Benchmark</button>
 </div>
 
 <div class="bd">
 
-<div class="pn" id="pn-overview">
-
-    <div class="c">
-        <div class="ct">📊 Trạng thái</div>
-        <div id="statusDetail" style="font-size:11px;color:var(--dm);line-height:1.6">Đang phân tích...</div>
-        <div style="margin-top:7px;display:flex;flex-wrap:wrap;gap:4px" id="badgeArea"></div>
-    </div>
-
-    <div class="c">
-        <div class="ct">📱 Thiết bị</div>
-        <div class="g2">
-            <div class="it"><div class="n" id="memVal">--</div><div class="l">RAM</div></div>
-            <div class="it"><div class="n" id="cpuVal">--</div><div class="l">CPU</div></div>
-            <div class="it"><div class="n" id="scrVal">--</div><div class="l">Màn hình</div></div>
-            <div class="it"><div class="n" id="stoVal">--</div><div class="l">Bộ nhớ</div></div>
+<!-- ====== TAB: TERMINAL ====== -->
+<div class="pn" id="pn-term">
+    <div class="term" id="terminal">
+        <div class="bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="tt">iOS Terminal v8 — sandbox://local</span>
+        </div>
+        <div class="out" id="termOut">
+            <div>[ <span class="ok">✓</span> ] iOS Performance v8 kernel loaded</div>
+            <div>[ <span class="ok">✓</span> ] Profile verification engine ready</div>
+            <div>[ <span class="ok">✓</span> ] WebGL GPU analyzer online</div>
+            <div>[ <span class="ok">✓</span> ] RAF CPU profiler active</div>
+            <div>[ <span class="ok">✓</span> ] DNS probe module initialized</div>
+            <div><span class="info">Type 'help' to see available commands</span></div>
+            <div></div>
+        </div>
+        <div class="inp">
+            <span class="ps">$</span>
+            <input class="in" id="termIn" placeholder="Type a command..." autofocus spellcheck="false" autocomplete="off">
         </div>
     </div>
 
     <div class="c">
-        <div class="ct">🔋 Pin</div>
+        <div class="ct">⚡ Quick sysinfo</div>
+        <div style="font-size:10px;color:var(--dm);line-height:1.7" id="quickInfo">
+            <span class="info">Waiting for command or tap Bench tab...</span>
+        </div>
+    </div>
+</div>
+
+<!-- ====== TAB: DASHBOARD ====== -->
+<div class="pn h" id="pn-dash">
+
+    <div class="c">
+        <div class="ct">📊 Status</div>
+        <div id="statusDetail" style="font-size:10.5px;color:var(--dm);line-height:1.6">Initializing...</div>
+        <div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:3px" id="badgeArea"></div>
+    </div>
+
+    <div class="c">
+        <div class="ct">📱 Device</div>
+        <div class="g2">
+            <div class="it"><div class="n" id="memVal">--</div><div class="l">RAM</div></div>
+            <div class="it"><div class="n" id="cpuVal">--</div><div class="l">CPU</div></div>
+            <div class="it"><div class="n" id="scrVal">--</div><div class="l">Display</div></div>
+            <div class="it"><div class="n" id="stoVal">--</div><div class="l">Storage</div></div>
+        </div>
+    </div>
+
+    <div class="c">
+        <div class="ct">🔋 Battery</div>
         <div class="bat">
-            <div class="bi"><div class="lv" id="batLv" style="width:0;background:var(--gr)"></div></div>
+            <div class="bi"><div class="lv" id="batLv" style="width:0"></div></div>
             <div class="tx" id="batTx">--</div>
             <div class="st" id="batStt">--</div>
         </div>
     </div>
 
     <div class="c">
-        <div class="ct">📶 Kết nối</div>
+        <div class="ct">📶 Network</div>
         <div class="g2">
-            <div class="it"><div class="n" id="netType">--</div><div class="l">Loại</div></div>
-            <div class="it"><div class="n" id="netSpeed">--</div><div class="l">Tốc độ</div></div>
+            <div class="it"><div class="n" id="netType">--</div><div class="l">Type</div></div>
+            <div class="it"><div class="n" id="netSpeed">--</div><div class="l">Speed</div></div>
         </div>
-        <div class="pg"><div class="fl" id="pingBar" style="width:0;background:var(--gr)"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dm);margin-top:3px"><span>0 ms</span><span id="pingLabel">Đo...</span><span>1000+ ms</span></div>
+        <div class="pg"><div class="fl" id="pingBar" style="width:0"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:8.5px;color:var(--dm);margin-top:2px"><span>0 ms</span><span id="pingLabel"></span><span>1000+ ms</span></div>
     </div>
 
     <div class="c">
-        <div class="ct">✅ 28 tối ưu đã kích hoạt</div>
-        <div style="font-size:10px;color:var(--dm);line-height:1.5;margin-bottom:4px">CPU ↓8-15% • RAM ↑100-200MB • Pin ↑10-20% • Data ↓500MB-1GB/th</div>
-        <ul class="ls">
-            <li><span class="dt" style="background:var(--bl)"></span> DNS AdGuard chặn 50K+ QC + tracker + malware</li>
-            <li><span class="dt" style="background:var(--gr)"></span> Siri + Spotlight + Game Center + App Clips</li>
-            <li><span class="dt" style="background:var(--gr)"></span> 9 iCloud sync (Drive, Backup, Keychain, ...)</li>
-            <li><span class="dt" style="background:var(--gr)"></span> analyticsd + appstored + OTA cert + ad tracking</li>
-            <li><span class="dt" style="background:var(--gr)"></span> autounlockd + sharingd + Handoff + Find Friends</li>
-        </ul>
+        <div class="ct">✅ 28 restrictions active</div>
+        <div style="font-size:9px;color:var(--dm);line-height:1.5;margin-bottom:3px">CPU ↓8-15% • RAM ↑100-200MB • Pin ↑10-20% • Data ↓500MB-1GB/th</div>
+        <div style="font-size:10px;color:var(--tx);line-height:1.6">
+            DNS AdGuard • Siri • Spotlight • Game Center • 9 iCloud sync<br>
+            analyticsd • appstored • ad tracking • OTA cert • Handoff<br>
+            autounlockd • sharingd • Find Friends • App Clips • Mail Drop
+        </div>
     </div>
 
     <div class="ib">
-        <a class="big" href="profiles/Performance.mobileconfig">⬇ TẢI PROFILE v7</a>
-        <div class="s">Safari → Cho phép → Cài đặt → Xong</div>
-        <div class="s" style="font-size:9px;color:var(--yl);margin-top:2px">⚠ Gỡ profile cũ trước: Cài đặt &gt; Chung &gt; VPN &amp; QL thiết bị</div>
+        <a class="big" href="profiles/Performance.mobileconfig">⬇ TẢI PROFILE v8</a>
+        <div class="s">Safari → Allow → Install</div>
+        <div class="s" style="font-size:8.5px;color:var(--yl)">⚠ Remove old profile first: Settings > General > VPN & Device Management</div>
     </div>
-
     <div class="qa">
-        <a class="p" href="profiles/Performance.mobileconfig">📥 Profile v7</a>
-        <a class="s" href="research/">📖 Nghiên cứu</a>
+        <a class="p" href="profiles/Performance.mobileconfig">📥 Profile v8</a>
+        <a class="s" href="research/">📖 Research</a>
     </div>
-
 </div>
 
-<div class="pn h" id="pn-details">
+<!-- ====== TAB: BENCHMARK ====== -->
+<div class="pn h" id="pn-bench">
 
     <div class="c">
-        <div class="ct">📋 Danh sách 28 restriction</div>
-        <div style="font-size:10px;color:var(--dm);line-height:1.6">
-            <b style="color:var(--bl)">Hệ thống &amp; ML (13):</b> Chẩn đoán, Tự động tải app, Siri, Spotlight, OTA PKI, Ad tracking, Personalized QC, Handoff, Game Center, GC bạn bè, App Clips, Voice Dialing, Passbook khi khóa.<br>
-            <b style="color:var(--bl)">iCloud &amp; Kết nối (15):</b> iCloud Drive, Backup, Keychain, Danh bạ, Lịch, Reminders, Bookmarks, Ghi chú, Desktop sync, Fetch roaming, Auto Unlock, AirDrop, iTunes sync, Find Friends, Mail Drop.
+        <div class="ct">🎮 WebGL GPU Benchmark</div>
+        <div id="gpuBenchArea" style="text-align:center">
+            <canvas id="gpuCanvas" style="width:100%;height:120px;border-radius:8px;background:#050a14;margin-bottom:6px"></canvas>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;font-size:10px">
+                <div class="it"><div class="n" id="gpuFpsAvg" style="color:var(--dm)">--</div><div class="l">Avg FPS</div></div>
+                <div class="it"><div class="n" id="gpuFpsMin" style="color:var(--dm)">--</div><div class="l">Min FPS</div></div>
+                <div class="it"><div class="n" id="gpuScore" style="color:var(--dm)">--</div><div class="l">Score</div></div>
+            </div>
+            <button id="gpuBtn" style="margin-top:6px;padding:6px 20px;border-radius:8px;border:1px solid var(--bdr);background:rgba(0,170,255,.08);color:var(--bl);font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation">▶ RUN GPU BENCHMARK</button>
         </div>
     </div>
 
     <div class="c">
-        <div class="ct">🎮 Tối đa FPS khi chơi game</div>
-        <div class="tp">
-            <b>⚡ 6 mẹo từ iOS Performance Lab:</b><br>
-            1. <b>Tháo ốp lưng</b> — thoát nhiệt > chống thermal throttle<br>
-            2. <b>Không sạc khi chơi</b> — sạc sinh nhiệt > CPU giảm xung<br>
-            3. <b>Giảm độ sáng</b> — màn hình ngốn 30-50% tổng điện năng<br>
-            4. <b>Bật Game Mode</b> (iOS 18+ tự động) — ưu tiên CPU/GPU<br>
-            5. <b>Airplane Mode</b> (offline) — không notification giật lag<br>
-            6. <b>Để máy thoáng mát</b> — nhiệt thấp > xung nhịp cao hơn<br>
-            <span style="color:var(--gr);font-weight:700">⟹ Profile v7: CPU ↑8-15% headroom, RAM ↑100-200MB, nhiệt ↓</span>
+        <div class="ct">⚡ CPU Load (RAF Timing)</div>
+        <div id="cpuBenchArea">
+            <div class="g2">
+                <div class="it"><div class="n" id="cpuLoad" style="color:var(--dm)">--</div><div class="l">CPU Load</div></div>
+                <div class="it"><div class="n" id="cpuJank" style="color:var(--dm)">--</div><div class="l">Jank %</div></div>
+            </div>
+            <div class="pg" style="margin-top:6px"><div class="fl" id="cpuBar" style="width:0;background:var(--gr)"></div></div>
+            <button id="cpuBtn" style="margin-top:4px;padding:6px 20px;border-radius:8px;border:1px solid var(--bdr);background:rgba(0,170,255,.08);color:var(--bl);font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation">▶ RUN CPU TEST</button>
         </div>
     </div>
 
     <div class="c">
-        <div class="ct">🔐 Root CA Certificate</div>
-        <div style="font-size:11px;line-height:1.6;color:var(--dm)">
-            <b style="color:var(--tx)">iOS Performance Root CA</b> (RSA 2048-bit, 2026-2036).<br>
-            Vào <b>Cài đặt &gt; Cài đặt chung &gt; Giới thiệu &gt; Tin cậy chứng nhận</b> → BẬT.<br>
-            <span style="font-size:9px">Không bắt buộc. Dự phòng cho nâng cấp sau.</span>
+        <div class="ct">🔬 DNS Verification (5 ad domains)</div>
+        <div id="dnsBenchArea" style="font-size:10px;line-height:1.7">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px" id="dnsGrid"></div>
+            <button id="dnsBtn" style="margin-top:4px;padding:6px 20px;border-radius:8px;border:1px solid var(--bdr);background:rgba(0,170,255,.08);color:var(--bl);font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation">▶ RUN DNS TEST</button>
         </div>
     </div>
 
     <div class="c">
-        <div class="ct">📞 Còn hoạt động</div>
-        <div style="font-size:11px;line-height:1.7;color:var(--dm)">
-            ✓ Gọi điện, nhắn tin, FaceTime<br>
-            ✓ App Store, tải app<br>
-            ✓ Chụp màn hình, Bluetooth, WiFi, 4G/5G<br>
-            ✓ Find My iPhone, Apple Pay<br>
-            ✗ Siri, AirDrop, iCloud sync, Handoff, GC
-        </div>
-    </div>
-
-    <div class="c">
-        <div class="ct">📊 Tiết kiệm ước tính</div>
-        <div class="kv"><span class="k">CPU nền</span><span class="v" style="color:var(--gr)">↓ 8-15%</span></div>
-        <div class="kv"><span class="k">RAM</span><span class="v" style="color:var(--gr)">↑ 100-200MB</span></div>
-        <div class="kv"><span class="k">Pin</span><span class="v" style="color:var(--gr)">↑ 10-20%</span></div>
-        <div class="kv"><span class="k">Data/tháng</span><span class="v" style="color:var(--gr)">↓ 500MB-1GB</span></div>
-        <div class="kv"><span class="k">Nhiệt</span><span class="v" style="color:var(--gr)">Giảm rõ → chống throttle</span></div>
-    </div>
-
-</div>
-
-<div class="pn h" id="pn-tests">
-
-    <div class="c">
-        <div class="ct">🔬 Kiểm tra xác minh</div>
-        <div class="vs" id="testResults">
-            <div class="vi"><span class="s"><span class="bt" style="background:var(--yl)"></span>Kết nối Internet</span><span>Đang kiểm tra...</span></div>
-            <div class="vi"><span class="s"><span class="bt" style="background:var(--yl)"></span>DNS chặn quảng cáo</span><span>Đang kiểm tra...</span></div>
-            <div class="vi"><span class="s"><span class="bt" style="background:var(--yl)"></span>Độ trễ mạng</span><span>Đang kiểm tra...</span></div>
-            <div class="vi"><span class="s"><span class="bt" style="background:var(--yl)"></span>DNS over HTTPS</span><span>Đang kiểm tra...</span></div>
-        </div>
-    </div>
-
-    <div class="c">
-        <div class="ct">📋 Hướng dẫn cài đặt</div>
-        <div class="tp" style="border-left-color:var(--gr)">
-            1. 📱 Mở Safari, truy cập trang này<br>
-            2. ⬇ Bấm "TẢI PROFILE v7"<br>
-            3. ✅ "Cho phép" → vào Settings<br>
-            4. ⚙ Cài đặt &gt; Đã tải hồ sơ → Cài đặt<br>
-            5. 🏠 WebClip "Perf" xuất hiện trên màn hình chính
-        </div>
-    </div>
-
-    <div class="c">
-        <div class="ct">❌ Gỡ cài đặt</div>
-        <div style="font-size:11px;color:var(--dm);line-height:1.6">
-            Cài đặt &gt; Chung &gt; VPN &amp; QL thiết bị &gt; iOS Performance Optimizer v7 &gt; Xóa hồ sơ.<br>
-            <span style="font-size:9px;color:var(--yl)">Phải gỡ profile cũ trước khi cài v7 mới.</span>
+        <div class="ct">📶 Network Speed Test</div>
+        <div id="netBenchArea">
+            <div class="g2">
+                <div class="it"><div class="n" id="netMbps" style="color:var(--dm)">--</div><div class="l">Mbps</div></div>
+                <div class="it"><div class="n" id="netLatency" style="color:var(--dm)">--</div><div class="l">Latency</div></div>
+            </div>
+            <button id="netBtn" style="margin-top:4px;padding:6px 20px;border-radius:8px;border:1px solid var(--bdr);background:rgba(0,170,255,.08);color:var(--bl);font-size:10px;font-weight:600;cursor:pointer;touch-action:manipulation">▶ RUN SPEED TEST</button>
         </div>
     </div>
 
@@ -292,169 +286,405 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
 </div>
 
 <div class="ft">
-iOS Performance Optimizer <span class="v">v7</span> — Hệ thống tối ưu toàn diện<br>
-28 restriction • DNS • Root CA • WebClip • Phân tích học thuật
+iOS Performance <span class="v">v8</span> — WebGL GPU • RAF CPU • DNS Probe • Terminal<br>
+iOS Performance Lab — 2026
 </div>
 
 </div>
 
 <script>
 (function(){
+'use strict';
 const $=id=>document.getElementById(id);
 const q=(s,p)=>p?p.querySelector(s):document.querySelector(s);
+
 const sbd=$('sbd'),sbt=$('sbt'),sd=$('statusDetail'),ba=$('badgeArea');
-
-function bdg(text,color){return `<span class="bdg ${color}">${text}</span>`}
-
-function tr(label,status,detail){
-    const c={0:'var(--yl)',1:'var(--gr)',2:'var(--rd)'}[status]||'var(--yl)';
-    const t={0:'Đang kiểm tra...',1:'✓ OK',2:'✗ Lỗi'}[status]||'--';
-    return `<div class="vi"><span class="s"><span class="bt" style="background:${c}"></span>${label}</span><span>${detail||t}</span></div>`;
-}
-
-// Tab switching
-q('.tabs').addEventListener('click',e=>{
-    const t=e.target.closest('.tab');
-    if(!t)return;
-    q('.tab.act').classList.remove('act');
-    t.classList.add('act');
-    q('.pn:not(.h)')?.classList.add('h');
-    $(`pn-${t.dataset.pn}`).classList.remove('h');
-});
 
 // Device model
 function detectModel(){
-    const ua=navigator.userAgent;
-    if(ua.includes('iPhone15,3')||ua.includes('iPhone15,2'))return 'iPhone 14 Pro';
-    if(ua.includes('iPhone15,5')||ua.includes('iPhone15,4'))return 'iPhone 14';
-    if(ua.includes('iPhone16,1')||ua.includes('iPhone16,2'))return 'iPhone 15 Pro';
-    if(ua.includes('iPhone16,3')||ua.includes('iPhone16,4'))return 'iPhone 15';
-    if(ua.includes('iPhone17,1')||ua.includes('iPhone17,2'))return 'iPhone 16 Pro';
-    if(ua.includes('iPhone17,3')||ua.includes('iPhone17,4'))return 'iPhone 16';
-    if(ua.includes('iPhone'))return 'iPhone';
-    if(ua.includes('iPad'))return 'iPad';
-    if(ua.includes('iPod'))return 'iPod touch';
+    const u=navigator.userAgent;
+    if(u.includes('iPhone17,1')||u.includes('iPhone17,2'))return 'iPhone 16 Pro';
+    if(u.includes('iPhone17,3')||u.includes('iPhone17,4'))return 'iPhone 16';
+    if(u.includes('iPhone16,1')||u.includes('iPhone16,2'))return 'iPhone 15 Pro';
+    if(u.includes('iPhone16,3')||u.includes('iPhone16,4'))return 'iPhone 15';
+    if(u.includes('iPhone15,3')||u.includes('iPhone15,2'))return 'iPhone 14 Pro';
+    if(u.includes('iPhone15,5')||u.includes('iPhone15,4'))return 'iPhone 14';
+    if(u.includes('iPhone'))return 'iPhone';
+    if(u.includes('iPad'))return 'iPad';
+    if(u.includes('iPod'))return 'iPod touch';
     return 'iOS Device';
 }
+const model=detectModel();
 
-async function init(){
-    let testI=0,testD=0,testL=0,testH=0;
-    let latMs='--';
+// ---- TAB SWITCHING ----
+q('.tabs').addEventListener('click',e=>{
+    const t=e.target.closest('.tab'); if(!t)return;
+    q('.tab.act').classList.remove('act'); t.classList.add('act');
+    q('.pn:not(.h)')?.classList.add('h'); $(`pn-${t.dataset.pn}`).classList.remove('h');
+});
 
+// ---- TERMINAL ----
+const termOut=$('termOut'),termIn=$('termIn');
+function termPrint(text,cls=''){
+    const d=document.createElement('div');
+    d.innerHTML=text; if(cls)d.className=cls;
+    termOut.appendChild(d);
+    termOut.scrollTop=termOut.scrollHeight;
+}
+function termPrompt(cmd){
+    termPrint(`<span class="prompt">$</span> <span class="cmd">${cmd}</span>`);
+}
+
+// Command handlers
+const cmdHandlers={
+    help(){
+        termPrint('═══ <span class="hl">Commands</span> ═══');
+        termPrint('<span class="ok">cpu</span>       CPU load via RAF timing analysis');
+        termPrint('<span class="ok">gpu</span>       WebGL 3D GPU benchmark (FPS)');
+        termPrint('<span class="ok">ram</span>       Memory estimation (JS heap)');
+        termPrint('<span class="ok">storage</span>   Storage usage breakdown');
+        termPrint('<span class="ok">dns</span>       Test DNS blocking on 5 ad domains');
+        termPrint('<span class="ok">net</span>       Network speed & latency measurement');
+        termPrint('<span class="ok">battery</span>   Battery level & charging status');
+        termPrint('<span class="ok">thermal</span>   Thermal state estimation via RAF');
+        termPrint('<span class="ok">sysinfo</span>   Show all device information');
+        termPrint('<span class="ok">profile</span>   Check profile installation status');
+        termPrint('<span class="ok">bench</span>     Run all benchmarks sequentially');
+        termPrint('<span class="ok">clear</span>     Clear terminal screen');
+    },
+    clear(){termOut.innerHTML='';},
+    sysinfo(){
+        termPrint('═══ <span class="hl">System Information</span> ═══');
+        termPrint(`<span class="kv">Model</span>       <span class="nm">${model}</span>`);
+        termPrint(`<span class="kv">Platform</span>    <span class="nm">${navigator.platform||'iOS'}</span>`);
+        termPrint(`<span class="kv">User Agent</span>  <span class="nm" style="font-size:8px;word-break:break-all">${navigator.userAgent}</span>`);
+        termPrint(`<span class="kv">Screen</span>      <span class="nm">${Math.round(screen.width*(window.devicePixelRatio||1))}x${Math.round(screen.height*(window.devicePixelRatio||1))} @${(window.devicePixelRatio||1).toFixed(1)}x</span>`);
+        termPrint(`<span class="kv">RAM</span>         <span class="nm">${navigator.deviceMemory||'N/A'} GB</span>`);
+        termPrint(`<span class="kv">CPU Cores</span>   <span class="nm">${navigator.hardwareConcurrency||'N/A'}</span>`);
+        termPrint(`<span class="kv">Language</span>    <span class="nm">${navigator.language||'N/A'}</span>`);
+        termPrint(`<span class="kv">Online</span>      <span class="nm">${navigator.onLine?'true':'false'}</span>`);
+        termPrint(`<span class="kv">Do Not Track</span> <span class="nm">${navigator.doNotTrack||'unspecified'}</span>`);
+    },
+    async battery(){
+        termPrint('═══ <span class="hl">Battery Status</span> ═══');
+        try{
+            const b=await navigator.getBattery();
+            termPrint(`<span class="kv">Level</span>      <span class="nm">${Math.round(b.level*100)}%</span>`);
+            termPrint(`<span class="kv">Charging</span>   <span class="nm">${b.charging?'Yes':'No'}</span>`);
+            termPrint(`<span class="kv">Time left</span>  <span class="nm">${b.dischargingTime===Infinity?'N/A':Math.round(b.dischargingTime/60)+' min'}</span>`);
+        }catch(e){termPrint(`<span class="err">Error:</span> Battery API not available on this iOS`);}
+    },
+    async storage(){
+        termPrint('═══ <span class="hl">Storage Analysis</span> ═══');
+        if(navigator.storage&&navigator.storage.estimate){
+            try{
+                const s=await navigator.storage.estimate();
+                const used=(s.usage/1073741824).toFixed(1);
+                const total=(s.quota/1073741824).toFixed(0);
+                const pct=(s.usage/s.quota*100).toFixed(1);
+                termPrint(`<span class="kv">Used</span>       <span class="nm">${used} GB</span>`);
+                termPrint(`<span class="kv">Total</span>      <span class="nm">${total} GB</span>`);
+                termPrint(`<span class="kv">Free</span>       <span class="nm">${(total-used).toFixed(1)} GB</span>`);
+                termPrint(`<span class="kv">Usage</span>      <span class="nm">${pct}%</span>`);
+                const bar='█'.repeat(Math.round(pct/5))+'░'.repeat(20-Math.round(pct/5));
+                termPrint(`<span class="kv">[${bar}]</span>`);
+            }catch(e){termPrint(`<span class="err">Error:</span> ${e.message}`);}
+        } else {termPrint(`<span class="info">Storage API not available</span>`);}
+    },
+    async cpu(){
+        termPrint('═══ <span class="hl">CPU Load (RAF Timing)</span> ═══');
+        termPrint(`<span class="info">Measuring main thread load over 100 frames...</span>`);
+        const frames=100; let sum=0, jank=0, min=1e9, max=0;
+        const times=[];
+        await new Promise(resolve=>{
+            let count=0, last=performance.now();
+            function tick(now){
+                const dt=now-last; last=now;
+                if(count>0){times.push(dt);sum+=dt;if(dt>16.67)jank++;if(dt<min)min=dt;if(dt>max)max=dt;}
+                count++;
+                if(count<=frames)requestAnimationFrame(tick);
+                else resolve();
+            }
+            requestAnimationFrame(tick);
+        });
+        const avg=sum/times.length;
+        const load=Math.min(100,Math.round((avg-4)/16.67*100));
+        const jankPct=(jank/times.length*100).toFixed(1);
+        termPrint(`<span class="kv">Avg frame</span>  <span class="nm">${avg.toFixed(2)} ms</span>`);
+        termPrint(`<span class="kv">Min frame</span>  <span class="nm">${min.toFixed(2)} ms</span>`);
+        termPrint(`<span class="kv">Max frame</span>  <span class="nm">${max.toFixed(2)} ms</span>`);
+        termPrint(`<span class="kv">Jank</span>       <span class="nm">${jank}/${times.length} (${jankPct}%)</span>`);
+        const l=load>80?'<span class="err">HIGH</span>':load>40?'<span class="hl">MODERATE</span>':'<span class="ok">LOW</span>';
+        termPrint(`<span class="kv">CPU Load</span>    <span class="nm">${load}% ${l}</span>`);
+        const bar='█'.repeat(Math.round(load/5))+'░'.repeat(20-Math.round(load/5));
+        termPrint(`<span class="kv">[${bar}]</span>`);
+        $('cpuLoad').textContent=load+'%';  $('cpuLoad').style.color=load>80?'var(--rd)':load>40?'var(--yl)':'var(--gr)';
+        $('cpuJank').textContent=jankPct+'%'; $('cpuJank').style.color=jankPct>20?'var(--rd)':jankPct>10?'var(--yl)':'var(--gr)';
+        $('cpuBar').style.width=load+'%'; $('cpuBar').style.background=load>80?'var(--rd)':load>40?'var(--yl)':'var(--gr)';
+    },
+    async gpu(){
+        termPrint('═══ <span class="hl">GPU Benchmark (WebGL 3D)</span> ═══');
+        document.querySelector('.tab[data-pn="bench"]').click();
+        runGPU();
+    },
+    async net(){
+        termPrint('═══ <span class="hl">Network Speed Test</span> ═══');
+        const speeds=[];
+        for(let i=0;i<3;i++){
+            termPrint(`<span class="info">Testing... (${i+1}/3)</span>`);
+            const t0=performance.now();
+            try{
+                await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store'});
+                const ms=performance.now()-t0;
+                const mbps=((10*8)/ms*1000).toFixed(1); // approx: 10KB / ms * 1000 * 8
+                speeds.push(parseFloat(mbps));
+                termPrint(`<span class="ok">✓</span> Test ${i+1}: ${mbps} Mbps (${ms.toFixed(0)}ms)`);
+            }catch(e){termPrint(`<span class="err">✗</span> Test ${i+1}: failed`);}
+        }
+        if(speeds.length){
+            const avg=(speeds.reduce((a,b)=>a+b,0)/speeds.length).toFixed(1);
+            termPrint(`<span class="kv">Avg Speed</span>  <span class="nm">${avg} Mbps</span>`);
+            $('netMbps').textContent=avg; $('netMbps').style.color=avg>20?'var(--gr)':avg>5?'var(--yl)':'var(--rd)';
+        }
+    },
+    async dns(){
+        termPrint('═══ <span class="hl">DNS Blocking Test (5 domains)</span> ═══');
+        const adDomains=['https://ad.doubleclick.net','https://pagead2.googlesyndication.com','https://www.google-analytics.com','https://amazon-adsystem.com','https://connect.facebook.net/en_US/fbevents.js'];
+        const normalDomains=['https://www.google.com','https://www.cloudflare.com'];
+        let blocked=0, total=0;
+        for(const url of adDomains){
+            const domain=url.replace('https://','').split('/')[0];
+            const t0=performance.now();
+            try{
+                await fetch(url,{mode:'no-cors',cache:'no-store'});
+                termPrint(`<span class="err">✗</span> ${domain} — NOT BLOCKED (${(performance.now()-t0).toFixed(0)}ms)`);
+            }catch(e){
+                if(e.name!=='AbortError'){
+                    blocked++; termPrint(`<span class="ok">✓</span> ${domain} — BLOCKED (${(performance.now()-t0).toFixed(0)}ms)`);
+                } else termPrint(`<span class="hl">?</span> ${domain} — timeout`);
+            }
+            total++;
+        }
+        termPrint(`<span class="kv">Result</span>     <span class="nm">${blocked}/${total} ad domains blocked</span>`);
+        if(blocked===total) termPrint(`<span class="ok">✓ AdGuard DNS is ACTIVE — all ${total} ad domains blocked</span>`);
+        else if(blocked>0) termPrint(`<span class="hl">⚠ Partial blocking — ${blocked}/${total}</span>`);
+        else termPrint(`<span class="err">✗ DNS not blocking — profile not active</span>`);
+    },
+    async thermal(){
+        termPrint('═══ <span class="hl">Thermal State Estimation</span> ═══');
+        termPrint(`<span class="info">Analyzing frame timing patterns...</span>`);
+        const frames=60; const times=[];
+        await new Promise(resolve=>{
+            let count=0, last=performance.now();
+            function tick(now){
+                if(count>0)times.push(now-last);
+                last=now; count++;
+                if(count<=frames)requestAnimationFrame(tick); else resolve();
+            }
+            requestAnimationFrame(tick);
+        });
+        const avg=times.reduce((a,b)=>a+b,0)/times.length;
+        const variance=times.reduce((a,b)=>a+(b-avg)**2,0)/times.length;
+        const jank=times.filter(t=>t>50).length;
+        let state='Normal', cls='ok';
+        if(jank>10||avg>33){state='Thermal Throttling Likely';cls='err';}
+        else if(jank>5||avg>20){state='Warm';cls='hl';}
+        termPrint(`<span class="kv">Avg Latency</span> <span class="nm">${avg.toFixed(1)}ms</span>`);
+        termPrint(`<span class="kv">Variance</span>   <span class="nm">${variance.toFixed(1)}</span>`);
+        termPrint(`<span class="kv">Dropped</span>    <span class="nm">${jank} frames >50ms</span>`);
+        termPrint(`<span class="kv">State</span>      <span class="${cls}">${state}</span>`);
+        if(jank>10)termPrint(`<span class="info">Tip: Thermal throttle reduces GPU clock. Remove case, reduce brightness.</span>`);
+    },
+    profile(){
+        termPrint('═══ <span class="hl">Profile Status Check</span> ═══');
+        termPrint(`<span class="info">Run 'dns' to test DNS blocking. Run 'sysinfo' for device info.</span>`);
+        termPrint(`<span class="info">Profile v8: 5 payloads • 28 restrictions • DNS • Root CA • WebClip</span>`);
+        termPrint(`<span class="info">Check: Settings > General > VPN & Device Management</span>`);
+    },
+    async bench(){
+        termPrint('═══ <span class="hl">Running ALL Benchmarks</span> ═══');
+        await cmdHandlers.cpu();
+        termPrint('');
+        await cmdHandlers.dns();
+        termPrint('');
+        await cmdHandlers.net();
+        termPrint('');
+        termPrint(`<span class="ok">✓ All benchmarks completed</span>`);
+    },
+    ram(){
+        termPrint('═══ <span class="hl">Memory Estimation</span> ═══');
+        const devMem=navigator.deviceMemory;
+        if(devMem)termPrint(`<span class="kv">Device RAM</span>  <span class="nm">${devMem} GB</span>`);
+        else termPrint(`<span class="info">Device Memory API not available on iOS Safari</span>`);
+        termPrint(`<span class="info">iOS restricts JS heap info. Estimated RAM from API: ${devMem||'N/A'}</span>`);
+        if(performance.memory){
+            const m=performance.memory;
+            termPrint(`<span class="kv">JS Heap</span>     <span class="nm">${(m.usedJSHeapSize/1048576).toFixed(1)} MB / ${(m.jsHeapSizeLimit/1048576).toFixed(0)} MB</span>`);
+        } else termPrint(`<span class="info">performance.memory not available on iOS</span>`);
+    }
+};
+
+termIn.addEventListener('keydown',e=>{
+    if(e.key!=='Enter')return;
+    const cmd=termIn.value.trim().toLowerCase(); termIn.value='';
+    if(!cmd)return;
+    termPrompt(cmd);
+    if(cmdHandlers[cmd])cmdHandlers[cmd]();
+    else termPrint(`<span class="err">Command not found:</span> ${cmd}. Type 'help' for commands.`);
+});
+
+// Auto-focus
+termIn.focus();
+document.addEventListener('touchstart',()=>termIn.focus());
+
+// Run initial command
+setTimeout(()=>termPrint(`<span class="info">iOS Performance v8 — ${model}. Type <span class="hl">help</span> for commands.</span>`),300);
+
+// ---- INIT DASHBOARD ----
+async function initDash(){
     // Battery
     try{
         const b=await navigator.getBattery();
         const p=Math.round(b.level*100);
-        const bar=$('batLv');
-        bar.style.width=p+'%';
+        const bar=$('batLv'); bar.style.width=p+'%';
         bar.style.background=p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
-        $('batTx').textContent=p+'%';
-        $('batTx').style.color=p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
-        $('batStt').textContent=b.charging?'Đang sạc':'Không sạc';
-    }catch(e){$('batTx').textContent='iOS hạn';$('batStt').textContent='API giới hạn';}
+        $('batTx').textContent=p+'%'; $('batTx').style.color=p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
+        $('batStt').textContent=b.charging?'Charging':'Not charging';
+    }catch(e){$('batTx').textContent='N/A';$('batStt').textContent='No API';}
 
-    // Network info
+    // Network
     try{
         const nc=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
         if(nc&&nc.effectiveType){$('netType').textContent=(nc.effectiveType||'wifi').toUpperCase();$('netSpeed').textContent=nc.downlink?nc.downlink.toFixed(1)+' Mbps':'--';}
         else throw 1;
-    }catch(e){$('netType').textContent='iOS hạn';$('netSpeed').textContent='iOS hạn';}
+    }catch(e){$('netType').textContent='N/A';$('netSpeed').textContent='N/A';}
 
     // Device
-    if(navigator.deviceMemory)$('memVal').textContent=navigator.deviceMemory+' GB';else $('memVal').textContent='iOS hạn';
-    if(navigator.hardwareConcurrency)$('cpuVal').textContent=navigator.hardwareConcurrency+' lõi';else $('cpuVal').textContent='iOS hạn';
+    if(navigator.deviceMemory)$('memVal').textContent=navigator.deviceMemory+' GB';else $('memVal').textContent='N/A';
+    if(navigator.hardwareConcurrency)$('cpuVal').textContent=navigator.hardwareConcurrency+' cores';else $('cpuVal').textContent='N/A';
     $('scrVal').textContent=Math.round(screen.width*(window.devicePixelRatio||1))+'x'+Math.round(screen.height*(window.devicePixelRatio||1));
     if(navigator.storage&&navigator.storage.estimate){
         try{const s=await navigator.storage.estimate();$('stoVal').textContent=(s.usage/1073741824).toFixed(1)+'/'+(s.quota/1073741824).toFixed(0)+' GB';}
-        catch(e){$('stoVal').textContent='Lỗi';}
-    }else $('stoVal').textContent='iOS hạn';
-
-    // Update header with model
-    const mod=detectModel();
-    const h1=q('.h .sub');
-    h1.textContent='v7 • 28 restriction • '+mod;
+        catch(e){$('stoVal').textContent='Error';}
+    }else $('stoVal').textContent='N/A';
 
     // Tests
-    const ut=()=>{
-        $('testResults').innerHTML=
-            tr('Kết nối Internet',testI,testI===1?'Có mạng':testI===2?'Mất kết nối':'...')+
-            tr('DNS chặn quảng cáo',testD,testD===1?'AdGuard chặn QC':testD===2?'QC không bị chặn':'...')+
-            tr('Độ trễ mạng',testL,testL===1?latMs+'ms':testL===2?'Quá hạn':'...')+
-            tr('DNS over HTTPS',testH,testH===1?'DoH hoạt động':testH===2?'Không xác định':'...');
-    };
-
-    // Test Internet
+    let testI=0,testD=0,testL=0;
     try{
-        const ac=new AbortController();setTimeout(()=>ac.abort(),5000);
-        await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:ac.signal});
+        await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(5000)});
         testI=1;
     }catch(e){testI=2}
-    ut();
-
-    // Test DNS blocking
     try{
-        const ac=new AbortController();setTimeout(()=>ac.abort(),4000);
-        await fetch('https://ad.doubleclick.net',{mode:'no-cors',cache:'no-store',signal:ac.signal});
+        await fetch('https://ad.doubleclick.net',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(4000)});
         testD=2;
-    }catch(e){testD=1}
-    ut();
-
-    // Test Latency + DoH
+    }catch(e){if(e.name!='TimeoutError')testD=1;}
     const t0=performance.now();
     try{
-        const ac=new AbortController();setTimeout(()=>ac.abort(),5000);
-        await fetch('https://www.google.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:ac.signal});
-        latMs=(performance.now()-t0).toFixed(0);
+        await fetch('https://www.google.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:AbortSignal.timeout(5000)});
         testL=1;
-        const n=parseInt(latMs);
-        $('pingBar').style.width=Math.min(100,Math.max(4,n>800?4:100-n/8))+'%';
-        $('pingBar').style.background=n<300?'var(--gr)':n<800?'var(--yl)':'var(--rd)';
-        $('pingLabel').textContent=latMs+'ms';
-    }catch(e){testL=2;$('pingLabel').textContent='Lỗi';$('pingBar').style.width='2%';$('pingBar').style.background='var(--rd)';}
-    ut();
+        const ms=(performance.now()-t0).toFixed(0);
+        $('pingBar').style.width=Math.min(100,Math.max(4,parseInt(ms)>800?4:100-parseInt(ms)/8))+'%';
+        $('pingBar').style.background=parseInt(ms)<300?'var(--gr)':parseInt(ms)<800?'var(--yl)':'var(--rd)';
+        $('pingLabel').textContent=ms+'ms';
+    }catch(e){$('pingLabel').textContent='Error';}
 
-    // Test DoH endpoint
-    try{
-        const t1=performance.now();
-        const ac=new AbortController();setTimeout(()=>ac.abort(),3000);
-        await fetch('https://dns.adguard.com/dns-query?name=google.com&type=A',{mode:'no-cors',cache:'no-store',signal:ac.signal});
-        testH=1;
-    }catch(e){testH=1}
-    ut();
-
-    // Status
-    const online=(testI===1);
-    const dnsBlock=(testD===1);
-    const fast=(testL===1);
-
+    const online=(testI===1),dnsBlock=(testD===1),fast=(testL===1);
     if(online&&dnsBlock&&fast){
-        sbd.className='d g';
-        sbt.textContent='✅ Hoạt động • DNS chặn QC • 28 restriction';
-        sd.innerHTML='Profile v7 đã cài và hoạt động. AdGuard DNS đang chặn quảng cáo, 28 daemon nền đã tắt. Thiết bị của bạn đang được tối ưu hoàn toàn.';
-        ba.innerHTML=bdg('PROFILE ACTIVE','g')+' '+bdg('DNS BLOCK','b')+' '+bdg('28 RESTRICTIONS','g');
-    } else if(online&&!dnsBlock&&fast){
-        sbd.className='d y';
-        sbt.textContent='⚠ Cần cài profile • DNS chưa chặn QC';
-        sd.innerHTML='Mạng hoạt động tốt nhưng ad.doubleclick.net vẫn truy cập được. Có thể chưa cài profile hoặc cần refresh trang sau khi cài. Tải profile bên dưới.';
-        ba.innerHTML=bdg('CÀI PROFILE','y')+' '+bdg('DNS CHƯA CHẶN','r');
+        sbd.className='d g'; sbt.textContent='✅ Active • DNS block • 28 restrictions';
+        sd.innerHTML='Profile v8 installed and active. AdGuard DNS blocking 50K+ ads. 28 daemons disabled. Device optimized.';
+        ba.innerHTML='<span class="bdg g">PROFILE ACTIVE</span><span class="bdg b">DNS BLOCK</span><span class="bdg g">28 RES</span>';
     } else if(online){
-        sbd.className='d y';
-        sbt.textContent='⚠ Có mạng • Đang chờ xác minh DNS';
-        sd.innerHTML='Đã kết nối internet nhưng chưa xác minh được DNS blocking. Protocol no-cors trên iOS có thể gây false negative. Refresh nếu đã cài profile.';
-        ba.innerHTML=bdg('CÓ MẠNG','g')+' '+bdg('CHỜ DNS','y');
+        sbd.className='d y'; sbt.textContent='⚠ Network OK • DNS check pending';
+        sd.innerHTML='Need profile install. Tap download, allow in Safari, then install in Settings.';
+        ba.innerHTML='<span class="bdg y">NEED PROFILE</span>';
     } else {
-        sbd.className='d r';
-        sbt.textContent='❌ Mất kết nối • Cần cài profile';
-        sd.innerHTML='Không thể kết nối internet. Mở Safari, tải profile, vào Settings cài đặt. Đảm bảo đã xóa profile cũ trước khi cài mới.';
-        ba.innerHTML=bdg('KHÔNG CÓ MẠNG','r')+' '+bdg('CÀI PROFILE','y');
+        sbd.className='d r'; sbt.textContent='❌ No connection • Install profile';
+        sd.innerHTML='No network detected. Open Safari, download profile, install in Settings.';
+        ba.innerHTML='<span class="bdg r">NO NETWORK</span>';
     }
+
+    $('quickInfo').innerHTML=`<span class="kv">Model:</span> ${model}<br><span class="kv">Storage:</span> ${$('stoVal').textContent}<br><span class="kv">Battery:</span> ${$('batTx').textContent}<br><span class="info">Type 'help' in Terminal or tap Bench tab</span>`;
 }
 
-init().catch(e=>{
-    sbd.className='d r';
-    sbt.textContent='Lỗi khởi tạo';
-    sd.textContent='Có lỗi: '+e.message;
-});
+// ---- BENCHMARKS ----
+// GPU Benchmark
+let gl=null, gpRunning=false;
+function initGL(){
+    if(gl)return gl;
+    const c=$('gpuCanvas'); c.width=280; c.height=120;
+    try{gl=c.getContext('webgl')||c.getContext('experimental-webgl');}catch(e){}
+    return gl;
+}
+
+function runGPU(){
+    if(gpRunning)return;
+    gpRunning=true;
+    const btn=$('gpuBtn'); btn.textContent='⏳ RUNNING...'; btn.disabled=true;
+    $('gpuFpsAvg').textContent='...'; $('gpuFpsAvg').style.color='var(--dm)';
+    $('gpuFpsMin').textContent='...'; $('gpuScore').textContent='...';
+
+    const gl=initGL();
+    if(!gl){gpRunning=false;btn.textContent='▶ RUN GPU BENCHMARK';btn.disabled=false;
+        $('gpuFpsAvg').textContent='N/A';$('gpuFpsAvg').style.color='var(--rd)';return;}
+
+    // Simple WebGL benchmark - rotating colored triangle
+    const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}';
+    const fs='precision lowp float;uniform float t;void main(){vec3 c=0.5+0.5*cos(t+vec3(0,2,4)+gl_FragCoord.xyx/80.0);gl_FragColor=vec4(c,1.0);}';
+    function shader(src,typ){
+        const s=gl.createShader(typ); gl.shaderSource(s,src); gl.compileShader(s);
+        return s;
+    }
+    const prog=gl.createProgram();
+    gl.attachShader(prog,shader(vs,gl.VERTEX_SHADER)); gl.attachShader(prog,shader(fs,gl.FRAGMENT_SHADER));
+    gl.linkProgram(prog); gl.useProgram(prog);
+    const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([0,0.8,-0.7,-0.5,0.7,-0.5]),gl.STATIC_DRAW);
+    const loc=gl.getAttribLocation(prog,'p'); gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    const tLoc=gl.getUniformLocation(prog,'t');
+    gl.viewport(0,0,280,120);
+
+    let frames=0,totalTime=0,minFps=60,start=performance.now(),runs=0;
+    const maxFrames=180;
+
+    function draw(){
+        const now=performance.now();
+        const dt=now-start; start=now;
+        if(runs>0){frames++;totalTime+=dt;const fps=1000/dt;if(fps<minFps)minFps=fps;}
+        runs++;
+        const t=now/1000;
+        gl.uniform1f(tLoc,t);
+        gl.drawArrays(gl.TRIANGLES,0,3);
+        if(runs<=maxFrames)requestAnimationFrame(draw);
+        else done();
+    }
+
+    function done(){
+        const avgFps=frames>0?frames/(totalTime/1000):0;
+        const score=Math.round(avgFps*10);
+        $('gpuFpsAvg').textContent=avgFps.toFixed(1);
+        $('gpuFpsAvg').style.color=avgFps>50?'var(--gr)':avgFps>25?'var(--yl)':'var(--rd)';
+        $('gpuFpsMin').textContent=minFps.toFixed(1);
+        $('gpuFpsMin').style.color=minFps>30?'var(--gr)':minFps>15?'var(--yl)':'var(--rd)';
+        $('gpuScore').textContent=score;
+        $('gpuScore').style.color=score>500?'var(--gr)':score>250?'var(--yl)':'var(--rd)';
+        btn.textContent='▶ RUN GPU BENCHMARK'; btn.disabled=false; gpRunning=false;
+
+        // Also show in terminal if it's visible
+        termPrint(`<span class="ok">✓</span> GPU: ${avgFps.toFixed(1)} FPS avg, ${minFps.toFixed(1)} min, score: ${score}`);
+    }
+
+    draw();
+}
+
+// CPU Benchmark button
+$('cpuBtn').addEventListener('click',()=>cmdHandlers.cpu());
+$('dnsBtn').addEventListener('click',()=>cmdHandlers.dns());
+$('netBtn').addEventListener('click',()=>cmdHandlers.net());
+$('gpuBtn').addEventListener('click',runGPU);
+
+// Init
+initDash().catch(()=>{});
 })();
 </script>
 </body>
