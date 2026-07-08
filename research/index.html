@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>iOS Perf v9 — REAL Data + MDM Analysis</title>
+<title>iOS Perf v10 — REAL Data + MDM Analysis</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#060a12;color:#bfcde0;font-family:-apple-system,BlinkMacSystemFont,Georgia,'Times New Roman',serif;padding:24px 14px 60px;max-width:900px;margin:auto;line-height:1.8;font-size:14.5px}
@@ -32,8 +32,8 @@ tr:hover td{background:rgba(79,172,254,.02)}
 </head>
 <body>
 
-<h1>iOS Performance Optimizer v9</h1>
-<p class="sub">Configuration Profile vs MDM • REAL device measurements • WebGL/RAF/DNS benchmark methodology • 28 daemon analysis</p>
+<h1>iOS Performance Optimizer v10</h1>
+<p class="sub">Configuration Profile vs MDM • REAL device measurements • WebGL/RAF/DNS benchmark methodology • 28 daemon analysis • API Compatibility Checker</p>
 
 <bq>
 <strong>Tóm tắt:</strong> Bài nghiên cứu này phân tích (1) MDM .vs Configuration Profile — khi nào cần MDM, khi nào profile đủ, (2) REAL device measurement — WebGL GPU benchmark hoạt động thế nào trên iOS Safari, RAF CPU profiling dựa trên requestAnimationFrame timing, multi-domain DNS probe, (3) 28 system daemon restrictions mới nhất.
@@ -128,17 +128,21 @@ Ví dụ: avgDelta = 20ms → load ≈ (18/16.67)*100 = 108% → clamp → 100% 
 
 <p>Kết quả 5/5 blocked = DNS profile hoạt động. Kết quả &lt; 5 = cần kiểm tra lại hoặc DNS cache.</p>
 
-<h3>2.4 Network Speed Test — Cơ chế thực tế</h3>
+<h3>2.4 API Compatibility Checker</h3>
+<p>Terminal CLI bao gồm lệnh <code>compat</code> kiểm tra 11 Web APIs có sẵn trên thiết bị: WebGL 1.0/2.0, deviceMemory, hardwareConcurrency, getBattery, storage.estimate, connection, performance.memory, AbortSignal.timeout, localStorage, requestAnimationFrame. Kết quả hiển thị dạng ✓/✗ kèm tổng số API available.</p>
+
+
+<h3>2.5 Network Speed Test — Cơ chế thực tế</h3>
 <p>Download một resource nhỏ (Cloudflare favicon ~10KB) với <code>cache: 'no-store'</code>, đo thời gian tải, ước tính throughput:</p>
 <div class="cd">Mbps = (fileSizeBytes * 8) / (timeMs / 1000) / 1_000_000</div>
 <p>Chạy 3 lần, lấy trung bình. Kết quả Mbps là REAL network throughput từ thiết bị đến CDN.</p>
 
-<h3>2.5 Battery Drain Tracking</h3>
+<h3>2.6 Battery Drain Tracking</h3>
 <p>Lưu battery level + timestamp vào localStorage. Khi user quay lại, so sánh với giá trị trước đó để tính drain rate:</p>
 <div class="cd">drainRate = (levelBefore - levelNow) / (timeElapsedHours)  // % per hour</div>
 <p>Kết quả là REAL battery drain rate, chỉ hiển thị khi đủ thời gian giữa 2 lần đo (&gt;5 phút).</p>
 
-<h3>2.6 Performance Score</h3>
+<h3>2.7 Performance Score</h3>
 <p>Tổng hợp 4 benchmark thành 1 score duy nhất (0-100):</p>
 <table>
 <tr><th>Component</th><th>Công thức</th><th>Trọng số</th></tr>
@@ -222,8 +226,8 @@ Ví dụ: avgDelta = 20ms → load ≈ (18/16.67)*100 = 108% → clamp → 100% 
 </div>
 
 <ft>
-iOS Performance Optimizer v9 • iOS Performance Lab • 2026<br>
-REAL device measurements • 28 restrictions • MDM analysis • WebGL • RAF • DNS probe
+iOS Performance Optimizer v10 • iOS Performance Lab • 2026<br>
+REAL device measurements • 28 restrictions • MDM analysis • WebGL • RAF • DNS probe • API compat
 </ft>
 
 </body>
