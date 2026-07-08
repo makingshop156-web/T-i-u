@@ -182,7 +182,7 @@ Thông số thực từ Battery API • Network API • Device Memory API
     const sd = ()=>document.querySelector('#profileStatus .status-dot');
     const st = ()=>document.querySelector('#profileStatus span:last-child');
 
-    // Battery
+    // ---- Battery (iOS 26 han che API) ----
     try{
         const b = await navigator.getBattery();
         const p = Math.round(b.level*100);
@@ -191,21 +191,25 @@ Thông số thực từ Battery API • Network API • Device Memory API
         bar.style.width = p+'%';
         bar.style.background = p>20?(p>60?'var(--green)':'var(--yellow)'):'var(--red)';
         $('batState').textContent = b.charging?'Đang sạc':'Pin';
-    }catch(e){$('batLevel').textContent='N/A';$('batState').textContent='--';}
+    }catch(e){
+        $('batLevel').textContent='iOS han';
+        $('batState').textContent='iOS han';
+    }
 
-    // Network
+    // ---- Network (iOS 26 han che API) ----
     const c = navigator.connection;
-    if(c){
-        $('netType').textContent=(c.type||c.effectiveType||'WiFi').toUpperCase();
+    if(c && c.effectiveType){
+        $('netType').textContent=(c.type||c.effectiveType||'').toUpperCase();
         $('netSpeed').textContent=c.downlink?c.downlink.toFixed(1)+' Mbps':'--';
         $('netRtt').textContent=c.rtt?c.rtt+' ms':'--';
         $('netData').textContent=c.saveData?'BẬT':'TẮT';
+    }else{
+        document.querySelectorAll('#netType,#netSpeed,#netRtt,#netData').forEach(el=>el.textContent='iOS han');
     }
 
-    // Device
+    // ---- Device ----
     if(navigator.deviceMemory) $('memVal').textContent=navigator.deviceMemory+' GB';
-    else $('memVal').textContent='iOS ẩn';
-    if(navigator.hardwareConcurrency) $('cpuVal').textContent=navigator.hardwareConcurrency+' lõi';
+    if(navigator.hardwareConcurrency) $('cpuVal').textContent=navigator.hardwareConcurrency+' loi';
     const d = window.devicePixelRatio||1;
     $('screenVal').textContent=Math.round(screen.width*d)+'x'+Math.round(screen.height*d);
     if(navigator.storage&&navigator.storage.estimate){
@@ -214,56 +218,70 @@ Thông số thực từ Battery API • Network API • Device Memory API
         }).catch(()=>{});
     }
 
-    // Verification
+    // ---- Verification: dung no-cors, fetch resource thay vi DoH endpoint ----
     sd().className='status-dot check';
-    let dnsOk=false, adBlockOk=false, normalOk=false;
+    let netOk=false, adBlockOk=false, normalOk=false;
+
+    // Test 1: Do latency toi 1 CDN (no-cors)
     const start = performance.now();
     try{
-        const c = new AbortController(), t = setTimeout(()=>c.abort(),4000);
-        await fetch('https://dns.adguard.com/dns-query',{method:'HEAD',mode:'cors',cache:'no-store',signal:c.signal});
+        const ac = new AbortController(), t = setTimeout(()=>ac.abort(),5000);
+        await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:ac.signal});
         clearTimeout(t);
         const ms = (performance.now()-start).toFixed(0);
         $('pingVal').textContent=ms;
         const n=parseInt(ms);
         let cl='var(--green)';
-        if(n>150)cl='var(--yellow)';
-        if(n>300)cl='var(--red)';
+        if(n>200)cl='var(--yellow)';
+        if(n>500)cl='var(--red)';
         $('pingVal').style.color=cl;
-        $('pingBar').style.width=Math.min(100,Math.max(5,300/n*20))+'%';
+        $('pingBar').style.width=Math.min(100,Math.max(3,500/n*20))+'%';
         $('pingBar').style.background=cl;
-        $('pingLabel').textContent=n<80?'Nhanh':n<200?'TB':'Chậm';
-        dnsOk=true;
+        $('pingLabel').textContent=n<100?'Tot':n<300?'TB':'Cham';
+        netOk=true;
     }catch(e){
-        $('pingVal').textContent='⏱';
+        $('pingVal').textContent='--';
         $('pingVal').style.color='var(--red)';
-        $('pingBar').style.width='5%';
+        $('pingBar').style.width='3%';
         $('pingBar').style.background='var(--red)';
-        $('pingLabel').textContent='Lỗi';
+        $('pingLabel').textContent='Loi mang';
     }
+
+    // Test 2: Ad block (try fetch ad domain, no-cors)
     try{
-        const c=new AbortController(), t=setTimeout(()=>c.abort(),3000);
-        await fetch('https://ad.doubleclick.net',{mode:'no-cors',cache:'no-store',signal:c.signal});
+        const ac=new AbortController(), t=setTimeout(()=>ac.abort(),3000);
+        await fetch('https://ad.doubleclick.net',{mode:'no-cors',cache:'no-store',signal:ac.signal});
         clearTimeout(t);
-        adBlockOk=false;
+        adBlockOk=false; // request thanh cong => DNS khong chan
     }catch(e){adBlockOk=(e.name!=='AbortError');}
+
+    // Test 3: Normal connectivity
     try{
-        const c=new AbortController(), t=setTimeout(()=>c.abort(),4000);
-        await fetch('https://www.google.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:c.signal});
+        const ac=new AbortController(), t=setTimeout(()=>ac.abort(),4000);
+        await fetch('https://www.google.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:ac.signal});
         clearTimeout(t);
         normalOk=true;
     }catch(e){}
-    if(dnsOk&&adBlockOk&&normalOk){
+
+    // Ket luan
+    if(netOk&&adBlockOk&&normalOk){
         sd().className='status-dot ok';
-        st().textContent='✅ PROFILE HOẠT ĐỘNG — 21 restriction + DNS chặn QC';
-    }else if(dnsOk&&normalOk){
+        st().textContent='✅ PROFILE HOAT DONG — DNS chan QC + mang tot';
+        $('profileDetail').textContent='Da cai profile. Biet pin/network iOS an = binh thuong.';
+    }else if(netOk&&normalOk){
         sd().className='status-dot ok';
         sd().style.background='var(--yellow)';
-        sd().style.boxShadow='0 0 8px rgba(255,215,64,.3)';
-        st().textContent='⚠ DNS hoạt động — chưa xác định chặn QC';
+        st().textContent='⚠ Mang on dinh — chua xac dinh chan QC';
+        $('profileDetail').textContent='Profile co the da cai nhung khong xac minh duoc ad-block.';
+    }else if(netOk){
+        sd().className='status-dot ok';
+        sd().style.background='var(--yellow)';
+        st().textContent='⚠ Co mang nhung han che';
+        $('profileDetail').textContent='Co the do CORS hoac iOS security han che fetch.';
     }else{
         sd().className='status-dot fail';
-        st().textContent='❌ CẦN CÀI PROFILE';
-        $('profileDetail').textContent='Bấm ⬇ TẢI PROFILE bên dưới';
+        st().textContent='❌ KHONG CO MANG hoac bi chan';
+        $('profileDetail').textContent='Kiem tra ket noi WiFi/4G. Neu co mang -> iOS security han che.';
     }
 })();
 </script>
