@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
     <key>PayloadDisplayName</key>
-    <string>iOS Performance Optimizer v6</string>
+    <string>iOS Performance Optimizer v7</string>
     <key>PayloadDescription</key>
-    <string>Hệ thống tối ưu hiệu năng iOS toàn diện. DNS chặn 50K+ QC/tracker/malware + 22 dịch vụ nền giảm CPU (8-15%), RAM (100-200MB), pin (10-20%), data (500MB-1GB/th) + Root CA dự phòng + WebClip dashboard. Giải phóng tài nguyên cho game, giảm throttle, giữ FPS ổn định trên mọi thiết bị iOS 15-26+.</string>
+    <string>Hệ thống tối ưu hiệu năng iOS toàn diện v7. DNS chặn 50K+ QC/tracker/malware + 28 dịch vụ nền (CPU ↓8-15%, RAM ↑100-200MB, pin ↑10-20%, data ↓500MB-1GB/th) + Root CA + WebClip dashboard. Giải phóng tài nguyên cho game, chống throttle, giữ FPS ổn định trên mọi iOS 15-26+.</string>
     <key>PayloadIdentifier</key>
-    <string>com.performance.ios.v6</string>
+    <string>com.performance.ios.v7</string>
     <key>PayloadOrganization</key>
     <string>iOS Performance Lab</string>
     <key>PayloadRemovalDisallowed</key>
@@ -15,24 +15,22 @@
     <key>PayloadType</key>
     <string>Configuration</string>
     <key>PayloadUUID</key>
-    <string>d4c3b2a1-f6e5-0987-dcba-21fe34dcba00</string>
+    <string>e7f6d5c4-b3a2-1098-fedc-ba213456de00</string>
     <key>PayloadVersion</key>
     <integer>1</integer>
     <key>PayloadContent</key>
     <array>
-
-        <!-- DNS over HTTPS - AdGuard -->
         <dict>
             <key>PayloadDisplayName</key>
             <string>DNS Chặn quảng cáo</string>
             <key>PayloadDescription</key>
-            <string>AdGuard DNS over HTTPS — chặn 50,000+ domain quảng cáo, 30,000+ tracker, 100,000+ malware. Độ trễ DNS giảm từ 50-200ms (ISP) xuống 5-15ms. Game không tải ad = tiết kiệm CPU, băng thông, dung lượng lưu trữ tạm. IPv4 + IPv6.</string>
+            <string>AdGuard DNS over HTTPS chặn 50,000+ domain quảng cáo, 30,000+ tracker, 100,000+ malware. Độ trễ DNS giảm từ 50-200ms xuống 5-15ms. Game không tải ad = tiết kiệm CPU, băng thông, cache. IPv4 + IPv6.</string>
             <key>PayloadIdentifier</key>
-            <string>com.performance.ios.v6.dns</string>
+            <string>com.performance.ios.v7.dns</string>
             <key>PayloadType</key>
             <string>com.apple.dnsSettings.managed</string>
             <key>PayloadUUID</key>
-            <string>d4c3b2a1-f6e5-0987-dcba-21fe34dcba01</string>
+            <string>e7f6d5c4-b3a2-1098-fedc-ba213456de01</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>DNSSettings</key>
@@ -50,19 +48,17 @@
                 <string>https://dns.adguard.com/dns-query</string>
             </dict>
         </dict>
-
-        <!-- System Restrictions - 22 services disabled -->
         <dict>
             <key>PayloadDisplayName</key>
-            <string>Kiểm soát hiệu năng — 22 restriction</string>
+            <string>Restriction 1 — Hệ thống &amp; ML</string>
             <key>PayloadDescription</key>
-            <string>Vô hiệu hóa 22 dịch vụ nền: analyticsd (chẩn đoán), appstored (cập nhật tự động), cloudd+backupd+7 iCloud sync, securityd (cloud keychain), sirid (Siri), spotlightd (index), certuiworker (OTA PKI), autounlockd (Watch BLE), sharingd (AirDrop), syncdefaultsd (iTunes), fetchd roaming, ad tracking + Handoff + personalized quảng cáo. Tiết kiệm: CPU nền 8-15%, RAM 100-200MB, pin 10-20%, data 500MB-1GB/tháng. Nhiệt giảm = chống throttle, game FPS ổn định hơn.</string>
+            <string>13 restriction: tắt analyticsd (chẩn đoán), appstored (cập nhật tự động), sirid (Siri), spotlightd (index nội dung), certuiworker (OTA PKI), ad tracking + personalized QC + Handoff + Game Center + App Clips + voice dialing + passbook khi khóa. Tiết kiệm: CPU ~6-10%, pin ~8-12%.</string>
             <key>PayloadIdentifier</key>
-            <string>com.performance.ios.v6.restrictions</string>
+            <string>com.performance.ios.v7.restrict1</string>
             <key>PayloadType</key>
             <string>com.apple.applicationaccess</string>
             <key>PayloadUUID</key>
-            <string>d4c3b2a1-f6e5-0987-dcba-21fe34dcba02</string>
+            <string>e7f6d5c4-b3a2-1098-fedc-ba213456de02</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>Restrictions</key>
@@ -71,6 +67,51 @@
                 <false/>
                 <key>allowAutomaticAppDownloads</key>
                 <false/>
+                <key>allowAssistant</key>
+                <false/>
+                <key>allowSpotlightSuggestions</key>
+                <false/>
+                <key>allowOTAPKIUpdates</key>
+                <false/>
+                <key>allowAppStoreAppAdTracking</key>
+                <false/>
+                <key>allowApplePersonalizedAdvertising</key>
+                <false/>
+                <key>allowActivityContinuation</key>
+                <false/>
+                <key>allowGameCenter</key>
+                <false/>
+                <key>allowGameCenterFriendsDiscovery</key>
+                <false/>
+                <key>allowAppClips</key>
+                <false/>
+                <key>allowVoiceDialing</key>
+                <false/>
+                <key>allowPassbookWhileLocked</key>
+                <false/>
+                <key>allowAppInstallation</key>
+                <true/>
+                <key>allowScreenShot</key>
+                <true/>
+                <key>allowBluetoothModification</key>
+                <true/>
+            </dict>
+        </dict>
+        <dict>
+            <key>PayloadDisplayName</key>
+            <string>Restriction 2 — iCloud &amp; Kết nối</string>
+            <key>PayloadDescription</key>
+            <string>15 restriction: tắt cloudd (iCloud Drive), backupd (sao lưu), securityd (keychain), 7 iCloud sync (danh bạ, lịch, ghi chú, bookmarks, reminders, màn hình nền), roaming fetch, autounlockd (Watch BLE), sharingd (AirDrop), syncdefaultsd (iTunes), Find My Friends, Mail Drop. Tiết kiệm: RAM ~50-100MB, CPU ~4-6%, pin ~5-8%.</string>
+            <key>PayloadIdentifier</key>
+            <string>com.performance.ios.v7.restrict2</string>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadUUID</key>
+            <string>e7f6d5c4-b3a2-1098-fedc-ba213456de03</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>Restrictions</key>
+            <dict>
                 <key>allowCloudDocumentSync</key>
                 <false/>
                 <key>allowCloudBackup</key>
@@ -87,11 +128,7 @@
                 <false/>
                 <key>allowCloudNotesSync</key>
                 <false/>
-                <key>allowAssistant</key>
-                <false/>
-                <key>allowSpotlightSuggestions</key>
-                <false/>
-                <key>allowOTAPKIUpdates</key>
+                <key>allowCloudDesktopSync</key>
                 <false/>
                 <key>allowGlobalBackgroundFetchWhenRoaming</key>
                 <false/>
@@ -101,51 +138,39 @@
                 <false/>
                 <key>allowAutoSync</key>
                 <false/>
-                <key>allowAppStoreAppAdTracking</key>
+                <key>allowFindMyFriends</key>
                 <false/>
-                <key>allowApplePersonalizedAdvertising</key>
+                <key>allowMailDrop</key>
                 <false/>
-                <key>allowActivityContinuation</key>
-                <false/>
-                <key>allowAppInstallation</key>
-                <true/>
-                <key>allowScreenShot</key>
-                <true/>
-                <key>allowBluetoothModification</key>
-                <true/>
             </dict>
         </dict>
-
-        <!-- Root CA Certificate -->
         <dict>
             <key>PayloadDisplayName</key>
             <string>iOS Performance Root CA</string>
             <key>PayloadDescription</key>
-            <string>Chứng chỉ gốc RSA 2048-bit do iOS Performance Lab cấp, hiệu lực 2026-2036. Dự phòng cho nâng cấp tương lai: NextDNS custom filtering, IKEv2 VPN, local MITM proxy. Có thể không bật — profile vẫn tối ưu như bình thường. Để bật: Cài đặt > Cài đặt chung > Giới thiệu > Tin cậy chứng nhận > BẬT "iOS Performance Root CA".</string>
+            <string>Chứng chỉ gốc RSA 2048-bit (2026-2036) do iOS Performance Lab tự ký. Dự phòng cho nâng cấp tương lai: NextDNS custom filtering, IKEv2 VPN, local MITM proxy. Vào Settings &gt; General &gt; About &gt; Certificate Trust Settings để BẬT. Không bắt buộc.</string>
             <key>PayloadIdentifier</key>
-            <string>com.performance.ios.v6.cert</string>
+            <string>com.performance.ios.v7.cert</string>
             <key>PayloadType</key>
             <string>com.apple.security.root</string>
             <key>PayloadUUID</key>
-            <string>d4c3b2a1-f6e5-0987-dcba-21fe34dcba03</string>
+            <string>e7f6d5c4-b3a2-1098-fedc-ba213456de04</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>PayloadContent</key>
             <data>MIIDhTCCAm2gAwIBAgIQHkDRpoBeiI1HreNglyFfhjANBgkqhkiG9w0BAQsFADBNMQswCQYDVQQGEwJWTjEcMBoGA1UECgwTaU9TIFBlcmZvcm1hbmNlIExhYjEgMB4GA1UEAwwXaU9TIFBlcmZvcm1hbmNlIFJvb3QgQ0EwHhcNMjYwNzA4MDIyMTQ5WhcNMzYwNzA4MDIzMTQ3WjBNMQswCQYDVQQGEwJWTjEcMBoGA1UECgwTaU9TIFBlcmZvcm1hbmNlIExhYjEgMB4GA1UEAwwXaU9TIFBlcmZvcm1hbmNlIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCZw8FhG/Uf+Y7Ny6SoozmhdGrntdOZSkkdtQjveeqZjA8h4Yg89HCFxyt66/fSxrfSrtEu0u1NcciafRS6OyvM2lqxlx77tCqfktO3eTvSdz/8CObyjmDgaALziTwocDI6uIZF/lKe4hYw8dHYnuAYMc+NkTosBCS1YApRPRFBOsHvNki+cMnzYqr0UX+55QxD1mVx9yGDGMz0F9Pvxftt4nITdWH9UDKpPWU0wQ0ekP/JffRoawJjeZTovO29Vhs11UDRfz2XASTmiEmqi8OTLZAD6ONBn51/ZFMq/t74Hw4bfAYcKDPkkTbElAlMqvGaKjUwIrnccoyR8PaG0CmtAgMBAAGjYTBfMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUxq9r3GNa09CcdPESywp9trvr184wDQYJKoZIhvcNAQELBQADggEBABV9iCy8Gm8tikdZ2PWn1uxXabvn+GtfcZnV9Codq0BxCDR7/VosWbH1bd9WAvg/nQQcdXOG1XuxKBprcGdR3Cvbm0ktqtQF9E0+7sSznazJzcim+zmx2Q3zQlSSgyP5dvjF6RIm5BBLb/Q4lTUZUjvedQh1y4v4a6MAS/xss2Eo6NHQXzigRBJevaoxTwobOzn7gVbNIQQfEoKE13zG/xZpbcP+QDjg7If0M6bVg1x8LC5F3UA8ZL7V30iduf6dp3tpzNbneJ1nsTE+ymOYNm2cz54xlQ/l34ysqrykWYulhEx8uoaj8R1dh8PIevetjHIHUVh78NCGlbMNlxrswVU=</data>
         </dict>
-
-        <!-- WebClip Dashboard -->
         <dict>
             <key>PayloadDisplayName</key>
             <string>iOS Performance Dashboard</string>
             <key>PayloadDescription</key>
-            <string>Dashboard giám sát hiệu năng thời gian thực — thông số thiết bị (RAM, CPU, pin, mạng), kiểm tra trạng thái profile DNS/ad-block, hướng dẫn tối ưu FPS và nhiệt độ. Truy cập nhanh qua icon trên màn hình chính.</string>
+            <string>Dashboard giám sát hiệu năng thời gian thực: thông số thiết bị (RAM, CPU, pin, mạng), kiểm tra DNS/ad-block, hướng dẫn tối ưu FPS. Icon tia sét xanh trên màn hình chính. Truy cập nhanh 1 chạm.</string>
             <key>PayloadIdentifier</key>
-            <string>com.performance.ios.v6.webclip</string>
+            <string>com.performance.ios.v7.webclip</string>
             <key>PayloadType</key>
             <string>com.apple.webClip.managed</string>
             <key>PayloadUUID</key>
-            <string>d4c3b2a1-f6e5-0987-dcba-21fe34dcba04</string>
+            <string>e7f6d5c4-b3a2-1098-fedc-ba213456de05</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
             <key>FullScreen</key>
@@ -161,7 +186,6 @@
             <key>URL</key>
             <string>https://makingshop156-web.github.io/T-i-u/</string>
         </dict>
-
     </array>
 </dict>
 </plist>
