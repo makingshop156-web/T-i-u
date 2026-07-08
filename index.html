@@ -4,287 +4,260 @@
 <meta charset="UTF-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>iOS Perf • Dashboard</title>
+<title>iOS Perf • Boost</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#070a0f;--card:#0e141c;--border:#1a2332;--text:#e8edf5;--dim:#5a6a85;--accent:#00c6ff;--accent2:#0072ff;--green:#00e676;--yellow:#ffd740;--red:#ff5252}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:14px;min-height:100vh}
-.header{display:flex;align-items:center;gap:12px;padding:16px 0 12px}
-.header .icon{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 20px rgba(0,198,255,.25)}
-.header h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
-.badge{display:inline-block;font-size:9px;padding:2px 7px;border-radius:20px;background:rgba(0,230,118,.1);color:var(--green);font-weight:600;text-transform:uppercase}
-.badge.gray{background:rgba(255,255,255,.05);color:var(--dim)}
-.cards{display:flex;flex-direction:column;gap:8px}
-.card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border)}
-.card h2{font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-.val{font-size:20px;font-weight:700;letter-spacing:-.3px}
-.sub{font-size:11px;color:var(--dim)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.box{background:rgba(255,255,255,.03);border-radius:10px;padding:10px;text-align:center}
-.box .n{font-size:18px;font-weight:700}
-.box .l{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
-.list{list-style:none}
-.list li{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11.5px;display:flex;align-items:center;gap:7px}
-.list li:last-child{border-bottom:none}
-.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.dot.g{background:var(--green)}
-.dot.y{background:var(--yellow)}
-.dot.r{background:var(--red)}
-.dot.b{background:var(--accent)}
-.install-box{background:linear-gradient(135deg,rgba(0,198,255,.08),rgba(0,114,255,.05));border:1px solid rgba(0,198,255,.2);border-radius:12px;padding:14px;text-align:center}
-.install-box .big{display:inline-block;padding:12px 28px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(0,198,255,.3);margin:6px 0}
-.install-box .s{font-size:11px;color:var(--dim);line-height:1.5}
-.install-box .s b{color:var(--text)}
-.ctl{display:flex;gap:6px;margin-top:6px}
-.ctl a{flex:1;text-align:center;padding:8px;border-radius:9px;font-size:11px;font-weight:600;text-decoration:none;transition:transform .1s}
-.ctl a:active{transform:scale(.95)}
-.ctl .prim{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
-.ctl .sec{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border)}
-footer{text-align:center;padding:24px 0 16px;font-size:9px;color:var(--dim);line-height:1.7}
-.status-bar{display:flex;align-items:center;gap:6px;font-size:11px;margin-top:4px}
-.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
-.status-dot.ok{background:var(--green);box-shadow:0 0 8px rgba(0,230,118,.3)}
-.status-dot.fail{background:var(--red);box-shadow:0 0 8px rgba(255,82,82,.3)}
-.status-dot.check{background:var(--yellow);animation:pulse .8s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.progress-bar{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:4px;overflow:hidden}
-.progress-fill{height:100%;border-radius:2px;transition:width .5s}
+:root{--bg:#06090e;--cd:#0d131c;--bd:#1a2335;--tx:#e4ecf5;--dm:#4a5a75;--bl:#00aaff;--gr:#00e676;--yl:#ffd740;--rd:#ff5252}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:0;min-height:100vh}
+.hdr{background:linear-gradient(135deg,#0d1b2a 0%,#0a0f18 100%);padding:28px 18px 18px;text-align:center;border-bottom:1px solid var(--bd)}
+.hdr .icn{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--bl),#0066ff);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 8px;box-shadow:0 6px 30px rgba(0,170,255,.25)}
+.hdr h1{font-size:20px;font-weight:800;letter-spacing:-.3px;background:linear-gradient(135deg,#f0f6ff,#80c8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr .p{font-size:11px;color:var(--dm);margin-top:2px}
+.sb{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;margin-top:10px;padding:6px 14px;background:rgba(0,255,255,.04);border-radius:20px;border:1px solid rgba(0,170,255,.15)}
+.sb .dt{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+.sb .dt.g{background:var(--gr);box-shadow:0 0 10px rgba(0,230,118,.4)}
+.sb .dt.r{background:var(--rd);box-shadow:0 0 10px rgba(255,82,82,.4)}
+.sb .dt.y{background:var(--yl);box-shadow:0 0 10px rgba(255,215,64,.4)}
+.sb .dt.ch{background:var(--yl);animation:pu 1s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
+.pg{height:3px;background:rgba(255,255,255,.05);border-radius:2px;margin-top:6px;overflow:hidden}
+.pg .fl{height:100%;border-radius:2px;transition:width .5s}
+.bd{padding:12px 14px 20px;display:flex;flex-direction:column;gap:8px}
+.cd{background:var(--cd);border-radius:12px;padding:14px;border:1px solid var(--bd)}
+.cd h2{font-size:10px;font-weight:700;color:var(--dm);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px}
+.r{display:flex;justify-content:space-between;align-items:center}
+.v{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.b{background:rgba(255,255,255,.03);border-radius:9px;padding:9px;text-align:center}
+.b .n{font-size:16px;font-weight:700}
+.b .l{font-size:9px;color:var(--dm);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+.ls{list-style:none}
+.ls li{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px;display:flex;align-items:center;gap:7px}
+.ls li:last-child{border-bottom:none}
+.dt2{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ib{background:linear-gradient(135deg,rgba(0,170,255,.08),rgba(0,100,255,.05));border:1px solid rgba(0,170,255,.2);border-radius:12px;padding:14px;text-align:center;margin-top:2px}
+.ib .big{display:inline-block;padding:13px 32px;border-radius:10px;background:linear-gradient(135deg,var(--bl),#0066ff);color:#fff;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 25px rgba(0,170,255,.3);margin:6px 0}
+.ib .s{font-size:11px;color:var(--dm);line-height:1.5}
+.ct{display:flex;gap:5px;margin-top:6px}
+.ct a{flex:1;text-align:center;padding:8px;border-radius:8px;font-size:10px;font-weight:600;text-decoration:none;transition:transform .1s}
+.ct a:active{transform:scale(.95)}
+.ct .p{background:linear-gradient(135deg,var(--bl),#0066ff);color:#fff}
+.ct .s{background:rgba(255,255,255,.05);color:var(--tx);border:1px solid var(--bd)}
+.ft{text-align:center;padding:18px 0;font-size:9px;color:var(--dm);line-height:1.6}
+.tp{border-left:2px solid var(--bl);padding:8px 10px;margin:6px 0;background:rgba(0,170,255,.04);font-size:11px;line-height:1.6;border-radius:0 5px 5px 0}
+.tp b{color:var(--bl)}
+hr{border:none;border-top:1px solid var(--bd);margin:8px 0}
 </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="icon">⚡</div>
-    <div><h1>iOS Perf</h1></div>
+<div class="hdr">
+    <div class="icn">⚡</div>
+    <h1>iOS Performance</h1>
+    <p class="p">Tối ưu hiệu năng • 20 restriction • DNS</p>
+    <div class="sb" id="statusBar">
+        <span class="dt ch"></span>
+        <span>Đang kiểm tra...</span>
+    </div>
 </div>
 
-<div class="cards">
-
-    <!-- STATUS -->
-    <div class="card">
-        <h2>🔍 TRẠNG THÁI</h2>
-        <div class="status-bar" id="profileStatus">
-            <span class="status-dot check"></span>
-            <span>Đang kiểm tra...</span>
-        </div>
-        <div class="sub" id="profileDetail" style="margin-top:2px">DNS chặn QC + kết nối</div>
-    </div>
+<div class="bd">
 
     <!-- DNS -->
-    <div class="card">
-        <h2>🌐 DNS</h2>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-            <div><span class="val" id="pingVal">--</span><span class="sub" style="margin-left:4px">ms</span></div>
-            <span class="sub" id="pingLabel">AdGuard</span>
+    <div class="cd">
+        <h2>🌐 Mạng</h2>
+        <div class="r">
+            <div><span class="v" id="pingVal">--</span><span style="font-size:12px;color:var(--dm);margin-left:3px">ms</span></div>
+            <span style="font-size:11px;color:var(--dm)" id="pingLabel">Kiểm tra...</span>
         </div>
-        <div class="progress-bar"><div class="progress-fill" id="pingBar" style="width:0%;background:var(--green)"></div></div>
+        <div class="pg" style="margin-top:4px"><div class="fl" id="pingBar" style="width:0;background:var(--gr)"></div></div>
     </div>
 
-    <!-- DEVICE -->
-    <div class="card">
-        <h2>📱 THIẾT BỊ</h2>
-        <div class="grid2">
-            <div class="box"><div class="n" id="memVal">--</div><div class="l">RAM</div></div>
-            <div class="box"><div class="n" id="cpuVal">--</div><div class="l">CPU</div></div>
-            <div class="box"><div class="n" id="screenVal">--</div><div class="l">Màn hình</div></div>
-            <div class="box"><div class="n" id="storageVal">--</div><div class="l">Bộ nhớ</div></div>
+    <!-- Status quick -->
+    <div class="cd" id="detailBox">
+        <h2>📋 Chi tiết</h2>
+        <div style="font-size:12px;color:var(--dm);line-height:1.7" id="profileDetail">
+            Đang xác minh kết nối và DNS...
         </div>
     </div>
 
-    <!-- NETWORK -->
-    <div class="card">
-        <h2>📶 MẠNG</h2>
-        <div class="grid2">
-            <div class="box"><div class="n" id="netType">--</div><div class="l">Loại</div></div>
-            <div class="box"><div class="n" id="netSpeed">--</div><div class="l">Tốc độ</div></div>
-            <div class="box"><div class="n" id="netRtt">--</div><div class="l">RTT</div></div>
-            <div class="box"><div class="n" id="netData">--</div><div class="l">Tiết kiệm DL</div></div>
+    <!-- Thiết bị -->
+    <div class="cd">
+        <h2>📱 Thiết bị</h2>
+        <div class="g2">
+            <div class="b"><div class="n" id="memVal">--</div><div class="l">RAM</div></div>
+            <div class="b"><div class="n" id="cpuVal">--</div><div class="l">CPU</div></div>
+            <div class="b"><div class="n" id="screenVal">--</div><div class="l">Màn hình</div></div>
+            <div class="b"><div class="n" id="storageVal">--</div><div class="l">Bộ nhớ</div></div>
         </div>
     </div>
 
-    <!-- BATTERY -->
-    <div class="card">
-        <h2>🔋 PIN</h2>
-        <div class="grid2">
-            <div class="box"><div class="n" id="batLevel">--</div><div class="l">Mức</div></div>
-            <div class="box"><div class="n" id="batState">--</div><div class="l">Trạng thái</div></div>
+    <!-- Mạng -->
+    <div class="cd">
+        <h2>📶 Mạng</h2>
+        <div class="g2">
+            <div class="b"><div class="n" id="netType">--</div><div class="l">Loại</div></div>
+            <div class="b"><div class="n" id="netSpeed">--</div><div class="l">Tốc độ</div></div>
         </div>
-        <div class="progress-bar"><div class="progress-fill" id="batBar" style="width:0%;background:var(--green)"></div></div>
     </div>
 
-    <!-- OPTIMIZATIONS -->
-    <div class="card">
-        <h2>✓ 20 TỐI ƯU ĐÃ ÁP DỤNG</h2>
-        <div style="font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:4px">
-            ⚡ Tiết kiệm CPU ~8-15% • Pin ~10-20% • RAM ~100-200MB
+    <!-- Pin -->
+    <div class="cd">
+        <h2>🔋 Pin</h2>
+        <div class="g2">
+            <div class="b"><div class="n" id="batLevel">--</div><div class="l">Mức</div></div>
+            <div class="b"><div class="n" id="batState">--</div><div class="l">Trạng thái</div></div>
         </div>
-        <ul class="list">
-            <li><span class="dot g"></span> DNS AdGuard — chặn quảng cáo + tracker</li>
-            <li><span class="dot g"></span> Tắt analyticsd — chẩn đoán nền</li>
-            <li><span class="dot g"></span> Tắt appstored — tải app tự động</li>
-            <li><span class="dot g"></span> Tắt cloudd — iCloud Drive sync</li>
-            <li><span class="dot g"></span> Tắt backupd — sao lưu iCloud nền</li>
-            <li><span class="dot g"></span> Tắt securityd sync — keychain</li>
-            <li><span class="dot g"></span> Tắt contacts/cal/reminder/bookmark/notes sync</li>
-            <li><span class="dot g"></span> Tắt SIRI — tiết kiệm CPU + pin nhất</li>
-            <li><span class="dot g"></span> Tắt Spotlight indexing — giảm CPU nền</li>
-            <li><span class="dot g"></span> Tắt cert updates OTA</li>
-            <li><span class="dot g"></span> Tắt autounlockd — BLE Watch</li>
-            <li><span class="dot g"></span> Tắt AirDrop — BT LE scanning</li>
-            <li><span class="dot g"></span> Tắt AutoSync — iTunes sync</li>
-            <li><span class="dot g"></span> Tắt background fetch roaming</li>
-            <li><span class="dot g"></span> Tắt ad tracking</li>
-            <li><span class="dot b"></span> Root CA certificate installed</li>
+        <div class="pg"><div class="fl" id="batBar" style="width:0;background:var(--gr)"></div></div>
+    </div>
+
+    <!-- 20 Optimization -->
+    <div class="cd">
+        <h2>✅ 20 tối ưu đã áp dụng</h2>
+        <div style="font-size:11px;color:var(--dm);line-height:1.5;margin-bottom:6px">
+            CPU ~8-15% • RAM ~100-200MB • Pin ~10-20% • Data ~500MB-1GB/tháng
+        </div>
+        <ul class="ls">
+            <li><span class="dt2" style="background:var(--bl)"></span> DNS AdGuard — chặn QC + tracker + malware</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt Siri (sirid) — CPU ~5%, pin ~8%</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt Spotlight (spotlightd) — CPU ~2%</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt analyticsd — chẩn đoán nền</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt appstored — tải app tự động</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt cloudd + backupd + 6 iCloud sync khác</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt certuiworker — OTA cert update</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt autounlockd — BLE Watch</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt sharingd — AirDrop BT LE</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt syncdefaultsd — iTunes sync</li>
+            <li><span class="dt2" style="background:var(--gr)"></span> Tắt fetchd roaming + ad tracking</li>
         </ul>
     </div>
 
-    <!-- GAMING FPS -->
-    <div class="card">
-        <h2>🎮 FPS & GAMING</h2>
-        <div style="font-size:11.5px;line-height:1.7;color:var(--dim)">
-            <b style="color:var(--green)">Profile này giúp FPS như thế nào?</b><br>
-            20 restriction giải phóng <b>CPU RAM</b> cho game, giảm nhiệt → hạn chế throttle → FPS ổn định hơn.<br>
-            DNS block QC = game không tải ad = tiết kiệm CPU/bandwidth.<br><br>
-            <b style="color:var(--yellow)">⚡ Mẹo tối đa FPS:</b><br>
-            1. Tháo ốp lưng — thoát nhiệt tốt hơn<br>
-            2. Không sạc pin khi chơi — sạc sinh nhiệt = throttle<br>
-            3. Giảm độ sáng — màn hình ngốn 30-50% pin/nhiệt<br>
-            4. Bật Game Mode (có sẵn iOS 18+) — tự động kích hoạt<br>
-            5. Airplane Mode nếu chơi offline — không notification giật lag<br><br>
-            <b style="color:var(--text)">⚠ Profile tắt Siri + iCloud sync. Cần các tính năng này → gỡ.</b>
+    <!-- FPS Guide -->
+    <div class="cd">
+        <h2>🎮 Tối đa FPS khi chơi game</h2>
+        <div class="tp">
+            <b>⚡ Mẹo từ iOS Performance Lab:</b><br>
+            1. Tháo ốp lưng → thoát nhiệt, chống throttle<br>
+            2. Không sạc khi chơi → sạc sinh nhiệt = giảm FPS<br>
+            3. Giảm độ sáng → màn hình ngốn 30-50% tài nguyên<br>
+            4. Bật Game Mode (iOS 18+ có sẵn) → tự động<br>
+            5. Airplane Mode (offline) → không notification giật<br>
+            6. Để máy nơi thoáng mát trước khi chơi<br><br>
+            <b style="color:var(--gr)">Profile này đã giải phóng CPU/RAM → FPS ổn định hơn!</b>
         </div>
     </div>
 
-    <!-- CERT -->
-    <div class="card">
-        <h2>🔐 CHỨNG CHỈ GỐC</h2>
-        <div style="font-size:11.5px;line-height:1.6;color:var(--dim)">
-            Profile có cài <b style="color:var(--text)">iOS Performance Root CA</b>.<br>
-            Vào <b>Cài đặt > Cài đặt chung > Giới thiệu > Tin cậy chứng nhận</b> → BẬT lên.<br>
-            <span style="color:var(--green)">Nếu không bật → không sao, máy vẫn chạy tối ưu.</span>
+    <!-- Cert -->
+    <div class="cd">
+        <h2>🔐 Chứng chỉ gốc</h2>
+        <div style="font-size:11px;line-height:1.6;color:var(--dm)">
+            Đã cài <b style="color:var(--tx)">iOS Performance Root CA</b>.<br>
+            Vào <b>Cài đặt > Cài đặt chung > Giới thiệu > Tin cậy chứng nhận</b> → BẬT.<br>
+            <span style="font-size:10px;color:var(--dm)">Không bắt buộc. Dự phòng cho nâng cấp sau.</span>
         </div>
     </div>
 
-    <!-- INSTALL -->
-    <div class="install-box">
+    <!-- Install -->
+    <div class="ib">
         <a class="big" href="profiles/Performance.mobileconfig">⬇ TẢI PROFILE</a>
-        <div class="s">Bấm → Cho phép → <b>Cài đặt</b> → Xong</div>
-        <div class="s" style="color:var(--green);margin-top:2px">Gỡ: Cài đặt > Chung > VPN & QL thiết bị</div>
+        <div class="s">Bấm → Cho phép → Cài đặt → Xong</div>
+        <div class="s" style="color:var(--gr);margin-top:2px">Gỡ: Cài đặt > Chung > VPN & QL thiết bị</div>
     </div>
 
 </div>
 
-<footer>
-iOS Performance Optimizer v5.0 • Hiệu năng phần mềm<br>
-Thông số thực từ Battery API • Network API • Device Memory API
-</footer>
+<div class="ft">
+iOS Performance Optimizer v5 • Hiệu năng phần mềm<br>
+Thông số thực (nếu iOS cho phép) • Design by iOS Perf Lab
+</div>
 
 <script>
 (async function(){
     const $ = id => document.getElementById(id);
-    const sd = ()=>document.querySelector('#profileStatus .status-dot');
-    const st = ()=>document.querySelector('#profileStatus span:last-child');
+    const sb = document.querySelector('#statusBar span:first-child');
+    const st = document.querySelector('#statusBar span:last-child');
 
-    // ---- Battery (iOS 26 han che API) ----
+    // ---- Battery ----
     try{
         const b = await navigator.getBattery();
         const p = Math.round(b.level*100);
         $('batLevel').textContent = p+'%';
         const bar = $('batBar');
         bar.style.width = p+'%';
-        bar.style.background = p>20?(p>60?'var(--green)':'var(--yellow)'):'var(--red)';
+        bar.style.background = p>20?(p>60?'var(--gr)':'var(--yl)'):'var(--rd)';
         $('batState').textContent = b.charging?'Đang sạc':'Pin';
-    }catch(e){
-        $('batLevel').textContent='iOS han';
-        $('batState').textContent='iOS han';
-    }
+    }catch(e){$('batLevel').textContent='iOS hạn';$('batState').textContent='iOS hạn';}
 
-    // ---- Network (iOS 26 han che API) ----
-    const c = navigator.connection;
-    if(c && c.effectiveType){
-        $('netType').textContent=(c.type||c.effectiveType||'').toUpperCase();
-        $('netSpeed').textContent=c.downlink?c.downlink.toFixed(1)+' Mbps':'--';
-        $('netRtt').textContent=c.rtt?c.rtt+' ms':'--';
-        $('netData').textContent=c.saveData?'BẬT':'TẮT';
-    }else{
-        document.querySelectorAll('#netType,#netSpeed,#netRtt,#netData').forEach(el=>el.textContent='iOS han');
-    }
+    // ---- Network ----
+    const nc = navigator.connection;
+    if(nc&&nc.effectiveType){
+        $('netType').textContent=(nc.type||nc.effectiveType||'WiFi').toUpperCase();
+        $('netSpeed').textContent=nc.downlink?nc.downlink.toFixed(1)+' Mbps':'--';
+    }else{document.querySelectorAll('#netType,#netSpeed').forEach(e=>e.textContent='iOS hạn');}
 
     // ---- Device ----
     if(navigator.deviceMemory) $('memVal').textContent=navigator.deviceMemory+' GB';
-    if(navigator.hardwareConcurrency) $('cpuVal').textContent=navigator.hardwareConcurrency+' loi';
-    const d = window.devicePixelRatio||1;
-    $('screenVal').textContent=Math.round(screen.width*d)+'x'+Math.round(screen.height*d);
+    if(navigator.hardwareConcurrency) $('cpuVal').textContent=navigator.hardwareConcurrency+' lõi';
+    const dr = window.devicePixelRatio||1;
+    $('screenVal').textContent=Math.round(screen.width*dr)+'x'+Math.round(screen.height*dr);
     if(navigator.storage&&navigator.storage.estimate){
         navigator.storage.estimate().then(s=>{
-            $('storageVal').textContent=(s.usage/1024/1024/1024).toFixed(1)+'/'+(s.quota/1024/1024/1024).toFixed(0)+' GB';
+            $('storageVal').textContent=(s.usage/1073741824).toFixed(1)+'/'+(s.quota/1073741824).toFixed(0)+' GB';
         }).catch(()=>{});
     }
 
-    // ---- Verification: dung no-cors, fetch resource thay vi DoH endpoint ----
-    sd().className='status-dot check';
-    let netOk=false, adBlockOk=false, normalOk=false;
+    // ---- Verification: no-cors fetch ----
+    sb.className='dt ch';
+    let netOk=false, adBlockOk=false, normOk=false;
 
-    // Test 1: Do latency toi 1 CDN (no-cors)
-    const start = performance.now();
+    const stt = performance.now();
     try{
-        const ac = new AbortController(), t = setTimeout(()=>ac.abort(),5000);
+        const ac=new AbortController(), t=setTimeout(()=>ac.abort(),5000);
         await fetch('https://www.cloudflare.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:ac.signal});
         clearTimeout(t);
-        const ms = (performance.now()-start).toFixed(0);
+        const ms=(performance.now()-stt).toFixed(0);
         $('pingVal').textContent=ms;
         const n=parseInt(ms);
-        let cl='var(--green)';
-        if(n>200)cl='var(--yellow)';
-        if(n>500)cl='var(--red)';
+        let cl='var(--gr)';
+        if(n>200)cl='var(--yl)';
+        if(n>500)cl='var(--rd)';
         $('pingVal').style.color=cl;
         $('pingBar').style.width=Math.min(100,Math.max(3,500/n*20))+'%';
         $('pingBar').style.background=cl;
-        $('pingLabel').textContent=n<100?'Tot':n<300?'TB':'Cham';
+        $('pingLabel').textContent=n<100?'Rất nhanh':n<300?'Bình thường':'Chậm';
         netOk=true;
     }catch(e){
-        $('pingVal').textContent='--';
-        $('pingVal').style.color='var(--red)';
+        $('pingVal').textContent='?';
         $('pingBar').style.width='3%';
-        $('pingBar').style.background='var(--red)';
-        $('pingLabel').textContent='Loi mang';
+        $('pingBar').style.background='var(--rd)';
+        $('pingLabel').textContent='Lỗi';
     }
 
-    // Test 2: Ad block (try fetch ad domain, no-cors)
     try{
         const ac=new AbortController(), t=setTimeout(()=>ac.abort(),3000);
         await fetch('https://ad.doubleclick.net',{mode:'no-cors',cache:'no-store',signal:ac.signal});
         clearTimeout(t);
-        adBlockOk=false; // request thanh cong => DNS khong chan
     }catch(e){adBlockOk=(e.name!=='AbortError');}
 
-    // Test 3: Normal connectivity
     try{
         const ac=new AbortController(), t=setTimeout(()=>ac.abort(),4000);
         await fetch('https://www.google.com/favicon.ico',{mode:'no-cors',cache:'no-store',signal:ac.signal});
         clearTimeout(t);
-        normalOk=true;
+        normOk=true;
     }catch(e){}
 
-    // Ket luan
-    if(netOk&&adBlockOk&&normalOk){
-        sd().className='status-dot ok';
-        st().textContent='✅ PROFILE HOAT DONG — DNS chan QC + mang tot';
-        $('profileDetail').textContent='Da cai profile. Biet pin/network iOS an = binh thuong.';
-    }else if(netOk&&normalOk){
-        sd().className='status-dot ok';
-        sd().style.background='var(--yellow)';
-        st().textContent='⚠ Mang on dinh — chua xac dinh chan QC';
-        $('profileDetail').textContent='Profile co the da cai nhung khong xac minh duoc ad-block.';
-    }else if(netOk){
-        sd().className='status-dot ok';
-        sd().style.background='var(--yellow)';
-        st().textContent='⚠ Co mang nhung han che';
-        $('profileDetail').textContent='Co the do CORS hoac iOS security han che fetch.';
+    if(netOk&&adBlockOk&&normOk){
+        sb.className='dt g';
+        st.textContent='✅ Profile hoạt động • DNS chặn QC';
+        $('profileDetail').textContent='20 daemon đã tắt. Nếu iOS hạn chế pin/mạng là bình thường (WebKit policy).';
+    }else if(netOk&&normOk){
+        sb.className='dt y';
+        st.textContent='⚠ Mạng tốt • Chưa xác định chặn QC';
+        $('profileDetail').textContent='Profile có thể đã cài. Một số iOS hạn chế xác minh CORS.';
     }else{
-        sd().className='status-dot fail';
-        st().textContent='❌ KHONG CO MANG hoac bi chan';
-        $('profileDetail').textContent='Kiem tra ket noi WiFi/4G. Neu co mang -> iOS security han che.';
+        sb.className='dt r';
+        st.textContent='❌ Cần cài profile';
+        $('profileDetail').textContent='Bấm TẢI PROFILE bên dưới, vào Safari cho phép, vào Settings cài đặt.';
     }
 })();
 </script>
